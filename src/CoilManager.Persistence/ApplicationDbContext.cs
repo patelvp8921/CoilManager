@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using CoilManager.Application.Abstractions.Persistence;
 using CoilManager.Domain.Common;
 using CoilManager.Domain.Entities;
@@ -9,12 +10,23 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     : DbContext(options), IApplicationDbContext
 {
     public DbSet<RawCoil> RawCoils => Set<RawCoil>();
+    public DbSet<User> Users => Set<User>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<UserRole> UserRoles => Set<UserRole>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AssemblyReference).Assembly);
+        ApplySoftDeleteQueryFilters(modelBuilder);
 
         base.OnModelCreating(modelBuilder);
+    }
+
+    public override int SaveChanges()
+    {
+        ApplyEntityStateRules();
+
+        return base.SaveChanges();
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -22,6 +34,25 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         ApplyEntityStateRules();
 
         return base.SaveChangesAsync(cancellationToken);
+    }
+
+    private static void ApplySoftDeleteQueryFilters(ModelBuilder modelBuilder)
+    {
+        foreach (Microsoft.EntityFrameworkCore.Metadata.IMutableEntityType entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            Type clrType = entityType.ClrType;
+            if (!typeof(SoftDeletableEntity).IsAssignableFrom(clrType))
+            {
+                continue;
+            }
+
+            ParameterExpression parameter = Expression.Parameter(clrType, "entity");
+            MemberExpression property = Expression.Property(parameter, nameof(SoftDeletableEntity.IsDeleted));
+            BinaryExpression condition = Expression.Equal(property, Expression.Constant(false));
+            LambdaExpression lambda = Expression.Lambda(condition, parameter);
+
+            modelBuilder.Entity(clrType).HasQueryFilter(lambda);
+        }
     }
 
     private void ApplyEntityStateRules()

@@ -43,8 +43,7 @@ public sealed class RawCoilConfiguration : IEntityTypeConfiguration<RawCoil>
 
         builder.Property(rawCoil => rawCoil.Status)
             .HasConversion<string>()
-            .HasMaxLength(30)
-            .HasDefaultValue(CoilStatus.Available);
+            .HasMaxLength(30);
 
         builder.Property(rawCoil => rawCoil.Warehouse)
             .HasMaxLength(100);
