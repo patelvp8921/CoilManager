@@ -1,39 +1,55 @@
 <mat-sidenav-container class="app-shell">
   <mat-sidenav class="app-sidebar" mode="side" opened>
     <div class="brand">
-      <span class="brand-mark">CM</span>
-      <span class="brand-name">CoilManager</span>
+      <img class="brand-mark" src="coil-mark.svg" alt="Steel coil">
+      <span class="brand-name">Coil Manager</span>
     </div>
 
     <mat-divider />
 
     <mat-nav-list class="nav-list">
+      <span class="nav-section">Master</span>
+
       @for (item of navigationItems; track item.route) {
         <a
-          mat-list-item
+          class="module-link"
           [routerLink]="item.route"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: item.exact }"
         >
-          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
-          <span matListItemTitle>{{ item.label }}</span>
+          <mat-icon class="nav-leading">{{ item.icon }}</mat-icon>
+          <span class="module-label">{{ item.label }}</span>
+          <mat-icon class="nav-chevron">expand_more</mat-icon>
         </a>
+
+        <div class="subnav">
+          <a routerLink="/raw-coils" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Raw Coils</a>
+        </div>
       }
     </mat-nav-list>
+
+    <div class="sidebar-footer">
+      <span>© 2024 CRGO Coil Management</span>
+      <span>All rights reserved.</span>
+    </div>
   </mat-sidenav>
 
   <mat-sidenav-content class="app-content">
     <mat-toolbar class="app-header">
-      <div>
-        <span class="header-title">Enterprise Operations</span>
-        <span class="header-subtitle">Coil inventory and processing workspace</span>
-      </div>
-
       <span class="header-spacer"></span>
 
-      <button mat-button type="button">
-        <mat-icon>account_circle</mat-icon>
+      <button mat-icon-button type="button" aria-label="Notifications" class="header-icon">
+        <mat-icon>notifications_none</mat-icon>
+        <span class="notification-dot">5</span>
+      </button>
+      <button mat-icon-button type="button" aria-label="Fullscreen" class="header-icon">
+        <mat-icon>fullscreen</mat-icon>
+      </button>
+      <span class="header-divider"></span>
+      <button mat-button type="button" class="profile-button">
+        <span class="profile-avatar">AU</span>
         Admin
+        <mat-icon>expand_more</mat-icon>
       </button>
     </mat-toolbar>
 

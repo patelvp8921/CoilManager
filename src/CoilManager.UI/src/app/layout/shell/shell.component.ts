@@ -33,13 +33,7 @@ interface NavigationItem {
 export class ShellComponent {
   protected readonly navigationItems: NavigationItem[] = [
     {
-      label: 'Dashboard',
-      icon: 'dashboard',
-      route: '/dashboard',
-      exact: true,
-    },
-    {
-      label: 'Raw Coils',
+      label: 'Raw Coil Management',
       icon: 'inventory_2',
       route: '/raw-coils',
       exact: false,
