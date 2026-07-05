@@ -1,5 +1,6 @@
 using CoilManager.Application.Abstractions.Persistence;
 using CoilManager.Domain.Common;
+using CoilManager.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoilManager.Persistence;
@@ -7,6 +8,8 @@ namespace CoilManager.Persistence;
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
     : DbContext(options), IApplicationDbContext
 {
+    public DbSet<RawCoil> RawCoils => Set<RawCoil>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AssemblyReference).Assembly);

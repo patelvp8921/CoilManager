@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoilManager.Persistence.Repositories;
 
-public sealed class Repository<TEntity>(ApplicationDbContext dbContext) : IRepository<TEntity>
+public class Repository<TEntity>(ApplicationDbContext dbContext) : IRepository<TEntity>
     where TEntity : BaseEntity
 {
     private readonly DbSet<TEntity> _dbSet = dbContext.Set<TEntity>();

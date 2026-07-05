@@ -26,6 +26,7 @@ public static class DependencyInjection
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<IRawCoilRepository, RawCoilRepository>();
 
         return services;
     }
