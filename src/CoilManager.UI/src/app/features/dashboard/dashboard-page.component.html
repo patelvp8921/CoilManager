@@ -1,0 +1,32 @@
+<section class="page-header">
+  <div>
+    <h1>Dashboard</h1>
+    <p>Operational overview</p>
+  </div>
+</section>
+
+<section class="metric-grid">
+  @for (metric of metrics; track metric.label) {
+    <mat-card appearance="outlined" class="metric-card">
+      <mat-card-content>
+        <div class="metric-icon">
+          <mat-icon>{{ metric.icon }}</mat-icon>
+        </div>
+        <div>
+          <span class="metric-label">{{ metric.label }}</span>
+          <strong>{{ metric.value }}</strong>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+</section>
+
+<mat-card appearance="outlined" class="work-panel">
+  <mat-card-header>
+    <mat-card-title>Workspace</mat-card-title>
+    <mat-card-subtitle>Sprint 1 application shell</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p>Dashboard content will be connected after the first operational modules are introduced.</p>
+  </mat-card-content>
+</mat-card>

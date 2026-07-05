@@ -1,0 +1,21 @@
+@import '@angular/material/prebuilt-themes/azure-blue.css';
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f5f7fa;
+  color: #1f2937;
+  font-family: Roboto, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+}

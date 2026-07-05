@@ -1,0 +1,49 @@
+<mat-sidenav-container class="app-shell">
+  <mat-sidenav class="app-sidebar" mode="side" opened>
+    <div class="brand">
+      <span class="brand-mark">CM</span>
+      <span class="brand-name">CoilManager</span>
+    </div>
+
+    <mat-divider />
+
+    <mat-nav-list class="nav-list">
+      @for (item of navigationItems; track item.route) {
+        <a
+          mat-list-item
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.exact }"
+        >
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="app-content">
+    <mat-toolbar class="app-header">
+      <div>
+        <span class="header-title">Enterprise Operations</span>
+        <span class="header-subtitle">Coil inventory and processing workspace</span>
+      </div>
+
+      <span class="header-spacer"></span>
+
+      <button mat-button type="button">
+        <mat-icon>account_circle</mat-icon>
+        Admin
+      </button>
+    </mat-toolbar>
+
+    <main class="content-area">
+      <router-outlet />
+    </main>
+
+    <footer class="app-footer">
+      <span>CoilManager ERP</span>
+      <span>API: https://localhost:5001/api</span>
+    </footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>

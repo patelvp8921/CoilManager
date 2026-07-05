@@ -1,0 +1,119 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.app-shell {
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+.app-sidebar {
+  width: 252px;
+  border-right: 1px solid #d7dde5;
+  background: #ffffff;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 64px;
+  padding: 0 20px;
+}
+
+.brand-mark {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 6px;
+  background: #24527a;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.brand-name {
+  color: #172033;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.nav-list {
+  padding: 12px;
+}
+
+.nav-list a {
+  margin-bottom: 4px;
+  border-radius: 6px;
+}
+
+.nav-list a.active {
+  background: #e6eef6;
+  color: #24527a;
+}
+
+.app-content {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  min-height: 64px;
+  border-bottom: 1px solid #d7dde5;
+  background: #ffffff;
+  color: #172033;
+}
+
+.header-title,
+.header-subtitle {
+  display: block;
+}
+
+.header-title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+}
+
+.header-subtitle {
+  color: #667085;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.header-spacer {
+  flex: 1 1 auto;
+}
+
+.content-area {
+  flex: 1;
+  padding: 24px;
+}
+
+.app-footer {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #d7dde5;
+  padding: 0 24px;
+  background: #ffffff;
+  color: #667085;
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  .app-sidebar {
+    width: 220px;
+  }
+
+  .content-area {
+    padding: 16px;
+  }
+}

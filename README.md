@@ -14,6 +14,7 @@ src/
   CoilManager.Infrastructure
   CoilManager.Persistence
   CoilManager.Shared
+  CoilManager.UI
 tests/
   CoilManager.UnitTests
   CoilManager.IntegrationTests
@@ -46,6 +47,20 @@ The development profile exposes Swagger and a health endpoint:
 
 ```text
 GET http://localhost:5170/health
+```
+
+## Run the UI
+
+```powershell
+cd src/CoilManager.UI
+npm install
+npm start
+```
+
+The Angular development server runs on:
+
+```text
+http://localhost:4200
 ```
 
 ## Configuration
