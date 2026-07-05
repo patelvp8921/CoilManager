@@ -1,4 +1,5 @@
 using CoilManager.Shared.Responses;
+using CoilManager.Shared.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoilManager.API.Controllers;
@@ -9,6 +10,14 @@ public abstract class BaseApiController : ControllerBase
     protected ActionResult<ApiResponse<T>> Success<T>(T? data, string message = "Request completed successfully.")
     {
         return Ok(ApiResponse<T>.Ok(data, message));
+    }
+
+    protected ActionResult<ApiPagedResponse<T>> Paged<T>(
+        IReadOnlyList<T> data,
+        PaginationResult pagination,
+        string message = "Request completed successfully.")
+    {
+        return Ok(new ApiPagedResponse<T>(true, message, data, pagination, []));
     }
 
     protected ObjectResult Failure<T>(

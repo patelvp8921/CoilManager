@@ -5,12 +5,17 @@ namespace CoilManager.Application.DTOs.RawCoils;
 public sealed record UpdateRawCoilRequest(
     string CoilNumber,
     string HeatNumber,
+    string MillName,
+    string? MillTCNo,
+    string? BISLicNumber,
     string SupplierName,
     string Grade,
-    decimal ThicknessMm,
-    decimal WidthMm,
-    decimal WeightMt,
+    decimal? Thickness,
+    decimal? Width,
+    decimal Weight,
+    decimal Length,
+    decimal? WattLossPerKg,
+    string? WarehouseLocation,
     CoilStatus Status,
-    string? Warehouse,
-    string? Location,
-    DateOnly ReceivedDate);
+    DateOnly ReceivedDate,
+    string RowVersion);

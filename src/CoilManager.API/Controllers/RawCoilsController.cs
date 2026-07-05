@@ -1,55 +1,99 @@
 using CoilManager.Application.DTOs.RawCoils;
+using CoilManager.Application.Interfaces.Services;
+using CoilManager.Shared.Errors;
+using CoilManager.Shared.Pagination;
+using CoilManager.Shared.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoilManager.API.Controllers;
 
 [Route("api/rawcoils")]
-public sealed class RawCoilsController : BaseApiController
+public sealed class RawCoilsController(IRawCoilService rawCoilService) : BaseApiController
 {
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public IActionResult GetAll()
+    [ProducesResponseType(typeof(ApiPagedResponse<RawCoilDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<ApiPagedResponse<RawCoilDto>>> GetAll(
+        [FromQuery] RawCoilQueryRequest request,
+        CancellationToken cancellationToken)
     {
-        return Placeholder();
+        PagedResult<RawCoilDto> result = await rawCoilService.GetAsync(request, cancellationToken);
+
+        return Paged(
+            result.Items,
+            new PaginationResult(result.PageNumber, result.PageSize, result.TotalCount));
     }
 
     [HttpGet("{id:guid}")]
-    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public IActionResult GetById(Guid id)
+    [ProducesResponseType(typeof(ApiResponse<RawCoilDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<RawCoilDto>), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ApiResponse<RawCoilDto>>> GetById(Guid id, CancellationToken cancellationToken)
     {
-        return Placeholder(id);
+        CoilManager.Shared.Results.Result<RawCoilDto> result = await rawCoilService.GetByIdAsync(id, cancellationToken);
+
+        return result.IsSuccess
+            ? Success(result.Value)
+            : ToFailure<RawCoilDto>(result.Error);
     }
 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public IActionResult Create([FromBody] CreateRawCoilRequest request)
+    [ProducesResponseType(typeof(ApiResponse<RawCoilDto>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiResponse<RawCoilDto>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<RawCoilDto>), StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<ApiResponse<RawCoilDto>>> Create(
+        [FromBody] CreateRawCoilRequest request,
+        CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(request);
+        CoilManager.Shared.Results.Result<RawCoilDto> result = await rawCoilService.CreateAsync(request, cancellationToken);
+        if (result.IsFailure)
+        {
+            return ToFailure<RawCoilDto>(result.Error);
+        }
 
-        return Placeholder();
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = result.Value.Id },
+            ApiResponse<RawCoilDto>.Ok(result.Value, "Raw coil created successfully."));
     }
 
     [HttpPut("{id:guid}")]
-    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public IActionResult Update(Guid id, [FromBody] UpdateRawCoilRequest request)
+    [ProducesResponseType(typeof(ApiResponse<RawCoilDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<RawCoilDto>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<RawCoilDto>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiResponse<RawCoilDto>), StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<ApiResponse<RawCoilDto>>> Update(
+        Guid id,
+        [FromBody] UpdateRawCoilRequest request,
+        CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(request);
+        CoilManager.Shared.Results.Result<RawCoilDto> result = await rawCoilService.UpdateAsync(id, request, cancellationToken);
 
-        return Placeholder(id);
+        return result.IsSuccess
+            ? Success(result.Value, "Raw coil updated successfully.")
+            : ToFailure<RawCoilDto>(result.Error);
     }
 
     [HttpDelete("{id:guid}")]
-    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public IActionResult Delete(Guid id)
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ApiResponse<object>>> Delete(Guid id, CancellationToken cancellationToken)
     {
-        return Placeholder(id);
+        CoilManager.Shared.Results.Result result = await rawCoilService.DeleteAsync(id, cancellationToken);
+
+        return result.IsSuccess
+            ? Success<object>(null, "Raw coil deleted successfully.")
+            : ToFailure<object>(result.Error);
     }
 
-    private ObjectResult Placeholder(Guid? id = null)
+    private ObjectResult ToFailure<T>(Error error)
     {
-        return Failure<object>(
-            StatusCodes.Status501NotImplemented,
-            "Raw Coil backend foundation is configured. Service implementation is deferred.",
-            id is null ? [] : [$"Id: {id}"]);
+        int statusCode = error.Code switch
+        {
+            "Validation" => StatusCodes.Status400BadRequest,
+            "NotFound" => StatusCodes.Status404NotFound,
+            "Conflict" => StatusCodes.Status409Conflict,
+            _ => StatusCodes.Status500InternalServerError
+        };
+
+        return Failure<T>(statusCode, error.Message, [error.Message]);
     }
 }

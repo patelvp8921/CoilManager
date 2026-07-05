@@ -1,11 +1,12 @@
 using CoilManager.Application.DTOs.RawCoils;
+using CoilManager.Domain.Enums;
 using FluentValidation;
 
 namespace CoilManager.Application.Validators.RawCoils;
 
-public sealed class CreateRawCoilRequestValidator : AbstractValidator<CreateRawCoilRequest>
+public sealed class UpdateRawCoilRequestValidator : AbstractValidator<UpdateRawCoilRequest>
 {
-    public CreateRawCoilRequestValidator()
+    public UpdateRawCoilRequestValidator()
     {
         RuleFor(request => request.CoilNumber)
             .NotEmpty()
@@ -54,7 +55,14 @@ public sealed class CreateRawCoilRequestValidator : AbstractValidator<CreateRawC
         RuleFor(request => request.WarehouseLocation)
             .MaximumLength(100);
 
+        RuleFor(request => request.Status)
+            .Must(status => Enum.IsDefined(typeof(CoilStatus), status))
+            .WithMessage("Status must be valid.");
+
         RuleFor(request => request.ReceivedDate)
             .LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow));
+
+        RuleFor(request => request.RowVersion)
+            .NotEmpty();
     }
 }

@@ -1,5 +1,4 @@
 using CoilManager.Domain.Entities;
-using CoilManager.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,6 +12,13 @@ public sealed class RawCoilConfiguration : IEntityTypeConfiguration<RawCoil>
 
         builder.HasKey(rawCoil => rawCoil.Id);
 
+        builder.Property(rawCoil => rawCoil.CoilID)
+            .HasMaxLength(20)
+            .IsRequired();
+
+        builder.HasIndex(rawCoil => rawCoil.CoilID)
+            .IsUnique();
+
         builder.Property(rawCoil => rawCoil.CoilNumber)
             .HasMaxLength(50)
             .IsRequired();
@@ -24,6 +30,16 @@ public sealed class RawCoilConfiguration : IEntityTypeConfiguration<RawCoil>
             .HasMaxLength(50)
             .IsRequired();
 
+        builder.Property(rawCoil => rawCoil.MillName)
+            .HasMaxLength(100)
+            .IsRequired();
+
+        builder.Property(rawCoil => rawCoil.MillTCNo)
+            .HasMaxLength(100);
+
+        builder.Property(rawCoil => rawCoil.BISLicNumber)
+            .HasMaxLength(100);
+
         builder.Property(rawCoil => rawCoil.SupplierName)
             .HasMaxLength(150)
             .IsRequired();
@@ -32,23 +48,26 @@ public sealed class RawCoilConfiguration : IEntityTypeConfiguration<RawCoil>
             .HasMaxLength(50)
             .IsRequired();
 
-        builder.Property(rawCoil => rawCoil.ThicknessMm)
+        builder.Property(rawCoil => rawCoil.Thickness)
             .HasPrecision(18, 3);
 
-        builder.Property(rawCoil => rawCoil.WidthMm)
+        builder.Property(rawCoil => rawCoil.Width)
             .HasPrecision(18, 3);
 
-        builder.Property(rawCoil => rawCoil.WeightMt)
+        builder.Property(rawCoil => rawCoil.Weight)
             .HasPrecision(18, 3);
+
+        builder.Property(rawCoil => rawCoil.Length)
+            .HasPrecision(18, 3);
+
+        builder.Property(rawCoil => rawCoil.WattLossPerKg)
+            .HasPrecision(18, 4);
 
         builder.Property(rawCoil => rawCoil.Status)
             .HasConversion<string>()
             .HasMaxLength(30);
 
-        builder.Property(rawCoil => rawCoil.Warehouse)
-            .HasMaxLength(100);
-
-        builder.Property(rawCoil => rawCoil.Location)
+        builder.Property(rawCoil => rawCoil.WarehouseLocation)
             .HasMaxLength(100);
 
         builder.Property(rawCoil => rawCoil.CreatedBy)
@@ -60,6 +79,7 @@ public sealed class RawCoilConfiguration : IEntityTypeConfiguration<RawCoil>
         builder.Property(rawCoil => rawCoil.DeletedBy)
             .HasMaxLength(100);
 
-        builder.HasQueryFilter(rawCoil => !rawCoil.IsDeleted);
+        builder.Property(rawCoil => rawCoil.RowVersion)
+            .IsRowVersion();
     }
 }

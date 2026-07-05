@@ -19,4 +19,19 @@ public sealed class RawCoilRepository : Repository<RawCoil>, IRawCoilRepository
         return _dbContext.RawCoils
             .FirstOrDefaultAsync(rawCoil => rawCoil.CoilNumber == coilNumber, cancellationToken);
     }
+
+    public Task<bool> ExistsByCoilNumberAsync(string coilNumber, Guid? excludingId = null, CancellationToken cancellationToken = default)
+    {
+        return _dbContext.RawCoils
+            .AnyAsync(rawCoil =>
+                rawCoil.CoilNumber == coilNumber
+                && (!excludingId.HasValue || rawCoil.Id != excludingId.Value),
+                cancellationToken);
+    }
+
+    public Task<int> CountByReceivedYearAsync(int year, CancellationToken cancellationToken = default)
+    {
+        return _dbContext.RawCoils
+            .CountAsync(rawCoil => rawCoil.ReceivedDate.Year == year, cancellationToken);
+    }
 }

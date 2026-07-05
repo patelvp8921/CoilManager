@@ -1,4 +1,6 @@
 using FluentValidation;
+using CoilManager.Application.Interfaces.Services;
+using CoilManager.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoilManager.Application;
@@ -11,6 +13,7 @@ public static class DependencyInjection
 
         services.AddAutoMapper(_ => { }, typeof(AssemblyReference).Assembly);
         services.AddValidatorsFromAssembly(typeof(AssemblyReference).Assembly);
+        services.AddScoped<IRawCoilService, RawCoilService>();
 
         return services;
     }
