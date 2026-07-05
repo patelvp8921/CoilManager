@@ -1,0 +1,6 @@
+@CoilManager.API_HostAddress = http://localhost:5170
+
+GET {{CoilManager.API_HostAddress}}/health
+Accept: application/json
+
+###
