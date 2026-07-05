@@ -6,6 +6,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CoilManager.Application\CoilManager.Application.csproj" />
     <ProjectReference Include="..\CoilManager.Domain\CoilManager.Domain.csproj" />
     <ProjectReference Include="..\CoilManager.Shared\CoilManager.Shared.csproj" />

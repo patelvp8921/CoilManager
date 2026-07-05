@@ -1,7 +1,10 @@
 using CoilManager.Application.Abstractions.Persistence;
+using CoilManager.Application.Interfaces.Persistence;
+using CoilManager.Application.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using CoilManager.Persistence.Repositories;
 
 namespace CoilManager.Persistence;
 
@@ -15,11 +18,14 @@ public static class DependencyInjection
         string connectionString = configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is required.");
 
-        services.AddDbContext<CoilManagerDbContext>(options =>
+        services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseSqlServer(connectionString);
         });
-        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<CoilManagerDbContext>());
+        services.AddScoped<CoilManagerDbContext>();
+        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
         return services;
     }
