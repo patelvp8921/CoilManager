@@ -30,6 +30,7 @@ if (app.Environment.IsDevelopment())
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 app.UseCors("AllowAngularClient");
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
