@@ -1,5 +1,7 @@
 using System.Net;
 using System.Text.Json;
+using CoilManager.Shared.Responses;
+using SharedExceptions = CoilManager.Shared.Exceptions;
 
 namespace CoilManager.API.Middleware;
 
@@ -24,29 +26,41 @@ public sealed class GlobalExceptionMiddleware
         }
         catch (Exception exception)
         {
-            _logger.LogError(exception, "Unhandled exception while processing {Method} {Path}.", context.Request.Method, context.Request.Path);
-            await WriteProblemDetailsAsync(context);
+            if (exception is SharedExceptions.ValidationException)
+            {
+                _logger.LogWarning(exception, "Validation exception while processing {Method} {Path}.", context.Request.Method, context.Request.Path);
+            }
+            else
+            {
+                _logger.LogError(exception, "Exception while processing {Method} {Path}.", context.Request.Method, context.Request.Path);
+            }
+
+            await WriteProblemDetailsAsync(context, exception);
         }
     }
 
-    private static async Task WriteProblemDetailsAsync(HttpContext context)
+    private static async Task WriteProblemDetailsAsync(HttpContext context, Exception exception)
     {
         if (context.Response.HasStarted)
         {
             return;
         }
 
-        context.Response.Clear();
-        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-        context.Response.ContentType = "application/problem+json";
-
-        var response = new
+        (HttpStatusCode statusCode, string message, IReadOnlyList<string> errors) = exception switch
         {
-            Type = "https://httpstatuses.com/500",
-            Title = "An unexpected error occurred.",
-            Status = context.Response.StatusCode,
-            TraceId = context.TraceIdentifier
+            SharedExceptions.ValidationException validationException => (HttpStatusCode.BadRequest, validationException.Message, validationException.Errors),
+            SharedExceptions.NotFoundException notFoundException => (HttpStatusCode.NotFound, notFoundException.Message, []),
+            SharedExceptions.ConflictException conflictException => (HttpStatusCode.Conflict, conflictException.Message, []),
+            SharedExceptions.UnauthorizedException unauthorizedException => (HttpStatusCode.Unauthorized, unauthorizedException.Message, []),
+            SharedExceptions.BusinessRuleException businessRuleException => ((HttpStatusCode)422, businessRuleException.Message, []),
+            _ => (HttpStatusCode.InternalServerError, "An unexpected error occurred.", [])
         };
+
+        context.Response.Clear();
+        context.Response.StatusCode = (int)statusCode;
+        context.Response.ContentType = "application/json";
+
+        ApiResponse<object> response = ApiResponse<object>.Fail(message, errors);
 
         await context.Response.WriteAsync(JsonSerializer.Serialize(response, JsonOptions));
     }

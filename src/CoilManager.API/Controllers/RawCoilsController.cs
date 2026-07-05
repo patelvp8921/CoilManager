@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CoilManager.API.Controllers;
 
-[ApiController]
 [Route("api/rawcoils")]
-public sealed class RawCoilsController : ControllerBase
+public sealed class RawCoilsController : BaseApiController
 {
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
@@ -48,10 +47,9 @@ public sealed class RawCoilsController : ControllerBase
 
     private ObjectResult Placeholder(Guid? id = null)
     {
-        return StatusCode(StatusCodes.Status501NotImplemented, new
-        {
-            Message = "Raw Coil backend foundation is configured. Service implementation is deferred.",
-            Id = id
-        });
+        return Failure<object>(
+            StatusCodes.Status501NotImplemented,
+            "Raw Coil backend foundation is configured. Service implementation is deferred.",
+            id is null ? [] : [$"Id: {id}"]);
     }
 }

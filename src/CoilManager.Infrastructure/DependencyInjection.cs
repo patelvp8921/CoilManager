@@ -1,5 +1,6 @@
 using CoilManager.Application.Interfaces.Auth;
 using CoilManager.Application.Interfaces.Services;
+using CoilManager.Infrastructure.Audit;
 using CoilManager.Infrastructure.Auth;
 using CoilManager.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ public static class DependencyInjection
         ArgumentNullException.ThrowIfNull(configuration);
 
         services.AddHttpContextAccessor();
+        services.AddScoped<IAuditLogger, AuditLogger>();
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
 

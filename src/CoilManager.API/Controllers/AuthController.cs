@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CoilManager.API.Controllers;
 
-[ApiController]
 [Route("api/[controller]")]
-public sealed class AuthController : ControllerBase
+public sealed class AuthController : BaseApiController
 {
     [AllowAnonymous]
     [HttpPost("login")]
@@ -15,9 +14,8 @@ public sealed class AuthController : ControllerBase
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        return StatusCode(StatusCodes.Status501NotImplemented, new
-        {
-            Message = "Authentication skeleton is configured. Login implementation is deferred."
-        });
+        return Failure<object>(
+            StatusCodes.Status501NotImplemented,
+            "Authentication skeleton is configured. Login implementation is deferred.");
     }
 }
