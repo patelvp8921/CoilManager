@@ -6,6 +6,7 @@ coverage/
 *.trx
 *.coverage
 *.coveragexml
+artifacts/
 
 ## User and IDE files
 .vs/
@@ -15,21 +16,32 @@ coverage/
 *.suo
 *.userosscache
 *.sln.docstates
+*.rsuser
+*.sln.DotSettings.user
 
 ## .NET
-artifacts/
 *.nupkg
 *.snupkg
 .dotnet/
+.nuget/
+.appdata/
+.localappdata/
+project.lock.json
+project.assets.json
 
 ## ASP.NET
 appsettings.Local.json
 appsettings.*.Local.json
+secrets.json
+*.Development.local.json
 
 ## Angular / Node
 node_modules/
 dist/
 .angular/
+src/CoilManager.UI/node_modules/
+src/CoilManager.UI/dist/
+src/CoilManager.UI/.angular/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
