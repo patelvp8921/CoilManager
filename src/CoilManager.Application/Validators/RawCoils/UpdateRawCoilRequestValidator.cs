@@ -16,9 +16,11 @@ public sealed class UpdateRawCoilRequestValidator : AbstractValidator<UpdateRawC
             .NotEmpty()
             .MaximumLength(50);
 
-        RuleFor(request => request.MillName)
-            .NotEmpty()
-            .MaximumLength(100);
+        RuleFor(request => request.PONumber)
+            .MaximumLength(50);
+
+        RuleFor(request => request.InvoiceNo)
+            .MaximumLength(50);
 
         RuleFor(request => request.MillTCNo)
             .MaximumLength(100);
@@ -26,13 +28,14 @@ public sealed class UpdateRawCoilRequestValidator : AbstractValidator<UpdateRawC
         RuleFor(request => request.BISLicNumber)
             .MaximumLength(100);
 
-        RuleFor(request => request.SupplierName)
-            .NotEmpty()
-            .MaximumLength(150);
+        RuleFor(request => request.SupplierId)
+            .NotEmpty();
 
-        RuleFor(request => request.Grade)
-            .NotEmpty()
-            .MaximumLength(50);
+        RuleFor(request => request.ManufacturerId)
+            .NotEmpty();
+
+        RuleFor(request => request.GradeId)
+            .NotEmpty();
 
         RuleFor(request => request.Thickness)
             .GreaterThan(0)

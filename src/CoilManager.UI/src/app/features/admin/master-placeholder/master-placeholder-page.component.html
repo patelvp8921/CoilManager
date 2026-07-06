@@ -1,0 +1,22 @@
+<section class="page-title-bar">
+  <div>
+    <h1>{{ title }}</h1>
+    <nav><a routerLink="/dashboard">Home</a><mat-icon>chevron_right</mat-icon><strong>Admin</strong></nav>
+  </div>
+
+  @if (createRoute) {
+    <a mat-flat-button [routerLink]="createRoute"><mat-icon>add</mat-icon>Create</a>
+  }
+</section>
+
+<section class="placeholder-page">
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>{{ title }}</mat-card-title>
+      <mat-card-subtitle>{{ section }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>This admin master screen is reserved for the next implementation pass.</p>
+    </mat-card-content>
+  </mat-card>
+</section>

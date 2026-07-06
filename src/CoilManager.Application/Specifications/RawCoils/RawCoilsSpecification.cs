@@ -9,6 +9,9 @@ public sealed class RawCoilsSpecification : BaseSpecification<RawCoil>
     public RawCoilsSpecification(RawCoilQueryRequest request)
         : base(BuildCriteria(request))
     {
+        AddInclude(rawCoil => rawCoil.Supplier!);
+        AddInclude(rawCoil => rawCoil.Manufacturer!);
+        AddInclude(rawCoil => rawCoil.Grade!);
         ApplySorting(request);
 
         int skip = (request.NormalizedPage - 1) * request.NormalizedPageSize;
@@ -21,9 +24,10 @@ public sealed class RawCoilsSpecification : BaseSpecification<RawCoil>
 
         Expression<Func<RawCoil, object>> keySelector = sortBy switch
         {
+            "coilid" or "rawcoilnumber" => rawCoil => rawCoil.RawCoilNumber,
             "coilnumber" => rawCoil => rawCoil.CoilNumber,
-            "grade" => rawCoil => rawCoil.Grade,
-            "manufacturer" or "millname" => rawCoil => rawCoil.MillName,
+            "grade" => rawCoil => rawCoil.Grade!.Code,
+            "manufacturer" or "millname" => rawCoil => rawCoil.Manufacturer!.Name,
             "status" => rawCoil => rawCoil.Status,
             "receiveddate" => rawCoil => rawCoil.ReceivedDate,
             "weight" => rawCoil => rawCoil.Weight,
@@ -48,12 +52,13 @@ public sealed class RawCoilsSpecification : BaseSpecification<RawCoil>
         return rawCoil =>
             (search == null
                 || rawCoil.CoilNumber.Contains(search)
+                || rawCoil.RawCoilNumber.Contains(search)
                 || rawCoil.HeatNumber.Contains(search)
-                || rawCoil.SupplierName.Contains(search)
-                || rawCoil.MillName.Contains(search)
-                || rawCoil.Grade.Contains(search))
-            && (grade == null || rawCoil.Grade == grade)
-            && (manufacturer == null || rawCoil.MillName == manufacturer)
+                || rawCoil.Supplier!.Name.Contains(search)
+                || rawCoil.Manufacturer!.Name.Contains(search)
+                || rawCoil.Grade!.Code.Contains(search))
+            && (grade == null || rawCoil.Grade!.Code == grade)
+            && (manufacturer == null || rawCoil.Manufacturer!.Name == manufacturer)
             && (!request.Status.HasValue || rawCoil.Status == request.Status.Value);
     }
 

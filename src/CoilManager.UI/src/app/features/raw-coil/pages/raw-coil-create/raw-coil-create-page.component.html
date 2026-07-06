@@ -1,0 +1,221 @@
+<section class="page-title-bar">
+  <div>
+    <h1>Create Raw Coil</h1>
+    <nav><a routerLink="/raw-coils">Raw Coils</a><mat-icon>chevron_right</mat-icon><strong>Create</strong></nav>
+  </div>
+</section>
+
+<section class="form-page two-column-layout">
+  <div class="entry-column">
+    <mat-card appearance="outlined">
+      @if (isSubmitting) {
+        <mat-progress-bar mode="indeterminate" />
+      }
+
+      @if (apiErrors.length) {
+        <div class="error-panel">
+          @for (error of apiErrors; track error) {
+            <span>{{ error }}</span>
+          }
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <mat-tab-group animationDuration="150ms" class="raw-coil-tabs">
+          <mat-tab label="General Information">
+            <div class="tab-body">
+              <section class="form-section">
+                <header>
+                  <h2>General Information</h2>
+                  <span>Identification, supplier, and receipt details.</span>
+                </header>
+
+                <div class="form-grid">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Coil ID</mat-label>
+                    <input matInput [value]="nextCoilId || 'Loading...'" readonly>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Coil Number</mat-label>
+                    <input matInput formControlName="coilNumber">
+                    <mat-error>{{ errorFor('coilNumber') }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Heat Number</mat-label>
+                    <input matInput formControlName="heatNumber">
+                    <mat-error>{{ errorFor('heatNumber') }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Supplier</mat-label>
+                    <mat-select formControlName="supplierId">
+                      @for (supplier of suppliers; track supplier.id) {
+                        <mat-option [value]="supplier.id">{{ supplier.name }} ({{ supplier.code }})</mat-option>
+                      }
+                    </mat-select>
+                    <mat-error>{{ errorFor('supplierId') }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>PO Number</mat-label>
+                    <input matInput formControlName="poNumber">
+                    <mat-error>{{ errorFor('poNumber') }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Invoice No</mat-label>
+                    <input matInput formControlName="invoiceNo">
+                    <mat-error>{{ errorFor('invoiceNo') }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Received Date</mat-label>
+                    <input matInput type="date" formControlName="receivedDate" [max]="today">
+                    <mat-error>{{ errorFor('receivedDate') }}</mat-error>
+                  </mat-form-field>
+                </div>
+              </section>
+
+              <section class="form-section">
+                <header>
+                  <h2>Material Details</h2>
+                  <span>Grade, dimensions, weight, and electrical loss.</span>
+                </header>
+
+                <div class="form-grid">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Mill</mat-label>
+                    <mat-select formControlName="manufacturerId">
+                      @for (manufacturer of manufacturers; track manufacturer.id) {
+                        <mat-option [value]="manufacturer.id">{{ manufacturer.name }} ({{ manufacturer.code }})</mat-option>
+                      }
+                    </mat-select>
+                    <mat-error>{{ errorFor('manufacturerId') }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Grade</mat-label>
+                    <mat-select formControlName="gradeId">
+                      @for (grade of grades; track grade.id) {
+                        <mat-option [value]="grade.id">{{ grade.code }}</mat-option>
+                      }
+                    </mat-select>
+                    <mat-error>{{ errorFor('gradeId') }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Thickness</mat-label>
+                    <input matInput type="number" step="0.001" formControlName="thickness">
+                    <mat-error>{{ errorFor('thickness') }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Width</mat-label>
+                    <input matInput type="number" step="0.001" formControlName="width">
+                    <mat-error>{{ errorFor('width') }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Weight</mat-label>
+                    <input matInput type="number" step="0.001" formControlName="weight">
+                    <mat-error>{{ errorFor('weight') }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Length</mat-label>
+                    <input matInput type="number" step="0.001" formControlName="length">
+                    <mat-error>{{ errorFor('length') }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Watt Loss/Kg</mat-label>
+                    <input matInput type="number" step="0.0001" formControlName="wattLossPerKg">
+                    <mat-error>{{ errorFor('wattLossPerKg') }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Mill TC No</mat-label>
+                    <input matInput formControlName="millTCNo">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>BIS Licence No</mat-label>
+                    <input matInput formControlName="bisLicNumber">
+                  </mat-form-field>
+                </div>
+              </section>
+
+              <section class="form-section">
+                <header>
+                  <h2>Status</h2>
+                  <span>Operational status for this raw coil.</span>
+                </header>
+
+                <div class="form-grid compact">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Status</mat-label>
+                    <mat-select formControlName="status">
+                      @for (option of statusOptions; track option.value) {
+                        <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                      }
+                    </mat-select>
+                    <mat-error>{{ errorFor('status') }}</mat-error>
+                  </mat-form-field>
+                </div>
+              </section>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Documents & Attachments">
+            <div class="tab-body">
+              <section class="attachment-placeholder">
+                <mat-icon>attach_file</mat-icon>
+                <div>
+                  <h2>Documents & Attachments</h2>
+                  <p>Test certificates, BIS licence files, and supporting documents will be attached here when the document module is enabled.</p>
+                </div>
+              </section>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+
+        <div class="actions">
+          <a mat-stroked-button routerLink="/raw-coils">Cancel</a>
+          <button mat-flat-button type="submit" [disabled]="isSubmitting || isLoadingLookups">Create Raw Coil</button>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+
+  <aside class="preview-column">
+    <app-coil-preview
+      [preview]="preview()"
+      [qrCodeDataUrl]="qrCodeDataUrl()"
+      [isQrGenerating]="isQrGenerating()"
+      (generateQr)="generateQrCode()"
+    />
+
+    <mat-card appearance="outlined" class="quick-actions-card">
+      <mat-card-header>
+        <mat-card-title>⚡ Quick Actions</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <button mat-stroked-button type="button" (click)="clearForm()" [disabled]="isSubmitting">
+          <mat-icon>refresh</mat-icon>
+          Clear Form
+        </button>
+        <button mat-flat-button color="primary" type="button" (click)="saveAsDraft()" [disabled]="isSubmitting || isLoadingLookups">
+          <mat-icon>save</mat-icon>
+          Save As Draft
+        </button>
+        <mat-divider />
+        <button mat-button type="button" disabled>
+          <mat-icon>qr_code_2</mat-icon>
+          Print QR
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </aside>
+</section>

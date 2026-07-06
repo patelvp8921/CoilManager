@@ -1,0 +1,156 @@
+<section class="page-title-bar">
+  <div>
+    <h1>Raw Coil Management</h1>
+    <nav aria-label="Breadcrumb">
+      <a routerLink="/dashboard">Home</a>
+      <mat-icon>chevron_right</mat-icon>
+      <strong>Raw Coils</strong>
+    </nav>
+  </div>
+
+  <a mat-flat-button routerLink="/raw-coils/create" class="primary-action">
+    <mat-icon>add</mat-icon>
+    Add Raw Coil
+  </a>
+</section>
+
+<section class="raw-coil-page">
+  <mat-card appearance="outlined" class="filter-panel">
+    <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="Coil, heat, grade, manufacturer">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Grade</mat-label>
+      <input matInput [formControl]="gradeControl" placeholder="23HP85D">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Manufacturer</mat-label>
+      <input matInput [formControl]="manufacturerControl" placeholder="Mill name">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select [formControl]="statusControl">
+        <mat-option [value]="null">All statuses</mat-option>
+        @for (option of statusOptions; track option.value) {
+          <mat-option [value]="option.value">{{ option.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="filter-actions">
+      <button mat-flat-button type="button" (click)="applyFilters()">
+        <mat-icon>search</mat-icon>
+        Search
+      </button>
+      <button mat-stroked-button type="button" (click)="resetFilters()">
+        <mat-icon>restart_alt</mat-icon>
+        Reset
+      </button>
+      <button mat-icon-button type="button" aria-label="Refresh raw coils" (click)="loadRawCoils()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+  </mat-card>
+
+  <mat-card appearance="outlined" class="table-panel">
+    @if (isLoading) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+
+    <div class="table-wrap">
+      <table mat-table matSort [dataSource]="rawCoils" (matSortChange)="onSortChange($event)">
+        <ng-container matColumnDef="rawCoilNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="rawCoilNumber">Coil ID</th>
+          <td mat-cell *matCellDef="let row">
+            <a [routerLink]="['/raw-coils', row.id]" class="coil-link">{{ row.rawCoilNumber || row.coilID }}</a>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="supplierName">
+          <th mat-header-cell *matHeaderCellDef>Supplier</th>
+          <td mat-cell *matCellDef="let row">{{ row.supplierName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="manufacturerName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="manufacturer">Manufacturer</th>
+          <td mat-cell *matCellDef="let row">{{ row.manufacturerName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="grade">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="grade">Grade</th>
+          <td mat-cell *matCellDef="let row">{{ row.grade }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="thickness">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="thickness">Thickness</th>
+          <td mat-cell *matCellDef="let row">{{ row.thickness | number:'1.2-3' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="width">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="width">Width</th>
+          <td mat-cell *matCellDef="let row">{{ row.width | number:'1.0-3' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="weight">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="weight">Weight</th>
+          <td mat-cell *matCellDef="let row">{{ row.weight | number:'1.3-3' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="status">Status</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="status-pill" [class.on-hold]="row.status === 2" [class.scrapped]="row.status === 3">
+              {{ labelForStatus(row.status) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="receivedDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="receivedDate">Received Date</th>
+          <td mat-cell *matCellDef="let row">{{ row.receivedDate | date:'dd/MM/yyyy' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="row-actions">
+              <a mat-icon-button [routerLink]="['/raw-coils', row.id]" aria-label="View raw coil">
+                <mat-icon>visibility</mat-icon>
+              </a>
+              <a mat-icon-button [routerLink]="['/raw-coils', row.id, 'edit']" aria-label="Edit raw coil">
+                <mat-icon>edit</mat-icon>
+              </a>
+              <button mat-icon-button type="button" aria-label="Delete raw coil" (click)="deleteRawCoil(row)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </span>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      @if (!isLoading && rawCoils.length === 0) {
+        <div class="empty-state">
+          <mat-icon>inventory_2</mat-icon>
+          <span>No raw coils found.</span>
+        </div>
+      }
+    </div>
+
+    <mat-paginator
+      [length]="totalCount"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[10, 25, 50, 100]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+    />
+  </mat-card>
+</section>

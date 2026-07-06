@@ -30,16 +30,54 @@ public sealed class RawCoilValidatorTests
         Assert.Contains(result.Errors, error => error.PropertyName == nameof(UpdateRawCoilRequest.Status));
     }
 
+    [Fact]
+    public async Task CreateValidator_RejectsMissingSupplierId()
+    {
+        CreateRawCoilRequest request = ValidCreateRequest() with { SupplierId = Guid.Empty };
+        CreateRawCoilRequestValidator validator = new();
+
+        FluentValidation.Results.ValidationResult result = await validator.ValidateAsync(request);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => error.PropertyName == nameof(CreateRawCoilRequest.SupplierId));
+    }
+
+    [Fact]
+    public async Task CreateValidator_RejectsMissingGradeId()
+    {
+        CreateRawCoilRequest request = ValidCreateRequest() with { GradeId = Guid.Empty };
+        CreateRawCoilRequestValidator validator = new();
+
+        FluentValidation.Results.ValidationResult result = await validator.ValidateAsync(request);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => error.PropertyName == nameof(CreateRawCoilRequest.GradeId));
+    }
+
+    [Fact]
+    public async Task CreateValidator_RejectsMissingManufacturerId()
+    {
+        CreateRawCoilRequest request = ValidCreateRequest() with { ManufacturerId = Guid.Empty };
+        CreateRawCoilRequestValidator validator = new();
+
+        FluentValidation.Results.ValidationResult result = await validator.ValidateAsync(request);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, error => error.PropertyName == nameof(CreateRawCoilRequest.ManufacturerId));
+    }
+
     private static CreateRawCoilRequest ValidCreateRequest()
     {
         return new CreateRawCoilRequest(
             "CN-001",
             "HN-001",
-            "Prime Mill",
+            "PO-001",
+            "INV-001",
             "TC-001",
             "BIS-001",
-            "Prime Supplier",
-            "23HP85D",
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Guid.NewGuid(),
             null,
             null,
             10,
@@ -54,11 +92,13 @@ public sealed class RawCoilValidatorTests
         return new UpdateRawCoilRequest(
             "CN-001",
             "HN-001",
-            "Prime Mill",
+            "PO-001",
+            "INV-001",
             "TC-001",
             "BIS-001",
-            "Prime Supplier",
-            "23HP85D",
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            Guid.NewGuid(),
             null,
             null,
             10,

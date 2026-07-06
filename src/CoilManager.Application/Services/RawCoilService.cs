@@ -6,6 +6,7 @@ using CoilManager.Application.Interfaces.Repositories;
 using CoilManager.Application.Interfaces.Services;
 using CoilManager.Application.Specifications.RawCoils;
 using CoilManager.Domain.Entities;
+using CoilManager.Domain.Enums;
 using CoilManager.Shared.Errors;
 using CoilManager.Shared.Pagination;
 using CoilManager.Shared.Results;
@@ -15,6 +16,9 @@ namespace CoilManager.Application.Services;
 
 public sealed partial class RawCoilService(
     IRawCoilRepository rawCoilRepository,
+    IRepository<Supplier> supplierRepository,
+    IRepository<Manufacturer> manufacturerRepository,
+    IRepository<Grade> gradeRepository,
     IUnitOfWork unitOfWork,
     IMapper mapper,
     IValidator<CreateRawCoilRequest> createValidator,
@@ -63,6 +67,11 @@ public sealed partial class RawCoilService(
         return Result<RawCoilDto>.Success(mapper.Map<RawCoilDto>(rawCoil));
     }
 
+    public Task<string> GetNextRawCoilNumberAsync(CancellationToken cancellationToken = default)
+    {
+        return BuildNextRawCoilNumberAsync(cancellationToken);
+    }
+
     public async Task<Result<RawCoilDto>> CreateAsync(CreateRawCoilRequest request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
@@ -78,33 +87,53 @@ public sealed partial class RawCoilService(
             return Result<RawCoilDto>.Failure(Error.Conflict($"Raw coil number '{request.CoilNumber}' already exists."));
         }
 
-        Result<GradeProperties> gradePropertiesResult = ResolveGradeProperties(request.Grade, request.Thickness, request.WattLossPerKg);
+        Supplier? supplier = supplierRepository.Query().FirstOrDefault(supplier => supplier.Id == request.SupplierId && supplier.IsActive);
+        if (supplier is null)
+        {
+            return Result<RawCoilDto>.Failure(Error.Validation("Supplier is required and must be active."));
+        }
+
+        Manufacturer? manufacturer = manufacturerRepository.Query().FirstOrDefault(manufacturer => manufacturer.Id == request.ManufacturerId && manufacturer.IsActive);
+        if (manufacturer is null)
+        {
+            return Result<RawCoilDto>.Failure(Error.Validation("Manufacturer is required and must be active."));
+        }
+
+        Grade? grade = gradeRepository.Query().FirstOrDefault(grade => grade.Id == request.GradeId && grade.IsActive);
+        if (grade is null)
+        {
+            return Result<RawCoilDto>.Failure(Error.Validation("Grade is required and must be active."));
+        }
+
+        Result<GradeProperties> gradePropertiesResult = ResolveGradeProperties(grade.Code, request.Thickness, request.WattLossPerKg);
         if (gradePropertiesResult.IsFailure)
         {
             return Result<RawCoilDto>.Failure(gradePropertiesResult.Error);
         }
 
         GradeProperties gradeProperties = gradePropertiesResult.Value;
-        int receivedYear = request.ReceivedDate.Year;
-        int nextSequence = await rawCoilRepository.CountByReceivedYearAsync(receivedYear, cancellationToken) + 1;
-        string coilId = $"RC-{receivedYear}-{nextSequence:000000}";
+        string rawCoilNumber = await BuildNextRawCoilNumberAsync(cancellationToken);
 
         RawCoil rawCoil = new(
-            coilId,
+            rawCoilNumber,
             request.CoilNumber.Trim(),
             request.HeatNumber.Trim(),
-            request.MillName.Trim(),
+            Normalize(request.PONumber),
+            Normalize(request.InvoiceNo),
             Normalize(request.MillTCNo),
             Normalize(request.BISLicNumber),
-            request.SupplierName.Trim(),
-            request.Grade.Trim(),
+            request.SupplierId,
+            request.ManufacturerId,
+            request.GradeId,
             gradeProperties.Thickness,
             request.Width ?? DefaultWidth,
             request.Weight,
             request.Length,
             gradeProperties.WattLossPerKg,
             Normalize(request.WarehouseLocation),
-            request.ReceivedDate);
+            request.ReceivedDate,
+            request.Status ?? CoilStatus.Available);
+        rawCoil.SetLookupReferences(supplier, manufacturer, grade);
 
         await rawCoilRepository.AddAsync(rawCoil, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
@@ -138,7 +167,25 @@ public sealed partial class RawCoilService(
             return Result<RawCoilDto>.Failure(Error.Conflict("The raw coil was modified by another process. Reload and try again."));
         }
 
-        Result<GradeProperties> gradePropertiesResult = ResolveGradeProperties(request.Grade, request.Thickness, request.WattLossPerKg);
+        Supplier? supplier = supplierRepository.Query().FirstOrDefault(supplier => supplier.Id == request.SupplierId && supplier.IsActive);
+        if (supplier is null)
+        {
+            return Result<RawCoilDto>.Failure(Error.Validation("Supplier is required and must be active."));
+        }
+
+        Manufacturer? manufacturer = manufacturerRepository.Query().FirstOrDefault(manufacturer => manufacturer.Id == request.ManufacturerId && manufacturer.IsActive);
+        if (manufacturer is null)
+        {
+            return Result<RawCoilDto>.Failure(Error.Validation("Manufacturer is required and must be active."));
+        }
+
+        Grade? grade = gradeRepository.Query().FirstOrDefault(grade => grade.Id == request.GradeId && grade.IsActive);
+        if (grade is null)
+        {
+            return Result<RawCoilDto>.Failure(Error.Validation("Grade is required and must be active."));
+        }
+
+        Result<GradeProperties> gradePropertiesResult = ResolveGradeProperties(grade.Code, request.Thickness, request.WattLossPerKg);
         if (gradePropertiesResult.IsFailure)
         {
             return Result<RawCoilDto>.Failure(gradePropertiesResult.Error);
@@ -149,11 +196,13 @@ public sealed partial class RawCoilService(
         rawCoil.Update(
             request.CoilNumber.Trim(),
             request.HeatNumber.Trim(),
-            request.MillName.Trim(),
+            Normalize(request.PONumber),
+            Normalize(request.InvoiceNo),
             Normalize(request.MillTCNo),
             Normalize(request.BISLicNumber),
-            request.SupplierName.Trim(),
-            request.Grade.Trim(),
+            request.SupplierId,
+            request.ManufacturerId,
+            request.GradeId,
             gradeProperties.Thickness,
             request.Width ?? DefaultWidth,
             request.Weight,
@@ -162,6 +211,7 @@ public sealed partial class RawCoilService(
             Normalize(request.WarehouseLocation),
             request.Status,
             request.ReceivedDate);
+        rawCoil.SetLookupReferences(supplier, manufacturer, grade);
 
         rawCoilRepository.Update(rawCoil);
 
@@ -218,6 +268,22 @@ public sealed partial class RawCoilService(
     private static string? Normalize(string? value)
     {
         return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+    }
+
+    private async Task<string> BuildNextRawCoilNumberAsync(CancellationToken cancellationToken)
+    {
+        int currentYear = DateTime.UtcNow.Year;
+        int nextSequence = await rawCoilRepository.CountByRawCoilYearAsync(currentYear, cancellationToken) + 1;
+        string rawCoilNumber;
+
+        do
+        {
+            rawCoilNumber = RawCoilNumberGenerator.Generate(currentYear, nextSequence);
+            nextSequence++;
+        }
+        while (await rawCoilRepository.ExistsByRawCoilNumberAsync(rawCoilNumber, cancellationToken));
+
+        return rawCoilNumber;
     }
 
     [GeneratedRegex(@"^(?<thickness>\d{2}).*?(?<loss>\d{2})[A-Za-z]?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]

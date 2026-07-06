@@ -1,0 +1,31 @@
+:host { display: block; }
+.preview-card { overflow: hidden; }
+mat-card-header { padding: 16px 16px 0; }
+mat-card-title { color: #111827; font-size: 18px; font-weight: 700; letter-spacing: 0; }
+mat-card-content { display: grid; gap: 16px; padding: 16px; }
+.coil-visual { display: grid; place-items: center; min-height: 154px; border: 1px solid #d8e0ec; border-radius: 6px; background: linear-gradient(135deg, #f8fafc, #eef3f8); }
+.coil-shell { position: relative; width: 140px; aspect-ratio: 1; border: 18px solid #a7b2c1; border-radius: 50%; background: #f8fafc; box-shadow: inset 0 0 0 14px #c6cfda, inset 0 0 0 40px #edf2f7; }
+.coil-shell span { position: absolute; inset: 18px; border: 1px solid #8d99a8; border-radius: 50%; }
+.coil-shell span:nth-child(2) { inset: 34px; }
+.coil-shell span:nth-child(3) { inset: 50px; background: #fff; }
+.preview-grid { display: grid; grid-template-columns: minmax(92px, 0.8fr) minmax(0, 1.2fr); gap: 10px 12px; align-items: center; }
+.preview-grid span { color: #667085; font-size: 12px; }
+.preview-grid strong { min-width: 0; color: #111827; font-size: 13px; font-weight: 700; overflow-wrap: anywhere; }
+mat-chip { justify-self: start; min-height: 26px; --mdc-chip-label-text-color: #111827; }
+.status-available { --mdc-chip-elevated-container-color: #dcfce7; }
+.status-reserved { --mdc-chip-elevated-container-color: #fef3c7; }
+.status-rejected { --mdc-chip-elevated-container-color: #fee2e2; }
+.status-inspection { --mdc-chip-elevated-container-color: #dbeafe; }
+.status-draft { --mdc-chip-elevated-container-color: #e5e7eb; }
+.status-default { --mdc-chip-elevated-container-color: #f1f5f9; }
+.qr-section { display: grid; gap: 12px; }
+.qr-section header { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.qr-section h3 { margin: 0; color: #111827; font-size: 15px; font-weight: 700; }
+.qr-section button { border-radius: 6px; white-space: nowrap; }
+.qr-box { display: grid; place-items: center; min-height: 174px; border: 1px dashed #aebbd0; border-radius: 6px; background: #f8fafc; }
+.qr-box img { width: min(156px, 100%); aspect-ratio: 1; }
+.qr-placeholder { display: grid; justify-items: center; gap: 8px; color: #667085; font-size: 12px; text-align: center; }
+.qr-placeholder mat-icon { color: #005eef; }
+@media (max-width: 420px) {
+  .qr-section header { align-items: stretch; flex-direction: column; }
+}

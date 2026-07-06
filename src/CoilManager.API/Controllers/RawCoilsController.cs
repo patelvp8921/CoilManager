@@ -23,6 +23,15 @@ public sealed class RawCoilsController(IRawCoilService rawCoilService) : BaseApi
             new PaginationResult(result.PageNumber, result.PageSize, result.TotalCount));
     }
 
+    [HttpGet("next-coil-id")]
+    [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<ApiResponse<string>>> GetNextCoilId(CancellationToken cancellationToken)
+    {
+        string nextCoilId = await rawCoilService.GetNextRawCoilNumberAsync(cancellationToken);
+
+        return Success(nextCoilId);
+    }
+
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(ApiResponse<RawCoilDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<RawCoilDto>), StatusCodes.Status404NotFound)]

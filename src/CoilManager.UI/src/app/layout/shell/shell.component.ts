@@ -14,6 +14,11 @@ interface NavigationItem {
   exact: boolean;
 }
 
+interface AdminNavigationItem {
+  label: string;
+  route: string;
+}
+
 @Component({
   selector: 'app-shell',
   imports: [
@@ -38,5 +43,11 @@ export class ShellComponent {
       route: '/raw-coils',
       exact: false,
     },
+  ];
+
+  protected readonly adminItems: AdminNavigationItem[] = [
+    { label: 'Suppliers', route: '/admin/suppliers' },
+    { label: 'Manufacturers', route: '/admin/manufacturers' },
+    { label: 'Grades', route: '/admin/grades' },
   ];
 }

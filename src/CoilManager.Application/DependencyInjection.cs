@@ -14,6 +14,7 @@ public static class DependencyInjection
         services.AddAutoMapper(_ => { }, typeof(AssemblyReference).Assembly);
         services.AddValidatorsFromAssembly(typeof(AssemblyReference).Assembly);
         services.AddScoped<IRawCoilService, RawCoilService>();
+        services.AddScoped<ILookupService, LookupService>();
 
         return services;
     }

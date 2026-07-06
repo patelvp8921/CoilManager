@@ -12,11 +12,11 @@ public sealed class RawCoilConfiguration : IEntityTypeConfiguration<RawCoil>
 
         builder.HasKey(rawCoil => rawCoil.Id);
 
-        builder.Property(rawCoil => rawCoil.CoilID)
+        builder.Property(rawCoil => rawCoil.RawCoilNumber)
             .HasMaxLength(20)
             .IsRequired();
 
-        builder.HasIndex(rawCoil => rawCoil.CoilID)
+        builder.HasIndex(rawCoil => rawCoil.RawCoilNumber)
             .IsUnique();
 
         builder.Property(rawCoil => rawCoil.CoilNumber)
@@ -30,9 +30,11 @@ public sealed class RawCoilConfiguration : IEntityTypeConfiguration<RawCoil>
             .HasMaxLength(50)
             .IsRequired();
 
-        builder.Property(rawCoil => rawCoil.MillName)
-            .HasMaxLength(100)
-            .IsRequired();
+        builder.Property(rawCoil => rawCoil.PONumber)
+            .HasMaxLength(50);
+
+        builder.Property(rawCoil => rawCoil.InvoiceNo)
+            .HasMaxLength(50);
 
         builder.Property(rawCoil => rawCoil.MillTCNo)
             .HasMaxLength(100);
@@ -40,13 +42,20 @@ public sealed class RawCoilConfiguration : IEntityTypeConfiguration<RawCoil>
         builder.Property(rawCoil => rawCoil.BISLicNumber)
             .HasMaxLength(100);
 
-        builder.Property(rawCoil => rawCoil.SupplierName)
-            .HasMaxLength(150)
-            .IsRequired();
+        builder.HasOne(rawCoil => rawCoil.Supplier)
+            .WithMany()
+            .HasForeignKey(rawCoil => rawCoil.SupplierId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        builder.Property(rawCoil => rawCoil.Grade)
-            .HasMaxLength(50)
-            .IsRequired();
+        builder.HasOne(rawCoil => rawCoil.Manufacturer)
+            .WithMany()
+            .HasForeignKey(rawCoil => rawCoil.ManufacturerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(rawCoil => rawCoil.Grade)
+            .WithMany()
+            .HasForeignKey(rawCoil => rawCoil.GradeId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(rawCoil => rawCoil.Thickness)
             .HasPrecision(18, 3);

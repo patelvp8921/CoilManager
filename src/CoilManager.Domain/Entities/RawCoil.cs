@@ -11,30 +11,35 @@ public sealed class RawCoil : SoftDeletableEntity
     }
 
     public RawCoil(
-        string coilId,
+        string rawCoilNumber,
         string coilNumber,
         string heatNumber,
-        string millName,
+        string? poNumber,
+        string? invoiceNo,
         string? millTcNo,
         string? bisLicNumber,
-        string supplierName,
-        string grade,
+        Guid supplierId,
+        Guid manufacturerId,
+        Guid gradeId,
         decimal thickness,
         decimal width,
         decimal weight,
         decimal length,
         decimal wattLossPerKg,
         string? warehouseLocation,
-        DateOnly receivedDate)
+        DateOnly receivedDate,
+        CoilStatus status = CoilStatus.Available)
     {
-        CoilID = coilId;
+        RawCoilNumber = rawCoilNumber;
         CoilNumber = coilNumber;
         HeatNumber = heatNumber;
-        MillName = millName;
+        PONumber = poNumber;
+        InvoiceNo = invoiceNo;
         MillTCNo = millTcNo;
         BISLicNumber = bisLicNumber;
-        SupplierName = supplierName;
-        Grade = grade;
+        SupplierId = supplierId;
+        ManufacturerId = manufacturerId;
+        GradeId = gradeId;
         Thickness = thickness;
         Width = width;
         Weight = weight;
@@ -42,17 +47,23 @@ public sealed class RawCoil : SoftDeletableEntity
         WattLossPerKg = wattLossPerKg;
         WarehouseLocation = warehouseLocation;
         ReceivedDate = receivedDate;
-        Status = CoilStatus.Available;
+        Status = status;
     }
 
-    public string CoilID { get; private set; } = string.Empty;
+    public string RawCoilNumber { get; private set; } = string.Empty;
+    public string CoilID => RawCoilNumber;
     public string CoilNumber { get; private set; } = string.Empty;
     public string HeatNumber { get; private set; } = string.Empty;
-    public string MillName { get; private set; } = string.Empty;
+    public string? PONumber { get; private set; }
+    public string? InvoiceNo { get; private set; }
     public string? MillTCNo { get; private set; }
     public string? BISLicNumber { get; private set; }
-    public string SupplierName { get; private set; } = string.Empty;
-    public string Grade { get; private set; } = string.Empty;
+    public Guid SupplierId { get; private set; }
+    public Supplier? Supplier { get; private set; }
+    public Guid ManufacturerId { get; private set; }
+    public Manufacturer? Manufacturer { get; private set; }
+    public Guid GradeId { get; private set; }
+    public Grade? Grade { get; private set; }
     public decimal Thickness { get; private set; }
     public decimal Width { get; private set; }
     public decimal Weight { get; private set; }
@@ -78,11 +89,13 @@ public sealed class RawCoil : SoftDeletableEntity
     public void Update(
         string coilNumber,
         string heatNumber,
-        string millName,
+        string? poNumber,
+        string? invoiceNo,
         string? millTcNo,
         string? bisLicNumber,
-        string supplierName,
-        string grade,
+        Guid supplierId,
+        Guid manufacturerId,
+        Guid gradeId,
         decimal thickness,
         decimal width,
         decimal weight,
@@ -94,11 +107,13 @@ public sealed class RawCoil : SoftDeletableEntity
     {
         CoilNumber = coilNumber;
         HeatNumber = heatNumber;
-        MillName = millName;
+        PONumber = poNumber;
+        InvoiceNo = invoiceNo;
         MillTCNo = millTcNo;
         BISLicNumber = bisLicNumber;
-        SupplierName = supplierName;
-        Grade = grade;
+        SupplierId = supplierId;
+        ManufacturerId = manufacturerId;
+        GradeId = gradeId;
         Thickness = thickness;
         Width = width;
         Weight = weight;
@@ -107,5 +122,12 @@ public sealed class RawCoil : SoftDeletableEntity
         WarehouseLocation = warehouseLocation;
         Status = status;
         ReceivedDate = receivedDate;
+    }
+
+    public void SetLookupReferences(Supplier supplier, Manufacturer manufacturer, Grade grade)
+    {
+        Supplier = supplier;
+        Manufacturer = manufacturer;
+        Grade = grade;
     }
 }

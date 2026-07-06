@@ -1,0 +1,66 @@
+<mat-card appearance="outlined" class="preview-card">
+  <mat-card-header>
+    <mat-card-title>📄 Coil Preview</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="coil-visual" aria-hidden="true">
+      <div class="coil-shell">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+
+    <div class="preview-grid">
+      <span>Coil ID</span>
+      <strong>{{ preview.coilId || 'Loading...' }}</strong>
+
+      <span>Supplier</span>
+      <strong>{{ preview.supplier || placeholder }}</strong>
+
+      <span>Mill</span>
+      <strong>{{ preview.manufacturer || placeholder }}</strong>
+
+      <span>Grade</span>
+      <strong>{{ preview.grade || placeholder }}</strong>
+
+      <span>Thickness</span>
+      <strong>{{ formatNumber(preview.thickness) }}</strong>
+
+      <span>Width</span>
+      <strong>{{ formatNumber(preview.width) }}</strong>
+
+      <span>Weight</span>
+      <strong>{{ formatNumber(preview.weight) }}</strong>
+
+      <span>Status</span>
+      <mat-chip [class]="statusClass(preview.status)">{{ statusLabel(preview.status) }}</mat-chip>
+    </div>
+
+    <mat-divider />
+
+    <section class="qr-section">
+      <header>
+        <h3>QR Code</h3>
+        <button mat-flat-button color="primary" type="button" (click)="generateQr.emit()" [disabled]="isQrGenerating">
+          <mat-icon>qr_code_2</mat-icon>
+          Generate QR Code
+        </button>
+      </header>
+
+      <div class="qr-box">
+        @if (isQrGenerating) {
+          <mat-progress-spinner mode="indeterminate" diameter="34" />
+        } @else if (qrCodeDataUrl) {
+          <img [src]="qrCodeDataUrl" alt="Generated coil QR code">
+        } @else {
+          <div class="qr-placeholder">
+            <mat-icon>qr_code</mat-icon>
+            <span>QR preview will appear here</span>
+          </div>
+        }
+      </div>
+    </section>
+  </mat-card-content>
+</mat-card>

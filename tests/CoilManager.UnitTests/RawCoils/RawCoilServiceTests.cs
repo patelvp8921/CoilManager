@@ -12,6 +12,10 @@ namespace CoilManager.UnitTests.RawCoils;
 
 public sealed class RawCoilServiceTests
 {
+    private static readonly Supplier TestSupplier = new("Prime Supplier", "PS");
+    private static readonly Manufacturer TestManufacturer = new("Prime Manufacturer", "PM");
+    private static readonly Grade TestGrade = new("23HP85", "23HP85");
+
     [Fact]
     public async Task CreateAsync_ReturnsConflict_WhenCoilNumberExists()
     {
@@ -47,10 +51,36 @@ public sealed class RawCoilServiceTests
         Assert.Equal(25, result.PageSize);
     }
 
+    [Fact]
+    public void RawCoilNumberGenerator_UsesRequestedFormat()
+    {
+        string rawCoilNumber = RawCoilNumberGenerator.Generate(2026, 1);
+
+        Assert.Equal("RC-2026-0000001", rawCoilNumber);
+    }
+
+    [Fact]
+    public async Task GetNextRawCoilNumberAsync_SkipsExistingGeneratedRawCoilNumber()
+    {
+        int currentYear = DateTime.UtcNow.Year;
+        FakeRawCoilRepository repository = new()
+        {
+            ExistingRawCoilNumbers = new HashSet<string> { RawCoilNumberGenerator.Generate(currentYear, 1) }
+        };
+        RawCoilService service = CreateService(repository);
+
+        string result = await service.GetNextRawCoilNumberAsync();
+
+        Assert.Equal(RawCoilNumberGenerator.Generate(currentYear, 2), result);
+    }
+
     private static RawCoilService CreateService(FakeRawCoilRepository repository)
     {
         return new RawCoilService(
             repository,
+            new FakeRepository<Supplier>([TestSupplier]),
+            new FakeRepository<Manufacturer>([TestManufacturer]),
+            new FakeRepository<Grade>([TestGrade]),
             new FakeUnitOfWork(repository),
             mapper: null!,
             new CreateRawCoilRequestValidator(),
@@ -62,11 +92,13 @@ public sealed class RawCoilServiceTests
         return new CreateRawCoilRequest(
             "CN-001",
             "HN-001",
-            "Prime Mill",
+            "PO-001",
+            "INV-001",
             "TC-001",
             "BIS-001",
-            "Prime Supplier",
-            "23HP85D",
+            TestSupplier.Id,
+            TestManufacturer.Id,
+            TestGrade.Id,
             null,
             null,
             10,
@@ -137,6 +169,66 @@ public sealed class RawCoilServiceTests
         public Task<int> CountByReceivedYearAsync(int year, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(0);
+        }
+
+        public Task<int> CountByRawCoilYearAsync(int year, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(0);
+        }
+
+        public IReadOnlySet<string> ExistingRawCoilNumbers { get; init; } = new HashSet<string>();
+
+        public Task<bool> ExistsByRawCoilNumberAsync(string rawCoilNumber, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(ExistingRawCoilNumbers.Contains(rawCoilNumber));
+        }
+    }
+
+    private sealed class FakeRepository<TEntity>(IReadOnlyList<TEntity> entities) : IRepository<TEntity>
+        where TEntity : BaseEntity
+    {
+        public IQueryable<TEntity> Query() => entities.AsQueryable();
+
+        public Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(entities.FirstOrDefault(entity => entity.Id == id));
+        }
+
+        public Task<IReadOnlyList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(entities);
+        }
+
+        public Task<IReadOnlyList<TEntity>> GetAllAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(entities);
+        }
+
+        public Task<TEntity?> FirstOrDefaultAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult<TEntity?>(entities.FirstOrDefault());
+        }
+
+        public Task<int> CountAsync(ISpecification<TEntity>? specification = null, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(entities.Count);
+        }
+
+        public Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
+        }
+
+        public void Update(TEntity entity)
+        {
+        }
+
+        public void Delete(TEntity entity)
+        {
+        }
+
+        public void Remove(TEntity entity)
+        {
         }
     }
 

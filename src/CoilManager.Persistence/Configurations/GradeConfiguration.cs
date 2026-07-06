@@ -1,0 +1,32 @@
+using CoilManager.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace CoilManager.Persistence.Configurations;
+
+public sealed class GradeConfiguration : IEntityTypeConfiguration<Grade>
+{
+    public void Configure(EntityTypeBuilder<Grade> builder)
+    {
+        builder.ToTable("Grades", "app");
+
+        builder.HasKey(grade => grade.Id);
+
+        builder.Property(grade => grade.Code)
+            .HasMaxLength(50)
+            .IsRequired();
+
+        builder.Property(grade => grade.Description)
+            .HasMaxLength(200)
+            .IsRequired();
+
+        builder.HasIndex(grade => grade.Code)
+            .IsUnique();
+
+        builder.Property(grade => grade.CreatedBy)
+            .HasMaxLength(100);
+
+        builder.Property(grade => grade.UpdatedBy)
+            .HasMaxLength(100);
+    }
+}

@@ -10,6 +10,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     : DbContext(options), IApplicationDbContext
 {
     public DbSet<RawCoil> RawCoils => Set<RawCoil>();
+    public DbSet<Supplier> Suppliers => Set<Supplier>();
+    public DbSet<Manufacturer> Manufacturers => Set<Manufacturer>();
+    public DbSet<Grade> Grades => Set<Grade>();
     public DbSet<User> Users => Set<User>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<UserRole> UserRoles => Set<UserRole>();

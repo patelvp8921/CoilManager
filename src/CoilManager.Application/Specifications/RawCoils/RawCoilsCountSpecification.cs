@@ -20,12 +20,13 @@ public sealed class RawCoilsCountSpecification : BaseSpecification<RawCoil>
         return rawCoil =>
             (search == null
                 || rawCoil.CoilNumber.Contains(search)
+                || rawCoil.RawCoilNumber.Contains(search)
                 || rawCoil.HeatNumber.Contains(search)
-                || rawCoil.SupplierName.Contains(search)
-                || rawCoil.MillName.Contains(search)
-                || rawCoil.Grade.Contains(search))
-            && (grade == null || rawCoil.Grade == grade)
-            && (manufacturer == null || rawCoil.MillName == manufacturer)
+                || rawCoil.Supplier!.Name.Contains(search)
+                || rawCoil.Manufacturer!.Name.Contains(search)
+                || rawCoil.Grade!.Code.Contains(search))
+            && (grade == null || rawCoil.Grade!.Code == grade)
+            && (manufacturer == null || rawCoil.Manufacturer!.Name == manufacturer)
             && (!request.Status.HasValue || rawCoil.Status == request.Status.Value);
     }
 
