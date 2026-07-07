@@ -7,13 +7,13 @@
 
 <section class="form-page">
   <mat-card appearance="outlined">
-    @if (isLoading || isSubmitting) {
+    @if (isLoading() || isSubmitting()) {
       <mat-progress-bar mode="indeterminate" />
     }
 
-    @if (apiErrors.length) {
+    @if (apiErrors().length) {
       <div class="error-panel">
-        @for (error of apiErrors; track error) {
+        @for (error of apiErrors(); track error) {
           <span>{{ error }}</span>
         }
       </div>
@@ -26,13 +26,13 @@
             <section class="form-section">
               <header><h2>General Information</h2><span>Identification, supplier, and receipt details.</span></header>
               <div class="form-grid">
-                <mat-form-field appearance="outline"><mat-label>Coil ID</mat-label><input matInput [value]="rawCoil?.rawCoilNumber || rawCoil?.coilID || ''" readonly></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Coil ID</mat-label><input matInput [value]="rawCoil()?.rawCoilNumber || rawCoil()?.coilID || ''" readonly></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Coil Number</mat-label><input matInput formControlName="coilNumber"><mat-error>{{ errorFor('coilNumber') }}</mat-error></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Heat Number</mat-label><input matInput formControlName="heatNumber"><mat-error>{{ errorFor('heatNumber') }}</mat-error></mat-form-field>
                 <mat-form-field appearance="outline">
                   <mat-label>Supplier</mat-label>
                   <mat-select formControlName="supplierId">
-                    @for (supplier of suppliers; track supplier.id) {
+                    @for (supplier of suppliers(); track supplier.id) {
                       <mat-option [value]="supplier.id">{{ supplier.name }} ({{ supplier.code }})</mat-option>
                     }
                   </mat-select>
@@ -50,7 +50,7 @@
                 <mat-form-field appearance="outline">
                   <mat-label>Mill</mat-label>
                   <mat-select formControlName="manufacturerId">
-                    @for (manufacturer of manufacturers; track manufacturer.id) {
+                    @for (manufacturer of manufacturers(); track manufacturer.id) {
                       <mat-option [value]="manufacturer.id">{{ manufacturer.name }} ({{ manufacturer.code }})</mat-option>
                     }
                   </mat-select>
@@ -59,7 +59,7 @@
                 <mat-form-field appearance="outline">
                   <mat-label>Grade</mat-label>
                   <mat-select formControlName="gradeId">
-                    @for (grade of grades; track grade.id) {
+                    @for (grade of grades(); track grade.id) {
                       <mat-option [value]="grade.id">{{ grade.code }}</mat-option>
                     }
                   </mat-select>
@@ -107,8 +107,8 @@
       </mat-tab-group>
 
       <div class="actions">
-        <a mat-stroked-button [routerLink]="rawCoil ? ['/raw-coils', rawCoil.id, 'view'] : '/raw-coils'">Cancel</a>
-        <button mat-flat-button type="submit" [disabled]="isSubmitting || isLoading">Save Changes</button>
+        <a mat-stroked-button [routerLink]="rawCoil() ? ['/raw-coils', rawCoil()!.id, 'view'] : '/raw-coils'">Cancel</a>
+        <button mat-flat-button type="submit" [disabled]="isSubmitting() || isLoading()">Save Changes</button>
       </div>
     </form>
   </mat-card>

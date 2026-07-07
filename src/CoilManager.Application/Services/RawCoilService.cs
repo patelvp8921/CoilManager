@@ -4,7 +4,6 @@ using CoilManager.Application.DTOs.RawCoils;
 using CoilManager.Application.Interfaces.Persistence;
 using CoilManager.Application.Interfaces.Repositories;
 using CoilManager.Application.Interfaces.Services;
-using CoilManager.Application.Specifications.RawCoils;
 using CoilManager.Domain.Entities;
 using CoilManager.Domain.Enums;
 using CoilManager.Shared.Errors;
@@ -30,21 +29,7 @@ public sealed partial class RawCoilService(
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        RawCoilsSpecification specification = new(request);
-        RawCoilsCountSpecification countSpecification = new(request);
-
-        IReadOnlyList<RawCoil> rawCoils = await rawCoilRepository.GetAllAsync(specification, cancellationToken);
-        int totalCount = await rawCoilRepository.CountAsync(countSpecification, cancellationToken);
-
-        IReadOnlyList<RawCoilDto> items = rawCoils.Count == 0
-            ? []
-            : rawCoils.Select(mapper.Map<RawCoilDto>).ToList();
-
-        return new PagedResult<RawCoilDto>(
-            items,
-            request.NormalizedPage,
-            request.NormalizedPageSize,
-            totalCount);
+        return await rawCoilRepository.GetPagedAsync(request, cancellationToken);
     }
 
     public async Task<IReadOnlyList<RawCoilDto>> GetAllAsync(CancellationToken cancellationToken = default)

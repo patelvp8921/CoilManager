@@ -16,17 +16,25 @@ public sealed class GradeConfiguration : IEntityTypeConfiguration<Grade>
             .HasMaxLength(50)
             .IsRequired();
 
-        builder.Property(grade => grade.Description)
-            .HasMaxLength(200)
+        builder.Property(grade => grade.Name)
+            .HasMaxLength(150)
             .IsRequired();
+
+        builder.Property(grade => grade.Description)
+            .HasMaxLength(250);
 
         builder.HasIndex(grade => grade.Code)
             .IsUnique();
+
+        builder.HasIndex(grade => grade.Name);
 
         builder.Property(grade => grade.CreatedBy)
             .HasMaxLength(100);
 
         builder.Property(grade => grade.UpdatedBy)
             .HasMaxLength(100);
+
+        builder.Property(grade => grade.RowVersion)
+            .IsRowVersion();
     }
 }

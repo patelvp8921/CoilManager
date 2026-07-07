@@ -1,0 +1,122 @@
+<section class="page-title-bar">
+  <div>
+    <h1>{{ routeData.title }}</h1>
+    <nav><a routerLink="/raw-coils">Home</a><mat-icon>chevron_right</mat-icon><strong>{{ routeData.title }}</strong></nav>
+  </div>
+  <a mat-flat-button [routerLink]="['/admin', routeData.type, 'create']"><mat-icon>add</mat-icon>Add {{ routeData.singular }}</a>
+</section>
+
+<section class="master-page">
+  <mat-card appearance="outlined" class="filter-panel" [class.manufacturer-master]="isManufacturer">
+    <mat-form-field appearance="outline" class="search-filter">
+      <mat-label>Search</mat-label>
+      <input matInput [formControl]="searchControl" [placeholder]="isSupplier ? 'Name, address, GST, email, contact' : isManufacturer ? 'Code, name, country, description' : 'Code, name, description'">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select [formControl]="statusControl">
+        <mat-option [value]="null">All</mat-option>
+        <mat-option [value]="true">Active</mat-option>
+        <mat-option [value]="false">Inactive</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="filter-actions">
+      <button mat-flat-button type="button" (click)="applyFilters()"><mat-icon>search</mat-icon>Search</button>
+      <button mat-stroked-button type="button" (click)="resetFilters()"><mat-icon>restart_alt</mat-icon>Reset</button>
+      <button mat-icon-button type="button" aria-label="Refresh" (click)="loadItems()"><mat-icon>refresh</mat-icon></button>
+    </div>
+  </mat-card>
+
+  <mat-card appearance="outlined" class="table-panel">
+    @if (isLoading()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+
+    <div class="table-wrap">
+      <table mat-table matSort [dataSource]="items()" (matSortChange)="onSortChange($event)">
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="code">Code</th>
+          <td mat-cell *matCellDef="let row">{{ row.code }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="name">Name</th>
+          <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="description">Description</th>
+          <td mat-cell *matCellDef="let row">{{ row.description || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="address">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="address">Address</th>
+          <td mat-cell *matCellDef="let row">{{ row.address || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="gst">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="gst">GST</th>
+          <td mat-cell *matCellDef="let row">{{ row.gst || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="email">Email</th>
+          <td mat-cell *matCellDef="let row">{{ row.email || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="contactNo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="contactNo">Contact No</th>
+          <td mat-cell *matCellDef="let row">{{ row.contactNo || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="country">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="country">Country</th>
+          <td mat-cell *matCellDef="let row">{{ row.country || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="isActive">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="isActive">Status</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="status-pill" [class.inactive]="!row.isActive">{{ row.isActive ? 'Active' : 'Inactive' }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdOn">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="createdOn">Created On</th>
+          <td mat-cell *matCellDef="let row">{{ row.createdOn | date:'dd/MM/yyyy HH:mm' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="row-actions">
+              <a mat-icon-button [routerLink]="['/admin', routeData.type, row.id, 'edit']" aria-label="Edit"><mat-icon>edit</mat-icon></a>
+              <button mat-icon-button type="button" [attr.aria-label]="row.isActive ? 'Deactivate' : 'Activate'" (click)="toggleStatus(row)">
+                <mat-icon>{{ row.isActive ? 'toggle_off' : 'toggle_on' }}</mat-icon>
+              </button>
+            </span>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      @if (!isLoading() && items().length === 0) {
+        <div class="empty-state"><mat-icon>database</mat-icon><span>No records found.</span></div>
+      }
+    </div>
+
+    <mat-paginator
+      [length]="totalCount"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[10, 25, 50, 100]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+    />
+  </mat-card>
+</section>

@@ -119,6 +119,17 @@ public sealed class RawCoilServiceTests
             return Task.FromResult<RawCoil?>(null);
         }
 
+        public Task<CoilManager.Shared.Pagination.PagedResult<RawCoilDto>> GetPagedAsync(
+            RawCoilQueryRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(new CoilManager.Shared.Pagination.PagedResult<RawCoilDto>(
+                [],
+                request.NormalizedPage,
+                request.NormalizedPageSize,
+                0));
+        }
+
         public Task<IReadOnlyList<RawCoil>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return Task.FromResult<IReadOnlyList<RawCoil>>([]);

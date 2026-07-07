@@ -26,6 +26,18 @@ public sealed class RawCoilConfiguration : IEntityTypeConfiguration<RawCoil>
         builder.HasIndex(rawCoil => rawCoil.CoilNumber)
             .IsUnique();
 
+        builder.HasIndex(rawCoil => rawCoil.CreatedAtUtc);
+
+        builder.HasIndex(rawCoil => rawCoil.ReceivedDate);
+
+        builder.HasIndex(rawCoil => rawCoil.Status);
+
+        builder.HasIndex(rawCoil => rawCoil.SupplierId);
+
+        builder.HasIndex(rawCoil => rawCoil.ManufacturerId);
+
+        builder.HasIndex(rawCoil => rawCoil.GradeId);
+
         builder.Property(rawCoil => rawCoil.HeatNumber)
             .HasMaxLength(50)
             .IsRequired();

@@ -46,8 +46,8 @@ export class ShellComponent {
   ];
 
   protected readonly adminItems: AdminNavigationItem[] = [
-    { label: 'Suppliers', route: '/admin/suppliers' },
     { label: 'Manufacturers', route: '/admin/manufacturers' },
+    { label: 'Suppliers', route: '/admin/suppliers' },
     { label: 'Grades', route: '/admin/grades' },
   ];
 }

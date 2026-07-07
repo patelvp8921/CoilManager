@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, OnInit, inject } from '@angular/core';
+import { Component, ElementRef, OnInit, inject, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -11,7 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { finalize, forkJoin } from 'rxjs';
+import { finalize, forkJoin, timeout } from 'rxjs';
 import { LookupItem } from '../../../../shared/models/lookup-item.model';
 import { LookupService } from '../../../../shared/services/lookup.service';
 import { COIL_STATUS_OPTIONS, CoilStatus, RawCoil, UpdateRawCoilRequest } from '../../models/raw-coil.model';
@@ -38,13 +38,13 @@ import { RawCoilService } from '../../services/raw-coil.service';
 export class RawCoilEditPageComponent implements OnInit {
   protected readonly statusOptions = COIL_STATUS_OPTIONS;
   protected readonly today = new Date().toISOString().slice(0, 10);
-  protected isLoading = false;
-  protected isSubmitting = false;
-  protected apiErrors: readonly string[] = [];
-  protected rawCoil?: RawCoil;
-  protected suppliers: readonly LookupItem[] = [];
-  protected manufacturers: readonly LookupItem[] = [];
-  protected grades: readonly LookupItem[] = [];
+  protected readonly isLoading = signal(false);
+  protected readonly isSubmitting = signal(false);
+  protected readonly apiErrors = signal<readonly string[]>([]);
+  protected readonly rawCoil = signal<RawCoil | null>(null);
+  protected readonly suppliers = signal<readonly LookupItem[]>([]);
+  protected readonly manufacturers = signal<readonly LookupItem[]>([]);
+  protected readonly grades = signal<readonly LookupItem[]>([]);
 
   private readonly fb = inject(FormBuilder);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
@@ -80,24 +80,28 @@ export class RawCoilEditPageComponent implements OnInit {
   }
 
   protected submit(): void {
-    this.apiErrors = [];
+    this.apiErrors.set([]);
     this.form.markAllAsTouched();
 
     if (this.form.invalid) {
-      this.apiErrors = ['Please fix the highlighted fields before updating the raw coil.'];
+      this.apiErrors.set(['Please fix the highlighted fields before updating the raw coil.']);
       this.focusFirstInvalidControl();
       return;
     }
 
-    if (!this.rawCoil) {
-      this.apiErrors = ['Raw coil details are still loading. Try again in a moment.'];
+    const rawCoil = this.rawCoil();
+    if (!rawCoil) {
+      this.apiErrors.set(['Raw coil details are still loading. Try again in a moment.']);
       return;
     }
 
-    this.isSubmitting = true;
+    this.isSubmitting.set(true);
     this.rawCoilService
-      .updateRawCoil(this.id, this.toRequest(this.rawCoil.rowVersion))
-      .pipe(finalize(() => (this.isSubmitting = false)))
+      .updateRawCoil(this.id, this.toRequest(rawCoil.rowVersion))
+      .pipe(
+        timeout(15000),
+        finalize(() => this.isSubmitting.set(false)),
+      )
       .subscribe({
         next: (rawCoil) => {
           this.snackBar.open('Raw coil updated.', 'Close', { duration: 3000 });
@@ -128,25 +132,25 @@ export class RawCoilEditPageComponent implements OnInit {
     return 'Invalid value';
   }
 
-  private loadRawCoil(): void {
-    this.loadPageData();
-  }
-
   private loadPageData(): void {
-    this.isLoading = true;
+    this.isLoading.set(true);
+    this.apiErrors.set([]);
     forkJoin({
       rawCoil: this.rawCoilService.getRawCoilById(this.id),
       suppliers: this.lookupService.getSuppliers(),
       manufacturers: this.lookupService.getManufacturers(),
       grades: this.lookupService.getGrades(),
     })
-      .pipe(finalize(() => (this.isLoading = false)))
+      .pipe(
+        timeout(15000),
+        finalize(() => this.isLoading.set(false)),
+      )
       .subscribe({
         next: ({ rawCoil, suppliers, manufacturers, grades }) => {
-          this.rawCoil = rawCoil;
-          this.suppliers = suppliers;
-          this.manufacturers = manufacturers;
-          this.grades = grades;
+          this.rawCoil.set(rawCoil);
+          this.suppliers.set(this.withCurrentLookup(suppliers, rawCoil.supplierId, rawCoil.supplierName));
+          this.manufacturers.set(this.withCurrentLookup(manufacturers, rawCoil.manufacturerId, rawCoil.manufacturerName));
+          this.grades.set(this.withCurrentLookup(grades, rawCoil.gradeId, rawCoil.grade));
           this.form.patchValue({
             coilNumber: rawCoil.coilNumber,
             heatNumber: rawCoil.heatNumber,
@@ -191,13 +195,21 @@ export class RawCoilEditPageComponent implements OnInit {
 
   private captureError(error: HttpErrorResponse): void {
     if (error.status === 0) {
-      this.apiErrors = ['The API is not reachable at http://localhost:5170. Start CoilManager.API and try again.'];
+      this.apiErrors.set(['The API is not reachable at http://localhost:5170. Start CoilManager.API and try again.']);
       return;
     }
 
     const body = error.error as { message?: string; errors?: string[] } | null;
     const message = body?.errors?.join('\n') || body?.message || error.message || 'Request failed.';
-    this.apiErrors = error.status === 409 ? [`Conflict: ${message}`] : [message];
+    this.apiErrors.set(error.status === 409 ? [`Conflict: ${message}`] : [message]);
+  }
+
+  private withCurrentLookup(items: readonly LookupItem[], id: string, name: string): readonly LookupItem[] {
+    if (!id || items.some((item) => item.id === id)) {
+      return items;
+    }
+
+    return [{ id, name, code: 'Inactive' }, ...items];
   }
 
   private focusFirstInvalidControl(): void {

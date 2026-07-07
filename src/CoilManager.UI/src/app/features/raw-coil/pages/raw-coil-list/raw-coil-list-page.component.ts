@@ -1,6 +1,6 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -67,11 +67,11 @@ export class RawCoilListPageComponent implements OnInit {
   protected readonly manufacturerControl = new FormControl('', { nonNullable: true });
   protected readonly statusControl = new FormControl<CoilStatus | null>(null);
 
-  protected rawCoils: readonly RawCoil[] = [];
-  protected totalCount = 0;
-  protected pageSize = 25;
-  protected pageIndex = 0;
-  protected isLoading = false;
+  protected readonly rawCoils = signal<readonly RawCoil[]>([]);
+  protected readonly totalCount = signal(0);
+  protected readonly pageSize = signal(25);
+  protected readonly pageIndex = signal(0);
+  protected readonly isLoading = signal(false);
 
   private readonly rawCoilService = inject(RawCoilService);
   private readonly snackBar = inject(MatSnackBar);
@@ -82,7 +82,7 @@ export class RawCoilListPageComponent implements OnInit {
   }
 
   protected applyFilters(): void {
-    this.pageIndex = 0;
+    this.pageIndex.set(0);
     this.paginator?.firstPage();
     this.loadRawCoils();
   }
@@ -92,20 +92,20 @@ export class RawCoilListPageComponent implements OnInit {
     this.gradeControl.reset('');
     this.manufacturerControl.reset('');
     this.statusControl.reset(null);
-    this.pageIndex = 0;
+    this.pageIndex.set(0);
     this.sort?.sort({ id: '', start: 'asc', disableClear: false });
     this.paginator?.firstPage();
     this.loadRawCoils();
   }
 
   protected onPageChange(event: PageEvent): void {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
+    this.pageIndex.set(event.pageIndex);
+    this.pageSize.set(event.pageSize);
     this.loadRawCoils();
   }
 
   protected onSortChange(sort: Sort): void {
-    this.pageIndex = 0;
+    this.pageIndex.set(0);
     this.paginator?.firstPage();
     this.loadRawCoils(sort);
   }
@@ -121,10 +121,10 @@ export class RawCoilListPageComponent implements OnInit {
         return;
       }
 
-      this.isLoading = true;
+      this.isLoading.set(true);
       this.rawCoilService
         .deleteRawCoil(rawCoil.id)
-        .pipe(finalize(() => (this.isLoading = false)))
+        .pipe(finalize(() => this.isLoading.set(false)))
         .subscribe({
           next: () => {
             this.snackBar.open('Raw coil deleted.', 'Close', { duration: 3000 });
@@ -141,8 +141,8 @@ export class RawCoilListPageComponent implements OnInit {
 
   protected loadRawCoils(sort: Sort | null = this.sort ?? null): void {
     const query: RawCoilQuery = {
-      page: this.pageIndex + 1,
-      pageSize: this.pageSize,
+      page: this.pageIndex() + 1,
+      pageSize: this.pageSize(),
       search: this.searchControl.value.trim(),
       grade: this.gradeControl.value.trim(),
       manufacturer: this.manufacturerControl.value.trim(),
@@ -151,14 +151,14 @@ export class RawCoilListPageComponent implements OnInit {
       sortDirection: sort?.direction,
     };
 
-    this.isLoading = true;
+    this.isLoading.set(true);
     this.rawCoilService
       .getRawCoils(query)
-      .pipe(finalize(() => (this.isLoading = false)))
+      .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: (response) => {
-          this.rawCoils = response.data;
-          this.totalCount = response.pagination.totalCount;
+          this.rawCoils.set(response.data);
+          this.totalCount.set(response.pagination.totalCount);
         },
         error: (error: HttpErrorResponse) => this.showError(error),
       });

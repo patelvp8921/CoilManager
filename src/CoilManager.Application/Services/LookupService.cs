@@ -37,7 +37,7 @@ public sealed class LookupService(
         IReadOnlyList<LookupItemDto> grades = gradeRepository.Query()
             .Where(grade => grade.IsActive)
             .OrderBy(grade => grade.Code)
-            .Select(grade => new LookupItemDto(grade.Id, grade.Code, grade.Description))
+            .Select(grade => new LookupItemDto(grade.Id, grade.Code, grade.Name))
             .ToList();
 
         return Task.FromResult(grades);

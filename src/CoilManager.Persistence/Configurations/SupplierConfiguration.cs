@@ -20,13 +20,33 @@ public sealed class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
             .HasMaxLength(30)
             .IsRequired();
 
+        builder.Property(supplier => supplier.Description)
+            .HasMaxLength(250);
+
+        builder.Property(supplier => supplier.Address)
+            .HasMaxLength(300);
+
+        builder.Property(supplier => supplier.GST)
+            .HasMaxLength(30);
+
+        builder.Property(supplier => supplier.Email)
+            .HasMaxLength(150);
+
+        builder.Property(supplier => supplier.ContactNo)
+            .HasMaxLength(30);
+
         builder.HasIndex(supplier => supplier.Code)
             .IsUnique();
+
+        builder.HasIndex(supplier => supplier.Name);
 
         builder.Property(supplier => supplier.CreatedBy)
             .HasMaxLength(100);
 
         builder.Property(supplier => supplier.UpdatedBy)
             .HasMaxLength(100);
+
+        builder.Property(supplier => supplier.RowVersion)
+            .IsRowVersion();
     }
 }
