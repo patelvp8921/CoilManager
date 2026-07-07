@@ -30,6 +30,12 @@ export const routes: Routes = [
         title: 'Create Raw Coil | CoilManager',
       },
       {
+        path: 'raw-coils/:id/view',
+        loadComponent: () =>
+          import('./features/raw-coil/pages/raw-coil-detail/raw-coil-detail-page.component').then((component) => component.RawCoilDetailPageComponent),
+        title: 'Raw Coil Detail | CoilManager',
+      },
+      {
         path: 'raw-coils/:id',
         loadComponent: () =>
           import('./features/raw-coil/pages/raw-coil-detail/raw-coil-detail-page.component').then((component) => component.RawCoilDetailPageComponent),

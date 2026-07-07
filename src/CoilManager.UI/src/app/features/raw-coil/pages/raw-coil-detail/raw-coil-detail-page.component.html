@@ -1,24 +1,27 @@
 <section class="page-title-bar">
   <div>
     <h1>Raw Coil Detail</h1>
-    <nav><a routerLink="/raw-coils">Raw Coils</a><mat-icon>chevron_right</mat-icon><strong>{{ rawCoil?.rawCoilNumber || rawCoil?.coilID || 'Detail' }}</strong></nav>
+    <nav><a routerLink="/raw-coils">Raw Coils</a><mat-icon>chevron_right</mat-icon><strong>{{ rawCoil()?.rawCoilNumber || rawCoil()?.coilID || 'Detail' }}</strong></nav>
   </div>
-  @if (rawCoil) {
-    <a mat-flat-button [routerLink]="['/raw-coils', rawCoil.id, 'edit']"><mat-icon>edit</mat-icon>Edit</a>
-  }
+  <div class="page-actions">
+    <a mat-stroked-button routerLink="/raw-coils"><mat-icon>arrow_back</mat-icon>Back</a>
+    @if (rawCoil(); as rawCoil) {
+      <a mat-flat-button [routerLink]="['/raw-coils', rawCoil.id, 'edit']"><mat-icon>edit</mat-icon>Edit</a>
+    }
+  </div>
 </section>
 
 <section class="detail-page">
   <mat-card appearance="outlined">
-    @if (isLoading) {
+    @if (isLoading()) {
       <mat-progress-bar mode="indeterminate" />
     }
 
-    @if (error) {
-      <div class="error-panel">{{ error }}</div>
+    @if (error()) {
+      <div class="error-panel">{{ error() }}</div>
     }
 
-    @if (rawCoil) {
+    @if (rawCoil(); as rawCoil) {
       <mat-card-header>
         <mat-card-title>{{ rawCoil.rawCoilNumber || rawCoil.coilID }}</mat-card-title>
         <mat-card-subtitle>{{ statusLabel(rawCoil) }}</mat-card-subtitle>

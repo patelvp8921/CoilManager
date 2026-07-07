@@ -101,7 +101,7 @@ export class RawCoilEditPageComponent implements OnInit {
       .subscribe({
         next: (rawCoil) => {
           this.snackBar.open('Raw coil updated.', 'Close', { duration: 3000 });
-          void this.router.navigate(['/raw-coils', rawCoil.id]);
+          void this.router.navigate(['/raw-coils']);
         },
         error: (error: HttpErrorResponse) => this.captureError(error),
       });

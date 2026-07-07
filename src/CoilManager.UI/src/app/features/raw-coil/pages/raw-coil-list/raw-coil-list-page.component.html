@@ -67,7 +67,7 @@
         <ng-container matColumnDef="rawCoilNumber">
           <th mat-header-cell *matHeaderCellDef mat-sort-header="rawCoilNumber">Coil ID</th>
           <td mat-cell *matCellDef="let row">
-            <a [routerLink]="['/raw-coils', row.id]" class="coil-link">{{ row.rawCoilNumber || row.coilID }}</a>
+            <a [routerLink]="['/raw-coils', row.id, 'view']" class="coil-link">{{ row.rawCoilNumber || row.coilID }}</a>
           </td>
         </ng-container>
 
@@ -119,7 +119,7 @@
           <th mat-header-cell *matHeaderCellDef>Actions</th>
           <td mat-cell *matCellDef="let row">
             <span class="row-actions">
-              <a mat-icon-button [routerLink]="['/raw-coils', row.id]" aria-label="View raw coil">
+              <a mat-icon-button [routerLink]="['/raw-coils', row.id, 'view']" aria-label="View raw coil">
                 <mat-icon>visibility</mat-icon>
               </a>
               <a mat-icon-button [routerLink]="['/raw-coils', row.id, 'edit']" aria-label="Edit raw coil">

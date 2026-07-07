@@ -107,7 +107,7 @@
       </mat-tab-group>
 
       <div class="actions">
-        <a mat-stroked-button [routerLink]="rawCoil ? ['/raw-coils', rawCoil.id] : '/raw-coils'">Cancel</a>
+        <a mat-stroked-button [routerLink]="rawCoil ? ['/raw-coils', rawCoil.id, 'view'] : '/raw-coils'">Cancel</a>
         <button mat-flat-button type="submit" [disabled]="isSubmitting || isLoading">Save Changes</button>
       </div>
     </form>

@@ -105,8 +105,10 @@ th {
 
 .row-actions {
   display: inline-flex;
+  align-items: center;
   gap: 4px;
 }
+
 
 .empty-state {
   display: grid;
