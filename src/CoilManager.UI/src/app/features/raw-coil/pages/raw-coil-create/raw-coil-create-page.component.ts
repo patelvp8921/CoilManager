@@ -72,11 +72,12 @@ export class RawCoilCreatePageComponent {
     supplierId: ['', [Validators.required]],
     manufacturerId: ['', [Validators.required]],
     gradeId: ['', [Validators.required]],
-    thickness: [null as number | null, [this.positiveOptional]],
+    thickness: [null as number | null],
+    category: [''],
+    coreLossPerKg: [null as number | null],
     width: [1250 as number | null, [this.positiveOptional]],
     weight: [null as number | null, [Validators.required, Validators.min(0.001)]],
     length: [0, [Validators.required, Validators.min(0)]],
-    wattLossPerKg: [null as number | null, [this.positiveOptional]],
     warehouseLocation: ['', [Validators.maxLength(100)]],
     status: [CoilStatus.Available, [Validators.required]],
     receivedDate: [this.today, [Validators.required, this.notFutureDate]],
@@ -87,6 +88,7 @@ export class RawCoilCreatePageComponent {
       this.qrCodeDataUrl.set('');
       this.updatePreview();
     });
+    this.form.controls.gradeId.valueChanges.pipe(takeUntilDestroyed()).subscribe((gradeId) => this.populateGradeDetails(gradeId));
     this.loadNextCoilId();
     this.loadLookups();
   }
@@ -96,7 +98,7 @@ export class RawCoilCreatePageComponent {
     this.form.markAllAsTouched();
 
     if (this.form.invalid) {
-      this.apiErrors = ['Please fix the highlighted fields before creating the raw coil.'];
+      this.apiErrors = ['Please fix the highlighted fields before creating the mother coil.'];
       this.focusFirstInvalidControl();
       return;
     }
@@ -107,8 +109,8 @@ export class RawCoilCreatePageComponent {
       .pipe(finalize(() => (this.isSubmitting = false)))
       .subscribe({
         next: (rawCoil) => {
-          this.snackBar.open('Raw coil created.', 'Close', { duration: 3000 });
-          void this.router.navigate(['/raw-coils', rawCoil.id]);
+          this.snackBar.open('Mother coil created.', 'Close', { duration: 3000 });
+          this.openCoilDetails(rawCoil.id);
         },
         error: (error: HttpErrorResponse) => this.captureError(error),
       });
@@ -149,10 +151,11 @@ export class RawCoilCreatePageComponent {
       manufacturerId: '',
       gradeId: '',
       thickness: null,
+      category: '',
+      coreLossPerKg: null,
       width: 1250,
       weight: null,
       length: 0,
-      wattLossPerKg: null,
       warehouseLocation: '',
       status: CoilStatus.Available,
       receivedDate: this.today,
@@ -177,7 +180,7 @@ export class RawCoilCreatePageComponent {
       .subscribe({
         next: (rawCoil) => {
           this.snackBar.open('Draft saved successfully', 'Close', { duration: 3000 });
-          void this.router.navigate(['/raw-coils', rawCoil.id]);
+          this.openCoilDetails(rawCoil.id);
         },
         error: (error: HttpErrorResponse) => this.captureError(error),
       });
@@ -187,11 +190,13 @@ export class RawCoilCreatePageComponent {
     this.isQrGenerating.set(true);
     const current = this.preview();
     const payload = {
-      CoilId: current.coilId,
+      MotherCoilId: current.coilId,
       Supplier: current.supplier,
       Manufacturer: current.manufacturer,
       Grade: current.grade,
       Thickness: current.thickness,
+      Category: current.category,
+      CoreLossPerKg: current.coreLossPerKg,
       Width: current.width,
       Weight: current.weight,
     };
@@ -213,17 +218,20 @@ export class RawCoilCreatePageComponent {
   private toRequest(status = this.form.controls.status.value): CreateRawCoilRequest {
     const value = this.form.getRawValue();
     return {
-      ...value,
+      coilNumber: value.coilNumber,
+      heatNumber: value.heatNumber,
+      supplierId: value.supplierId,
+      manufacturerId: value.manufacturerId,
+      gradeId: value.gradeId,
       poNumber: value.poNumber || null,
       invoiceNo: value.invoiceNo || null,
       millTCNo: value.millTCNo || null,
       bisLicNumber: value.bisLicNumber || null,
       warehouseLocation: value.warehouseLocation || null,
-      thickness: value.thickness ?? null,
       width: value.width ?? null,
-      wattLossPerKg: value.wattLossPerKg ?? null,
       weight: value.weight ?? 0,
       length: value.length ?? 0,
+      receivedDate: value.receivedDate,
       status,
     };
   }
@@ -236,6 +244,15 @@ export class RawCoilCreatePageComponent {
 
     const body = error.error as { message?: string; errors?: string[] } | null;
     this.apiErrors = body?.errors?.length ? body.errors : [body?.message || error.message || 'Request failed.'];
+  }
+
+  private openCoilDetails(rawCoilId: string): void {
+    if (!rawCoilId) {
+      this.apiErrors = ['Mother coil was saved, but the API did not return the new mother coil id.'];
+      return;
+    }
+
+    void this.router.navigateByUrl(`/mother-coils/${rawCoilId}/details`, { replaceUrl: true });
   }
 
   private loadLookups(): void {
@@ -251,6 +268,7 @@ export class RawCoilCreatePageComponent {
           this.suppliers = suppliers;
           this.manufacturers = manufacturers;
           this.grades = grades;
+          this.populateGradeDetails(this.form.controls.gradeId.value);
           this.updatePreview();
         },
         error: (error: HttpErrorResponse) => this.captureError(error),
@@ -269,12 +287,15 @@ export class RawCoilCreatePageComponent {
 
   private updatePreview(): void {
     const value = this.form.getRawValue();
+    const selectedGrade = this.selectedGrade(value.gradeId);
     this.preview.set({
       coilId: this.nextCoilId,
       supplier: this.lookupName(this.suppliers, value.supplierId),
       manufacturer: this.lookupName(this.manufacturers, value.manufacturerId),
       grade: this.lookupName(this.grades, value.gradeId),
-      thickness: value.thickness,
+      thickness: selectedGrade?.thicknessMm ?? value.thickness,
+      category: selectedGrade?.category ?? value.category,
+      coreLossPerKg: selectedGrade?.coreLossPerKg ?? value.coreLossPerKg,
       width: value.width,
       weight: value.weight,
       status: value.status,
@@ -288,6 +309,8 @@ export class RawCoilCreatePageComponent {
       manufacturer: '',
       grade: '',
       thickness: null,
+      category: '',
+      coreLossPerKg: null,
       width: 1250,
       weight: null,
       status: CoilStatus.Available,
@@ -301,6 +324,23 @@ export class RawCoilCreatePageComponent {
     }
 
     return match.code ? `${match.name} (${match.code})` : match.name;
+  }
+
+  private selectedGrade(id: string): LookupItem | undefined {
+    return this.grades.find((grade) => grade.id === id);
+  }
+
+  private populateGradeDetails(gradeId: string): void {
+    const grade = this.selectedGrade(gradeId);
+    this.form.patchValue(
+      {
+        thickness: grade?.thicknessMm ?? null,
+        category: grade?.category ?? '',
+        coreLossPerKg: grade?.coreLossPerKg ?? null,
+      },
+      { emitEvent: false },
+    );
+    this.updatePreview();
   }
 
   private validateDraftIdentifiers(): boolean {

@@ -38,9 +38,9 @@ interface AdminNavigationItem {
 export class ShellComponent {
   protected readonly navigationItems: NavigationItem[] = [
     {
-      label: 'Raw Coil Management',
+      label: 'Mother Coils',
       icon: 'inventory_2',
-      route: '/raw-coils',
+      route: '/mother-coils',
       exact: false,
     },
   ];

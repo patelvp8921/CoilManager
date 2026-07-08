@@ -1,12 +1,15 @@
+using AutoMapper;
 using CoilManager.Application.DTOs.RawCoils;
 using CoilManager.Application.Interfaces.Persistence;
 using CoilManager.Application.Interfaces.Repositories;
+using CoilManager.Application.Mappings;
 using CoilManager.Application.Services;
 using CoilManager.Application.Specifications;
 using CoilManager.Application.Validators.RawCoils;
 using CoilManager.Domain.Common;
 using CoilManager.Domain.Entities;
 using CoilManager.Shared.Results;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CoilManager.UnitTests.RawCoils;
 
@@ -14,7 +17,7 @@ public sealed class RawCoilServiceTests
 {
     private static readonly Supplier TestSupplier = new("Prime Supplier", "PS");
     private static readonly Manufacturer TestManufacturer = new("Prime Manufacturer", "PM");
-    private static readonly Grade TestGrade = new("23HP85", "23HP85");
+    private static readonly Grade TestGrade = new("23HP85D", 0.23m, 0.85m);
 
     [Fact]
     public async Task CreateAsync_ReturnsConflict_WhenCoilNumberExists()
@@ -56,7 +59,7 @@ public sealed class RawCoilServiceTests
     {
         string rawCoilNumber = RawCoilNumberGenerator.Generate(2026, 1);
 
-        Assert.Equal("RC-2026-0000001", rawCoilNumber);
+        Assert.Equal("MC-2026-0000001", rawCoilNumber);
     }
 
     [Fact]
@@ -74,21 +77,47 @@ public sealed class RawCoilServiceTests
         Assert.Equal(RawCoilNumberGenerator.Generate(currentYear, 2), result);
     }
 
-    private static RawCoilService CreateService(FakeRawCoilRepository repository)
+    [Fact]
+    public async Task CreateAsync_CopiesThicknessCategoryAndCoreLossFromGrade()
+    {
+        Grade selectedGrade = new("27HP90D", 0.27m, 0.90m);
+        FakeRawCoilRepository repository = new();
+        RawCoilService service = CreateService(repository, selectedGrade, CreateMapper());
+        CreateRawCoilRequest request = ValidCreateRequest(selectedGrade) with
+        {
+            Thickness = 0.35m,
+            WattLossPerKg = 1.50m
+        };
+
+        Result<RawCoilDto> result = await service.CreateAsync(request);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(repository.AddedRawCoil);
+        Assert.Equal(0.27m, repository.AddedRawCoil.Thickness);
+        Assert.Equal("M4", repository.AddedRawCoil.Category);
+        Assert.Equal(0.90m, repository.AddedRawCoil.CoreLossPerKg);
+        Assert.Equal(0.27m, result.Value.Thickness);
+        Assert.Equal("M4", result.Value.Category);
+        Assert.Equal(0.90m, result.Value.CoreLossPerKg);
+    }
+
+    private static RawCoilService CreateService(FakeRawCoilRepository repository, Grade? grade = null, IMapper? mapper = null)
     {
         return new RawCoilService(
             repository,
             new FakeRepository<Supplier>([TestSupplier]),
             new FakeRepository<Manufacturer>([TestManufacturer]),
-            new FakeRepository<Grade>([TestGrade]),
+            new FakeRepository<Grade>([grade ?? TestGrade]),
             new FakeUnitOfWork(repository),
-            mapper: null!,
+            mapper: mapper ?? null!,
             new CreateRawCoilRequestValidator(),
             new UpdateRawCoilRequestValidator());
     }
 
-    private static CreateRawCoilRequest ValidCreateRequest()
+    private static CreateRawCoilRequest ValidCreateRequest(Grade? grade = null)
     {
+        grade ??= TestGrade;
+
         return new CreateRawCoilRequest(
             "CN-001",
             "HN-001",
@@ -98,7 +127,7 @@ public sealed class RawCoilServiceTests
             "BIS-001",
             TestSupplier.Id,
             TestManufacturer.Id,
-            TestGrade.Id,
+            grade.Id,
             null,
             null,
             10,
@@ -108,9 +137,16 @@ public sealed class RawCoilServiceTests
             DateOnly.FromDateTime(DateTime.UtcNow));
     }
 
+    private static IMapper CreateMapper()
+    {
+        MapperConfiguration configuration = new(config => config.AddProfile<RawCoilMappingProfile>(), NullLoggerFactory.Instance);
+        return configuration.CreateMapper();
+    }
+
     private sealed class FakeRawCoilRepository : IRawCoilRepository
     {
         public bool CoilNumberExists { get; init; }
+        public RawCoil? AddedRawCoil { get; private set; }
 
         public IQueryable<RawCoil> Query() => Array.Empty<RawCoil>().AsQueryable();
 
@@ -152,6 +188,7 @@ public sealed class RawCoilServiceTests
 
         public Task AddAsync(RawCoil entity, CancellationToken cancellationToken = default)
         {
+            AddedRawCoil = entity;
             return Task.CompletedTask;
         }
 

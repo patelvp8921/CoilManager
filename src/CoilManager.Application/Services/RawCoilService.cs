@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using AutoMapper;
 using CoilManager.Application.DTOs.RawCoils;
 using CoilManager.Application.Interfaces.Persistence;
@@ -13,7 +12,7 @@ using FluentValidation;
 
 namespace CoilManager.Application.Services;
 
-public sealed partial class RawCoilService(
+public sealed class RawCoilService(
     IRawCoilRepository rawCoilRepository,
     IRepository<Supplier> supplierRepository,
     IRepository<Manufacturer> manufacturerRepository,
@@ -46,7 +45,7 @@ public sealed partial class RawCoilService(
         RawCoil? rawCoil = await rawCoilRepository.GetByIdAsync(id, cancellationToken);
         if (rawCoil is null)
         {
-            return Result<RawCoilDto>.Failure(Error.NotFound($"Raw coil '{id}' was not found."));
+            return Result<RawCoilDto>.Failure(Error.NotFound($"Mother coil '{id}' was not found."));
         }
 
         return Result<RawCoilDto>.Success(mapper.Map<RawCoilDto>(rawCoil));
@@ -69,7 +68,7 @@ public sealed partial class RawCoilService(
 
         if (await rawCoilRepository.ExistsByCoilNumberAsync(request.CoilNumber, cancellationToken: cancellationToken))
         {
-            return Result<RawCoilDto>.Failure(Error.Conflict($"Raw coil number '{request.CoilNumber}' already exists."));
+            return Result<RawCoilDto>.Failure(Error.Conflict($"Mother coil number '{request.CoilNumber}' already exists."));
         }
 
         Supplier? supplier = supplierRepository.Query().FirstOrDefault(supplier => supplier.Id == request.SupplierId && supplier.IsActive);
@@ -90,13 +89,6 @@ public sealed partial class RawCoilService(
             return Result<RawCoilDto>.Failure(Error.Validation("Grade is required and must be active."));
         }
 
-        Result<GradeProperties> gradePropertiesResult = ResolveGradeProperties(grade.Code, request.Thickness, request.WattLossPerKg);
-        if (gradePropertiesResult.IsFailure)
-        {
-            return Result<RawCoilDto>.Failure(gradePropertiesResult.Error);
-        }
-
-        GradeProperties gradeProperties = gradePropertiesResult.Value;
         string rawCoilNumber = await BuildNextRawCoilNumberAsync(cancellationToken);
 
         RawCoil rawCoil = new(
@@ -110,11 +102,12 @@ public sealed partial class RawCoilService(
             request.SupplierId,
             request.ManufacturerId,
             request.GradeId,
-            gradeProperties.Thickness,
+            grade.ThicknessMm,
+            grade.Category,
+            grade.CoreLossPerKg,
             request.Width ?? DefaultWidth,
             request.Weight,
             request.Length,
-            gradeProperties.WattLossPerKg,
             Normalize(request.WarehouseLocation),
             request.ReceivedDate,
             request.Status ?? CoilStatus.Available);
@@ -139,17 +132,17 @@ public sealed partial class RawCoilService(
         RawCoil? rawCoil = await rawCoilRepository.GetByIdAsync(id, cancellationToken);
         if (rawCoil is null)
         {
-            return Result<RawCoilDto>.Failure(Error.NotFound($"Raw coil '{id}' was not found."));
+            return Result<RawCoilDto>.Failure(Error.NotFound($"Mother coil '{id}' was not found."));
         }
 
         if (await rawCoilRepository.ExistsByCoilNumberAsync(request.CoilNumber, id, cancellationToken))
         {
-            return Result<RawCoilDto>.Failure(Error.Conflict($"Raw coil number '{request.CoilNumber}' already exists."));
+            return Result<RawCoilDto>.Failure(Error.Conflict($"Mother coil number '{request.CoilNumber}' already exists."));
         }
 
         if (!RowVersionMatches(rawCoil.RowVersion, request.RowVersion))
         {
-            return Result<RawCoilDto>.Failure(Error.Conflict("The raw coil was modified by another process. Reload and try again."));
+            return Result<RawCoilDto>.Failure(Error.Conflict("The mother coil was modified by another process. Reload and try again."));
         }
 
         Supplier? supplier = supplierRepository.Query().FirstOrDefault(supplier => supplier.Id == request.SupplierId && supplier.IsActive);
@@ -170,14 +163,6 @@ public sealed partial class RawCoilService(
             return Result<RawCoilDto>.Failure(Error.Validation("Grade is required and must be active."));
         }
 
-        Result<GradeProperties> gradePropertiesResult = ResolveGradeProperties(grade.Code, request.Thickness, request.WattLossPerKg);
-        if (gradePropertiesResult.IsFailure)
-        {
-            return Result<RawCoilDto>.Failure(gradePropertiesResult.Error);
-        }
-
-        GradeProperties gradeProperties = gradePropertiesResult.Value;
-
         rawCoil.Update(
             request.CoilNumber.Trim(),
             request.HeatNumber.Trim(),
@@ -188,11 +173,12 @@ public sealed partial class RawCoilService(
             request.SupplierId,
             request.ManufacturerId,
             request.GradeId,
-            gradeProperties.Thickness,
+            grade.ThicknessMm,
+            grade.Category,
+            grade.CoreLossPerKg,
             request.Width ?? DefaultWidth,
             request.Weight,
             request.Length,
-            gradeProperties.WattLossPerKg,
             Normalize(request.WarehouseLocation),
             request.Status,
             request.ReceivedDate);
@@ -210,31 +196,13 @@ public sealed partial class RawCoilService(
         RawCoil? rawCoil = await rawCoilRepository.GetByIdAsync(id, cancellationToken);
         if (rawCoil is null)
         {
-            return Result.Failure(Error.NotFound($"Raw coil '{id}' was not found."));
+            return Result.Failure(Error.NotFound($"Mother coil '{id}' was not found."));
         }
 
         rawCoilRepository.Delete(rawCoil);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
-    }
-
-    private static Result<GradeProperties> ResolveGradeProperties(string grade, decimal? requestedThickness, decimal? requestedWattLoss)
-    {
-        Match match = GradePattern().Match(grade);
-        if (match.Success
-            && decimal.TryParse(match.Groups["thickness"].Value, out decimal gradeThickness)
-            && decimal.TryParse(match.Groups["loss"].Value, out decimal gradeLoss))
-        {
-            return Result<GradeProperties>.Success(new GradeProperties(gradeThickness / 100m, gradeLoss / 100m));
-        }
-
-        if (requestedThickness.HasValue && requestedWattLoss.HasValue)
-        {
-            return Result<GradeProperties>.Success(new GradeProperties(requestedThickness.Value, requestedWattLoss.Value));
-        }
-
-        return Result<GradeProperties>.Failure(Error.Validation("Grade must contain derivable thickness and watt loss, or both values must be provided."));
     }
 
     private static bool RowVersionMatches(byte[] currentRowVersion, string requestRowVersion)
@@ -271,8 +239,4 @@ public sealed partial class RawCoilService(
         return rawCoilNumber;
     }
 
-    [GeneratedRegex(@"^(?<thickness>\d{2}).*?(?<loss>\d{2})[A-Za-z]?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
-    private static partial Regex GradePattern();
-
-    private sealed record GradeProperties(decimal Thickness, decimal WattLossPerKg);
 }

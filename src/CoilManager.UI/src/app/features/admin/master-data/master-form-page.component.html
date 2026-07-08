@@ -2,7 +2,7 @@
   <div>
     <h1>{{ routeData.title }}</h1>
     <nav>
-      <a routerLink="/raw-coils">Home</a>
+      <a routerLink="/mother-coils">Home</a>
       <mat-icon>chevron_right</mat-icon>
       <a [routerLink]="['/admin', routeData.type]">{{ routeData.singular }}s</a>
       <mat-icon>chevron_right</mat-icon>
@@ -30,27 +30,56 @@
       <div class="form-grid">
         @if (!isSupplier) {
           <mat-form-field appearance="outline">
-            <mat-label>Code</mat-label>
+            <mat-label>{{ isGrade ? 'Grade' : 'Code' }}</mat-label>
             <input matInput formControlName="code" autocomplete="off">
             @if (form.controls.code.hasError('required')) {
-              <mat-error>Code is required.</mat-error>
+              <mat-error>{{ isGrade ? 'Grade is required.' : 'Code is required.' }}</mat-error>
             }
             @if (form.controls.code.hasError('maxlength')) {
-              <mat-error>Code must be 50 characters or less.</mat-error>
+              <mat-error>{{ isGrade ? 'Grade' : 'Code' }} must be 50 characters or less.</mat-error>
             }
           </mat-form-field>
         }
 
-        <mat-form-field appearance="outline">
-          <mat-label>Name</mat-label>
-          <input matInput formControlName="name" autocomplete="off">
-          @if (form.controls.name.hasError('required')) {
-            <mat-error>Name is required.</mat-error>
-          }
-          @if (form.controls.name.hasError('maxlength')) {
-            <mat-error>Name must be 150 characters or less.</mat-error>
-          }
-        </mat-form-field>
+        @if (!isGrade) {
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" autocomplete="off">
+            @if (form.controls.name.hasError('required')) {
+              <mat-error>Name is required.</mat-error>
+            }
+            @if (form.controls.name.hasError('maxlength')) {
+              <mat-error>Name must be 150 characters or less.</mat-error>
+            }
+          </mat-form-field>
+        }
+
+        @if (isGrade) {
+          <mat-form-field appearance="outline">
+            <mat-label>Thickness(mm)</mat-label>
+            <mat-select formControlName="thicknessMm">
+              @for (option of thicknessOptions; track option.thicknessMm) {
+                <mat-option [value]="option.thicknessMm">{{ option.thicknessMm | number:'1.2-2' }}</mat-option>
+              }
+            </mat-select>
+            @if (form.controls.thicknessMm.hasError('required')) {
+              <mat-error>Thickness(mm) is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Category</mat-label>
+            <input matInput formControlName="category" readonly>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Core Loss/Kg</mat-label>
+            <input matInput type="number" step="0.0001" formControlName="coreLossPerKg">
+            @if (form.controls.coreLossPerKg.hasError('required') || form.controls.coreLossPerKg.hasError('min')) {
+              <mat-error>Core Loss/Kg must be greater than 0.</mat-error>
+            }
+          </mat-form-field>
+        }
 
         @if (isManufacturer) {
           <mat-form-field appearance="outline">
@@ -99,13 +128,15 @@
           </mat-form-field>
         }
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description" rows="4"></textarea>
-          @if (form.controls.description.hasError('maxlength')) {
-            <mat-error>Description must be 250 characters or less.</mat-error>
-          }
-        </mat-form-field>
+        @if (!isGrade) {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="4"></textarea>
+            @if (form.controls.description.hasError('maxlength')) {
+              <mat-error>Description must be 250 characters or less.</mat-error>
+            }
+          </mat-form-field>
+        }
       </div>
 
       <mat-slide-toggle formControlName="isActive">Active</mat-slide-toggle>

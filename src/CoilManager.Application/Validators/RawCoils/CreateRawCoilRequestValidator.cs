@@ -38,10 +38,6 @@ public sealed class CreateRawCoilRequestValidator : AbstractValidator<CreateRawC
         RuleFor(request => request.GradeId)
             .NotEmpty();
 
-        RuleFor(request => request.Thickness)
-            .GreaterThan(0)
-            .When(request => request.Thickness.HasValue);
-
         RuleFor(request => request.Width)
             .GreaterThan(0)
             .When(request => request.Width.HasValue);
@@ -52,10 +48,6 @@ public sealed class CreateRawCoilRequestValidator : AbstractValidator<CreateRawC
 
         RuleFor(request => request.Length)
             .GreaterThanOrEqualTo(0);
-
-        RuleFor(request => request.WattLossPerKg)
-            .GreaterThan(0)
-            .When(request => request.WattLossPerKg.HasValue);
 
         RuleFor(request => request.WarehouseLocation)
             .MaximumLength(100);

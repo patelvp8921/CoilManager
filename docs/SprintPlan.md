@@ -12,4 +12,4 @@ Establish the production-ready solution foundation for CoilManager.
 
 ## Deferred
 
-Raw Coil CRUD, authentication workflows, reporting, and other business modules are intentionally deferred.
+Mother Coil CRUD, authentication workflows, reporting, and other business modules are intentionally deferred.

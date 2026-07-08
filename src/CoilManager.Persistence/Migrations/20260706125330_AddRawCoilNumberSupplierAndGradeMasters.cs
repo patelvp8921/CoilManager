@@ -151,7 +151,7 @@ namespace CoilManager.Persistence.Migrations
                 WITH Numbered AS (
                     SELECT Id,
                            CONCAT(
-                               'RC-',
+                               'MC-',
                                YEAR(ReceivedDate),
                                '-',
                                RIGHT(CONCAT('0000000', ROW_NUMBER() OVER (PARTITION BY YEAR(ReceivedDate) ORDER BY CreatedAtUtc, Id)), 7)

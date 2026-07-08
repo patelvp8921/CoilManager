@@ -37,10 +37,12 @@ export interface RawCoil {
   gradeId: string;
   grade: string;
   thickness: number;
+  thicknessMm?: number;
+  category: string;
   width: number;
   weight: number;
   length: number;
-  wattLossPerKg: number;
+  coreLossPerKg: number;
   warehouseLocation?: string | null;
   status: CoilStatus;
   receivedDate: string;
@@ -64,11 +66,9 @@ export interface CreateRawCoilRequest {
   supplierId: string;
   manufacturerId: string;
   gradeId: string;
-  thickness?: number | null;
   width?: number | null;
   weight: number;
   length: number;
-  wattLossPerKg?: number | null;
   warehouseLocation?: string | null;
   receivedDate: string;
   status?: CoilStatus;

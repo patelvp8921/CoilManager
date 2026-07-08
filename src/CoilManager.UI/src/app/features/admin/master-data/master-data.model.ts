@@ -18,6 +18,10 @@ export interface MasterRecord {
   gst?: string | null;
   email?: string | null;
   contactNo?: string | null;
+  grade?: string | null;
+  thicknessMm?: number | null;
+  category?: string | null;
+  coreLossPerKg?: number | null;
   isActive: boolean;
   createdOn: string;
   createdBy?: string | null;
@@ -35,6 +39,9 @@ export interface MasterRequest {
   gst?: string | null;
   email?: string | null;
   contactNo?: string | null;
+  grade?: string | null;
+  thicknessMm?: number | null;
+  coreLossPerKg?: number | null;
   isActive: boolean;
   rowVersion?: string | null;
 }

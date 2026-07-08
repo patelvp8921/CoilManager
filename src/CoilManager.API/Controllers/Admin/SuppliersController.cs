@@ -127,7 +127,7 @@ public sealed class SuppliersController : MasterDataController<Supplier>
 
         return Success<object>(
             new { deletedRawCoils, deletedSuppliers },
-            "Inactive suppliers and linked raw coils were deleted successfully.");
+            "Inactive suppliers and linked mother coils were deleted successfully.");
     }
 
     private static string GenerateSupplierCode(string name)

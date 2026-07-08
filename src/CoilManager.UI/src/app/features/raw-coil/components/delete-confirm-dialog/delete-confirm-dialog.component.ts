@@ -9,10 +9,10 @@ import { MatIconModule } from '@angular/material/icon';
   template: `
     <h2 mat-dialog-title>
       <mat-icon>delete</mat-icon>
-      Delete raw coil
+      Delete mother coil
     </h2>
     <mat-dialog-content>
-      Delete <strong>{{ data.coilNumber }}</strong>? This marks the coil as deleted.
+      Delete <strong>{{ data.coilNumber }}</strong>? This marks the mother coil as deleted.
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-button type="button" (click)="dialogRef.close(false)">Cancel</button>

@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -21,6 +21,7 @@ import { MasterRecord, MasterRouteData } from './master-data.model';
   selector: 'app-master-list-page',
   imports: [
     DatePipe,
+    DecimalPipe,
     ReactiveFormsModule,
     RouterLink,
     MatButtonModule,
@@ -48,11 +49,12 @@ export class MasterListPageComponent implements OnInit {
   protected readonly routeData = inject(ActivatedRoute).snapshot.data as MasterRouteData;
   protected readonly isManufacturer = this.routeData.type === 'manufacturers';
   protected readonly isSupplier = this.routeData.type === 'suppliers';
+  protected readonly isGrade = this.routeData.type === 'grades';
   protected readonly displayedColumns = this.isSupplier
     ? ['name', 'address', 'gst', 'email', 'contactNo', 'isActive', 'createdOn', 'actions']
     : this.isManufacturer
       ? ['code', 'name', 'country', 'description', 'isActive', 'createdOn', 'actions']
-      : ['code', 'name', 'description', 'isActive', 'createdOn', 'actions'];
+      : ['grade', 'thicknessMm', 'category', 'coreLossPerKg', 'isActive', 'createdOn', 'actions'];
   protected totalCount = 0;
   protected pageSize = 25;
   protected pageIndex = 0;

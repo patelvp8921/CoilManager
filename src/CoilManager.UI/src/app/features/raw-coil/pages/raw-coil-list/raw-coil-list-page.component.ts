@@ -55,6 +55,8 @@ export class RawCoilListPageComponent implements OnInit {
     'manufacturerName',
     'grade',
     'thickness',
+    'category',
+    'coreLossPerKg',
     'width',
     'weight',
     'status',
@@ -127,7 +129,7 @@ export class RawCoilListPageComponent implements OnInit {
         .pipe(finalize(() => this.isLoading.set(false)))
         .subscribe({
           next: () => {
-            this.snackBar.open('Raw coil deleted.', 'Close', { duration: 3000 });
+            this.snackBar.open('Mother coil deleted.', 'Close', { duration: 3000 });
             this.loadRawCoils();
           },
           error: (error: HttpErrorResponse) => this.showError(error),

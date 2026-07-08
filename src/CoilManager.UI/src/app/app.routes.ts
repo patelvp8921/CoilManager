@@ -18,34 +18,68 @@ export const routes: Routes = [
         title: 'Dashboard | CoilManager',
       },
       {
-        path: 'raw-coils/create',
+        path: 'mother-coils/create',
         loadComponent: () =>
           import('./features/raw-coil/pages/raw-coil-create/raw-coil-create-page.component').then((component) => component.RawCoilCreatePageComponent),
-        title: 'Create Raw Coil | CoilManager',
+        title: 'Create Mother Coil | CoilManager',
+      },
+      {
+        path: 'mother-coils/:id/edit',
+        loadComponent: () =>
+          import('./features/raw-coil/pages/raw-coil-edit/raw-coil-edit-page.component').then((component) => component.RawCoilEditPageComponent),
+        title: 'Mother Coil Details | CoilManager',
+      },
+      {
+        path: 'mother-coils/:id/details',
+        loadComponent: () =>
+          import('./features/raw-coil/pages/raw-coil-edit/raw-coil-edit-page.component').then((component) => component.RawCoilEditPageComponent),
+        title: 'Mother Coil Details | CoilManager',
+      },
+      {
+        path: 'mother-coils/:id/view',
+        redirectTo: (route) => `/mother-coils/${route.params['id']}/details`,
+        pathMatch: 'full',
+      },
+      {
+        path: 'mother-coils/:id',
+        redirectTo: '/mother-coils/:id/details',
+        pathMatch: 'full',
+      },
+      {
+        path: 'mother-coils',
+        loadComponent: () =>
+          import('./features/raw-coil/pages/raw-coil-list/raw-coil-list-page.component').then((component) => component.RawCoilListPageComponent),
+        title: 'Mother Coils | CoilManager',
+      },
+      {
+        path: 'raw-coils/create',
+        redirectTo: '/mother-coils/create',
+        pathMatch: 'full',
       },
       {
         path: 'raw-coils/:id/edit',
-        loadComponent: () =>
-          import('./features/raw-coil/pages/raw-coil-edit/raw-coil-edit-page.component').then((component) => component.RawCoilEditPageComponent),
-        title: 'Edit Raw Coil | CoilManager',
+        redirectTo: (route) => `/mother-coils/${route.params['id']}/edit`,
+        pathMatch: 'full',
+      },
+      {
+        path: 'raw-coils/:id/details',
+        redirectTo: (route) => `/mother-coils/${route.params['id']}/details`,
+        pathMatch: 'full',
       },
       {
         path: 'raw-coils/:id/view',
-        loadComponent: () =>
-          import('./features/raw-coil/pages/raw-coil-detail/raw-coil-detail-page.component').then((component) => component.RawCoilDetailPageComponent),
-        title: 'Raw Coil Detail | CoilManager',
+        redirectTo: (route) => `/mother-coils/${route.params['id']}/details`,
+        pathMatch: 'full',
       },
       {
         path: 'raw-coils/:id',
-        loadComponent: () =>
-          import('./features/raw-coil/pages/raw-coil-detail/raw-coil-detail-page.component').then((component) => component.RawCoilDetailPageComponent),
-        title: 'Raw Coil Detail | CoilManager',
+        redirectTo: (route) => `/mother-coils/${route.params['id']}/details`,
+        pathMatch: 'full',
       },
       {
         path: 'raw-coils',
-        loadComponent: () =>
-          import('./features/raw-coil/pages/raw-coil-list/raw-coil-list-page.component').then((component) => component.RawCoilListPageComponent),
-        title: 'Raw Coils | CoilManager',
+        redirectTo: '/mother-coils',
+        pathMatch: 'full',
       },
       {
         path: 'admin/manufacturers/create',

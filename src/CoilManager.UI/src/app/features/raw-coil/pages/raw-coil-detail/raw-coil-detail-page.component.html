@@ -1,12 +1,12 @@
 <section class="page-title-bar">
   <div>
-    <h1>Raw Coil Detail</h1>
-    <nav><a routerLink="/raw-coils">Raw Coils</a><mat-icon>chevron_right</mat-icon><strong>{{ rawCoil()?.rawCoilNumber || rawCoil()?.coilID || 'Detail' }}</strong></nav>
+    <h1>Mother Coil Details</h1>
+    <nav><a routerLink="/mother-coils">Mother Coils</a><mat-icon>chevron_right</mat-icon><strong>{{ rawCoil()?.rawCoilNumber || rawCoil()?.coilID || 'Detail' }}</strong></nav>
   </div>
   <div class="page-actions">
-    <a mat-stroked-button routerLink="/raw-coils"><mat-icon>arrow_back</mat-icon>Back</a>
+    <a mat-stroked-button routerLink="/mother-coils"><mat-icon>arrow_back</mat-icon>Back</a>
     @if (rawCoil(); as rawCoil) {
-      <a mat-flat-button [routerLink]="['/raw-coils', rawCoil.id, 'edit']"><mat-icon>edit</mat-icon>Edit</a>
+      <a mat-flat-button [routerLink]="['/mother-coils', rawCoil.id, 'edit']"><mat-icon>edit</mat-icon>Edit</a>
     }
   </div>
 </section>
@@ -28,18 +28,19 @@
       </mat-card-header>
       <mat-card-content>
         <dl>
-          <div><dt>Coil Number</dt><dd>{{ rawCoil.coilNumber }}</dd></div>
+          <div><dt>Mother Coil Number</dt><dd>{{ rawCoil.coilNumber }}</dd></div>
           <div><dt>Heat Number</dt><dd>{{ rawCoil.heatNumber }}</dd></div>
           <div><dt>PO Number</dt><dd>{{ rawCoil.poNumber || '-' }}</dd></div>
           <div><dt>Invoice No</dt><dd>{{ rawCoil.invoiceNo || '-' }}</dd></div>
           <div><dt>Mill</dt><dd>{{ rawCoil.manufacturerName }}</dd></div>
           <div><dt>Supplier</dt><dd>{{ rawCoil.supplierName }}</dd></div>
           <div><dt>Grade</dt><dd>{{ rawCoil.grade }}</dd></div>
-          <div><dt>Thickness</dt><dd>{{ rawCoil.thickness | number:'1.2-3' }}</dd></div>
+          <div><dt>Thickness(mm)</dt><dd>{{ rawCoil.thickness | number:'1.2-3' }}</dd></div>
+          <div><dt>Category</dt><dd>{{ rawCoil.category || '-' }}</dd></div>
+          <div><dt>Core Loss/Kg</dt><dd>{{ rawCoil.coreLossPerKg | number:'1.2-4' }}</dd></div>
           <div><dt>Width</dt><dd>{{ rawCoil.width | number:'1.0-3' }}</dd></div>
           <div><dt>Weight</dt><dd>{{ rawCoil.weight | number:'1.3-3' }}</dd></div>
           <div><dt>Length</dt><dd>{{ rawCoil.length | number:'1.3-3' }}</dd></div>
-          <div><dt>Watt Loss/Kg</dt><dd>{{ rawCoil.wattLossPerKg | number:'1.2-4' }}</dd></div>
           <div><dt>Mill TC No</dt><dd>{{ rawCoil.millTCNo || '-' }}</dd></div>
           <div><dt>BIS Licence</dt><dd>{{ rawCoil.bisLicNumber || '-' }}</dd></div>
           <div><dt>Received Date</dt><dd>{{ rawCoil.receivedDate | date:'dd/MM/yyyy' }}</dd></div>

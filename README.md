@@ -2,7 +2,7 @@
 
 CoilManager is an enterprise ERP foundation for coil inventory and processing workflows. Sprint 1 focuses on the production skeleton only: layered .NET backend, Angular application shell, database script folders, documentation, and verification tests.
 
-Business modules, including Raw Coil CRUD, are intentionally deferred.
+Business modules, including Mother Coil CRUD, are intentionally deferred.
 
 ## Tech Stack
 
@@ -110,7 +110,7 @@ Replace the default JWT signing key before deploying outside local development.
 - API bootstrap, health endpoint, global exception middleware, and Serilog configuration are in place.
 - Persistence bootstrap and `CoilManagerDbContext` are in place.
 - Angular workspace and application shell are in place.
-- Raw Coil UI placeholder routes are in place without CRUD behavior.
+- Mother Coil UI placeholder routes are in place without CRUD behavior.
 - Database script folder structure and placeholder scripts are in place.
 - Architecture, API, database, coding, branching, and sprint docs are in place.
 - Unit and integration test projects include architecture and placeholder coverage.

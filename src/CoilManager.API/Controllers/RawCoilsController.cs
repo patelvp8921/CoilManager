@@ -61,7 +61,7 @@ public sealed class RawCoilsController(IRawCoilService rawCoilService) : BaseApi
         return CreatedAtAction(
             nameof(GetById),
             new { id = result.Value.Id },
-            ApiResponse<RawCoilDto>.Ok(result.Value, "Raw coil created successfully."));
+            ApiResponse<RawCoilDto>.Ok(result.Value, "Mother coil created successfully."));
     }
 
     [HttpPut("{id:guid}")]
@@ -77,7 +77,7 @@ public sealed class RawCoilsController(IRawCoilService rawCoilService) : BaseApi
         CoilManager.Shared.Results.Result<RawCoilDto> result = await rawCoilService.UpdateAsync(id, request, cancellationToken);
 
         return result.IsSuccess
-            ? Success(result.Value, "Raw coil updated successfully.")
+            ? Success(result.Value, "Mother coil updated successfully.")
             : ToFailure<RawCoilDto>(result.Error);
     }
 
@@ -89,7 +89,7 @@ public sealed class RawCoilsController(IRawCoilService rawCoilService) : BaseApi
         CoilManager.Shared.Results.Result result = await rawCoilService.DeleteAsync(id, cancellationToken);
 
         return result.IsSuccess
-            ? Success<object>(null, "Raw coil deleted successfully.")
+            ? Success<object>(null, "Mother coil deleted successfully.")
             : ToFailure<object>(result.Error);
     }
 

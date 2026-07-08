@@ -9,6 +9,6 @@ public static class RawCoilNumberGenerator
             throw new ArgumentOutOfRangeException(nameof(sequence), "Sequence must be greater than zero.");
         }
 
-        return $"RC-{year}-{sequence:0000000}";
+        return $"MC-{year}-{sequence:0000000}";
     }
 }

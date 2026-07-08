@@ -20,9 +20,14 @@ public abstract class MasterDataController<TEntity>(ApplicationDbContext dbConte
     protected virtual string? GetGST(TEntity entity) => null;
     protected virtual string? GetEmail(TEntity entity) => null;
     protected virtual string? GetContactNo(TEntity entity) => null;
+    protected virtual string? GetGrade(TEntity entity) => null;
+    protected virtual decimal? GetThicknessMm(TEntity entity) => null;
+    protected virtual string? GetCategory(TEntity entity) => null;
+    protected virtual decimal? GetCoreLossPerKg(TEntity entity) => null;
     protected virtual Task<bool> IsUsedByRawCoilAsync(Guid id, CancellationToken cancellationToken) => Task.FromResult(false);
     protected virtual string GetCreateCode(CreateMasterRequest request) => request.Code?.Trim() ?? string.Empty;
     protected virtual string GetUpdateCode(TEntity entity, UpdateMasterRequest request) => request.Code?.Trim() ?? string.Empty;
+    protected virtual string DuplicateCodeMessage(string code) => $"Code '{code}' already exists.";
 
     [HttpGet]
     [ProducesResponseType(typeof(ApiPagedResponse<MasterDto>), StatusCodes.Status200OK)]
@@ -66,7 +71,7 @@ public abstract class MasterDataController<TEntity>(ApplicationDbContext dbConte
         [FromBody] CreateMasterRequest request,
         CancellationToken cancellationToken)
     {
-        string? validation = Validate(request.Code, request.Name);
+        string? validation = Validate(request);
         if (validation is not null)
         {
             return Failure<MasterDto>(StatusCodes.Status400BadRequest, validation, [validation]);
@@ -75,7 +80,8 @@ public abstract class MasterDataController<TEntity>(ApplicationDbContext dbConte
         string code = GetCreateCode(request);
         if (await Masters.AnyAsync(entity => entity.Code == code, cancellationToken))
         {
-            return Failure<MasterDto>(StatusCodes.Status409Conflict, $"Code '{code}' already exists.", [$"Code '{code}' already exists."]);
+            string duplicateMessage = DuplicateCodeMessage(code);
+            return Failure<MasterDto>(StatusCodes.Status409Conflict, duplicateMessage, [duplicateMessage]);
         }
 
         TEntity entity = CreateEntity(request, code);
@@ -96,7 +102,7 @@ public abstract class MasterDataController<TEntity>(ApplicationDbContext dbConte
         [FromBody] UpdateMasterRequest request,
         CancellationToken cancellationToken)
     {
-        string? validation = Validate(request.Code, request.Name);
+        string? validation = Validate(request);
         if (validation is not null)
         {
             return Failure<MasterDto>(StatusCodes.Status400BadRequest, validation, [validation]);
@@ -111,7 +117,8 @@ public abstract class MasterDataController<TEntity>(ApplicationDbContext dbConte
         string code = GetUpdateCode(entity, request);
         if (await Masters.AnyAsync(candidate => candidate.Id != id && candidate.Code == code, cancellationToken))
         {
-            return Failure<MasterDto>(StatusCodes.Status409Conflict, $"Code '{code}' already exists.", [$"Code '{code}' already exists."]);
+            string duplicateMessage = DuplicateCodeMessage(code);
+            return Failure<MasterDto>(StatusCodes.Status409Conflict, duplicateMessage, [duplicateMessage]);
         }
 
         if (!string.IsNullOrWhiteSpace(request.RowVersion))
@@ -130,8 +137,8 @@ public abstract class MasterDataController<TEntity>(ApplicationDbContext dbConte
         {
             return Failure<MasterDto>(
                 StatusCodes.Status409Conflict,
-                "This master record is used by one or more raw coils and cannot be deactivated.",
-                ["This master record is used by one or more raw coils and cannot be deactivated."]);
+                "This master record is used by one or more mother coils and cannot be deactivated.",
+                ["This master record is used by one or more mother coils and cannot be deactivated."]);
         }
 
         UpdateEntity(entity, request, code);
@@ -184,8 +191,8 @@ public abstract class MasterDataController<TEntity>(ApplicationDbContext dbConte
         {
             return Failure<MasterDto>(
                 StatusCodes.Status409Conflict,
-                "This master record is used by one or more raw coils and cannot be deactivated.",
-                ["This master record is used by one or more raw coils and cannot be deactivated."]);
+                "This master record is used by one or more mother coils and cannot be deactivated.",
+                ["This master record is used by one or more mother coils and cannot be deactivated."]);
         }
 
         SetActive(entity, isActive);
@@ -246,6 +253,16 @@ public abstract class MasterDataController<TEntity>(ApplicationDbContext dbConte
         return string.IsNullOrWhiteSpace(name) ? "Name is required." : null;
     }
 
+    protected virtual string? Validate(CreateMasterRequest request)
+    {
+        return Validate(request.Code, request.Name);
+    }
+
+    protected virtual string? Validate(UpdateMasterRequest request)
+    {
+        return Validate(request.Code, request.Name);
+    }
+
     private MasterDto ToDto(TEntity entity)
     {
         return new MasterDto(
@@ -263,6 +280,10 @@ public abstract class MasterDataController<TEntity>(ApplicationDbContext dbConte
             entity.CreatedBy,
             entity.UpdatedAtUtc,
             entity.UpdatedBy,
-            Convert.ToBase64String(entity.RowVersion));
+            Convert.ToBase64String(entity.RowVersion),
+            GetGrade(entity),
+            GetThicknessMm(entity),
+            GetCategory(entity),
+            GetCoreLossPerKg(entity));
     }
 }

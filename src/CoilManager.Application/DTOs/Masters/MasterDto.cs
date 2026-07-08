@@ -15,4 +15,8 @@ public sealed record MasterDto(
     string? CreatedBy,
     DateTimeOffset? ModifiedOn,
     string? ModifiedBy,
-    string RowVersion);
+    string RowVersion,
+    string? Grade = null,
+    decimal? ThicknessMm = null,
+    string? Category = null,
+    decimal? CoreLossPerKg = null);

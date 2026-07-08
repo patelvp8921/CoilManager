@@ -72,6 +72,16 @@ public sealed class RawCoilConfiguration : IEntityTypeConfiguration<RawCoil>
         builder.Property(rawCoil => rawCoil.Thickness)
             .HasPrecision(18, 3);
 
+        builder.Property(rawCoil => rawCoil.ThicknessMm)
+            .HasPrecision(18, 3);
+
+        builder.Property(rawCoil => rawCoil.Category)
+            .HasMaxLength(10)
+            .IsRequired();
+
+        builder.Property(rawCoil => rawCoil.CoreLossPerKg)
+            .HasPrecision(18, 4);
+
         builder.Property(rawCoil => rawCoil.Width)
             .HasPrecision(18, 3);
 

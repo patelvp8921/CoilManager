@@ -47,17 +47,28 @@ public static class DatabaseSeeder
 
     private static async Task SeedGradesAsync(ApplicationDbContext dbContext, CancellationToken cancellationToken)
     {
-        if (await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.AnyAsync(dbContext.Grades, cancellationToken))
-        {
-            return;
-        }
+        Domain.Entities.Grade[] grades =
+        [
+            new("23HP85D", 0.23m, 0.85m),
+            new("23HP90D", 0.23m, 0.90m),
+            new("23HP95D", 0.23m, 0.95m)
+        ];
 
-        await dbContext.Grades.AddRangeAsync(
-            [
-                new Domain.Entities.Grade("23HP85", "23HP85"),
-                new Domain.Entities.Grade("23HP90", "23HP90"),
-                new Domain.Entities.Grade("23HP95", "23HP95")
-            ],
-            cancellationToken);
+        foreach (Domain.Entities.Grade seedGrade in grades)
+        {
+            Domain.Entities.Grade? existing = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(
+                dbContext.Grades,
+                grade => grade.Code == seedGrade.Code,
+                cancellationToken);
+
+            if (existing is null)
+            {
+                await dbContext.Grades.AddAsync(seedGrade, cancellationToken);
+            }
+            else
+            {
+                existing.Update(seedGrade.Code, seedGrade.ThicknessMm, seedGrade.CoreLossPerKg, existing.IsActive);
+            }
+        }
     }
 }

@@ -13,6 +13,8 @@ export interface CoilPreviewModel {
   manufacturer: string;
   grade: string;
   thickness: number | null;
+  category: string;
+  coreLossPerKg: number | null;
   width: number | null;
   weight: number | null;
   status: CoilStatus;

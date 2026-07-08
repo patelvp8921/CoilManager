@@ -1,7 +1,7 @@
 <section class="page-title-bar">
   <div>
-    <h1>Edit Raw Coil</h1>
-    <nav><a routerLink="/raw-coils">Raw Coils</a><mat-icon>chevron_right</mat-icon><strong>Edit</strong></nav>
+    <h1>Mother Coil Details</h1>
+    <nav><a routerLink="/mother-coils">Mother Coils</a><mat-icon>chevron_right</mat-icon><strong>{{ rawCoil()?.rawCoilNumber || rawCoil()?.coilID || 'Details' }}</strong></nav>
   </div>
 </section>
 
@@ -26,7 +26,7 @@
             <section class="form-section">
               <header><h2>General Information</h2><span>Identification, supplier, and receipt details.</span></header>
               <div class="form-grid">
-                <mat-form-field appearance="outline"><mat-label>Coil ID</mat-label><input matInput [value]="rawCoil()?.rawCoilNumber || rawCoil()?.coilID || ''" readonly></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Mother Coil ID</mat-label><input matInput [value]="rawCoil()?.rawCoilNumber || rawCoil()?.coilID || ''" readonly></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Coil Number</mat-label><input matInput formControlName="coilNumber"><mat-error>{{ errorFor('coilNumber') }}</mat-error></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Heat Number</mat-label><input matInput formControlName="heatNumber"><mat-error>{{ errorFor('heatNumber') }}</mat-error></mat-form-field>
                 <mat-form-field appearance="outline">
@@ -65,18 +65,19 @@
                   </mat-select>
                   <mat-error>{{ errorFor('gradeId') }}</mat-error>
                 </mat-form-field>
-                <mat-form-field appearance="outline"><mat-label>Thickness</mat-label><input matInput type="number" step="0.001" formControlName="thickness"><mat-error>{{ errorFor('thickness') }}</mat-error></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Thickness(mm)</mat-label><input matInput type="number" formControlName="thickness" readonly></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Category</mat-label><input matInput formControlName="category" readonly></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Width</mat-label><input matInput type="number" step="0.001" formControlName="width"><mat-error>{{ errorFor('width') }}</mat-error></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Weight</mat-label><input matInput type="number" step="0.001" formControlName="weight"><mat-error>{{ errorFor('weight') }}</mat-error></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Length</mat-label><input matInput type="number" step="0.001" formControlName="length"><mat-error>{{ errorFor('length') }}</mat-error></mat-form-field>
-                <mat-form-field appearance="outline"><mat-label>Watt Loss/Kg</mat-label><input matInput type="number" step="0.0001" formControlName="wattLossPerKg"><mat-error>{{ errorFor('wattLossPerKg') }}</mat-error></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Core Loss/Kg</mat-label><input matInput type="number" formControlName="coreLossPerKg" readonly></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Mill TC No</mat-label><input matInput formControlName="millTCNo"></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>BIS Licence No</mat-label><input matInput formControlName="bisLicNumber"></mat-form-field>
               </div>
             </section>
 
             <section class="form-section">
-              <header><h2>Status</h2><span>Operational status for this raw coil.</span></header>
+              <header><h2>Status</h2><span>Operational status for this mother coil.</span></header>
               <div class="form-grid compact">
                 <mat-form-field appearance="outline">
                   <mat-label>Status</mat-label>
@@ -107,8 +108,8 @@
       </mat-tab-group>
 
       <div class="actions">
-        <a mat-stroked-button [routerLink]="rawCoil() ? ['/raw-coils', rawCoil()!.id, 'view'] : '/raw-coils'">Cancel</a>
-        <button mat-flat-button type="submit" [disabled]="isSubmitting() || isLoading()">Save Changes</button>
+        <a mat-stroked-button routerLink="/mother-coils">Cancel</a>
+        <button mat-flat-button type="submit" [disabled]="isSubmitting() || isLoading()">Save</button>
       </div>
     </form>
   </mat-card>

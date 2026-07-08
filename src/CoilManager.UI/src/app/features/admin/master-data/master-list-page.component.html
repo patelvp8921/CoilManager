@@ -1,7 +1,7 @@
 <section class="page-title-bar">
   <div>
     <h1>{{ routeData.title }}</h1>
-    <nav><a routerLink="/raw-coils">Home</a><mat-icon>chevron_right</mat-icon><strong>{{ routeData.title }}</strong></nav>
+    <nav><a routerLink="/mother-coils">Home</a><mat-icon>chevron_right</mat-icon><strong>{{ routeData.title }}</strong></nav>
   </div>
   <a mat-flat-button [routerLink]="['/admin', routeData.type, 'create']"><mat-icon>add</mat-icon>Add {{ routeData.singular }}</a>
 </section>
@@ -45,6 +45,26 @@
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef mat-sort-header="name">Name</th>
           <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="grade">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="grade">Grade</th>
+          <td mat-cell *matCellDef="let row">{{ row.grade || row.code }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="thicknessMm">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="thicknessMm">Thickness(mm)</th>
+          <td mat-cell *matCellDef="let row">{{ row.thicknessMm | number:'1.2-3' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="category">Category</th>
+          <td mat-cell *matCellDef="let row">{{ row.category || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="coreLossPerKg">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="coreLossPerKg">Core Loss/Kg</th>
+          <td mat-cell *matCellDef="let row">{{ row.coreLossPerKg | number:'1.2-4' }}</td>
         </ng-container>
 
         <ng-container matColumnDef="description">

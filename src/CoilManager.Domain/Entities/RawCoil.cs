@@ -22,10 +22,11 @@ public sealed class RawCoil : SoftDeletableEntity
         Guid manufacturerId,
         Guid gradeId,
         decimal thickness,
+        string category,
+        decimal coreLossPerKg,
         decimal width,
         decimal weight,
         decimal length,
-        decimal wattLossPerKg,
         string? warehouseLocation,
         DateOnly receivedDate,
         CoilStatus status = CoilStatus.Available)
@@ -41,10 +42,13 @@ public sealed class RawCoil : SoftDeletableEntity
         ManufacturerId = manufacturerId;
         GradeId = gradeId;
         Thickness = thickness;
+        ThicknessMm = thickness;
+        Category = category;
+        CoreLossPerKg = coreLossPerKg;
         Width = width;
         Weight = weight;
         Length = length;
-        WattLossPerKg = wattLossPerKg;
+        WattLossPerKg = coreLossPerKg;
         WarehouseLocation = warehouseLocation;
         ReceivedDate = receivedDate;
         Status = status;
@@ -65,6 +69,9 @@ public sealed class RawCoil : SoftDeletableEntity
     public Guid GradeId { get; private set; }
     public Grade? Grade { get; private set; }
     public decimal Thickness { get; private set; }
+    public decimal ThicknessMm { get; private set; }
+    public string Category { get; private set; } = string.Empty;
+    public decimal CoreLossPerKg { get; private set; }
     public decimal Width { get; private set; }
     public decimal Weight { get; private set; }
     public decimal Length { get; private set; }
@@ -97,10 +104,11 @@ public sealed class RawCoil : SoftDeletableEntity
         Guid manufacturerId,
         Guid gradeId,
         decimal thickness,
+        string category,
+        decimal coreLossPerKg,
         decimal width,
         decimal weight,
         decimal length,
-        decimal wattLossPerKg,
         string? warehouseLocation,
         CoilStatus status,
         DateOnly receivedDate)
@@ -115,10 +123,13 @@ public sealed class RawCoil : SoftDeletableEntity
         ManufacturerId = manufacturerId;
         GradeId = gradeId;
         Thickness = thickness;
+        ThicknessMm = thickness;
+        Category = category;
+        CoreLossPerKg = coreLossPerKg;
         Width = width;
         Weight = weight;
         Length = length;
-        WattLossPerKg = wattLossPerKg;
+        WattLossPerKg = coreLossPerKg;
         WarehouseLocation = warehouseLocation;
         Status = status;
         ReceivedDate = receivedDate;

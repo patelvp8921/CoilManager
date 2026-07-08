@@ -45,10 +45,11 @@ public sealed class RawCoilRepository : Repository<RawCoil>, IRawCoilRepository
                 rawCoil.GradeId,
                 rawCoil.Grade!.Code,
                 rawCoil.Thickness,
+                rawCoil.Category,
                 rawCoil.Width,
                 rawCoil.Weight,
                 rawCoil.Length,
-                rawCoil.WattLossPerKg,
+                rawCoil.CoreLossPerKg,
                 rawCoil.WarehouseLocation,
                 rawCoil.Status,
                 rawCoil.ReceivedDate,
@@ -78,10 +79,12 @@ public sealed class RawCoilRepository : Repository<RawCoil>, IRawCoilRepository
             row.GradeId,
             row.Grade,
             row.Thickness,
+            row.Thickness,
+            row.Category,
             row.Width,
             row.Weight,
             row.Length,
-            row.WattLossPerKg,
+            row.CoreLossPerKg,
             row.WarehouseLocation,
             row.Status,
             row.ReceivedDate,
@@ -146,15 +149,17 @@ public sealed class RawCoilRepository : Repository<RawCoil>, IRawCoilRepository
 
     public Task<int> CountByRawCoilYearAsync(int year, CancellationToken cancellationToken = default)
     {
-        string prefix = $"RC-{year}-";
+        string prefix = $"MC-{year}-";
 
         return _dbContext.RawCoils
+            .IgnoreQueryFilters()
             .CountAsync(rawCoil => rawCoil.RawCoilNumber.StartsWith(prefix), cancellationToken);
     }
 
     public Task<bool> ExistsByRawCoilNumberAsync(string rawCoilNumber, CancellationToken cancellationToken = default)
     {
         return _dbContext.RawCoils
+            .IgnoreQueryFilters()
             .AnyAsync(rawCoil => rawCoil.RawCoilNumber == rawCoilNumber, cancellationToken);
     }
 
@@ -235,10 +240,11 @@ public sealed class RawCoilRepository : Repository<RawCoil>, IRawCoilRepository
         Guid GradeId,
         string Grade,
         decimal Thickness,
+        string Category,
         decimal Width,
         decimal Weight,
         decimal Length,
-        decimal WattLossPerKg,
+        decimal CoreLossPerKg,
         string? WarehouseLocation,
         Domain.Enums.CoilStatus Status,
         DateOnly ReceivedDate,

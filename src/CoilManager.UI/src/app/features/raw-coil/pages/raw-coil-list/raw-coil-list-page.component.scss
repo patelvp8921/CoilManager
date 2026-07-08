@@ -48,16 +48,17 @@ nav strong,
 .filter-panel {
   display: grid;
   grid-template-columns: minmax(220px, 1.5fr) repeat(3, minmax(160px, 1fr)) auto;
-  gap: 12px;
+  gap: 10px;
   align-items: center;
-  margin-bottom: 16px;
-  padding: 16px;
+  margin: 12px 0;
+  padding: 13px 12px;
 }
 
 .filter-actions {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 56px;
 }
 
 .table-panel {

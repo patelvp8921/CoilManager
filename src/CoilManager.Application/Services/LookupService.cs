@@ -15,7 +15,7 @@ public sealed class LookupService(
         IReadOnlyList<LookupItemDto> suppliers = supplierRepository.Query()
             .Where(supplier => supplier.IsActive)
             .OrderBy(supplier => supplier.Name)
-            .Select(supplier => new LookupItemDto(supplier.Id, supplier.Code, supplier.Name))
+            .Select(supplier => new LookupItemDto(supplier.Id, supplier.Code, supplier.Name, null, null, null))
             .ToList();
 
         return Task.FromResult(suppliers);
@@ -26,7 +26,7 @@ public sealed class LookupService(
         IReadOnlyList<LookupItemDto> manufacturers = manufacturerRepository.Query()
             .Where(manufacturer => manufacturer.IsActive)
             .OrderBy(manufacturer => manufacturer.Name)
-            .Select(manufacturer => new LookupItemDto(manufacturer.Id, manufacturer.Code, manufacturer.Name))
+            .Select(manufacturer => new LookupItemDto(manufacturer.Id, manufacturer.Code, manufacturer.Name, null, null, null))
             .ToList();
 
         return Task.FromResult(manufacturers);
@@ -37,7 +37,7 @@ public sealed class LookupService(
         IReadOnlyList<LookupItemDto> grades = gradeRepository.Query()
             .Where(grade => grade.IsActive)
             .OrderBy(grade => grade.Code)
-            .Select(grade => new LookupItemDto(grade.Id, grade.Code, grade.Name))
+            .Select(grade => new LookupItemDto(grade.Id, grade.Code, grade.Name, grade.ThicknessMm, grade.Category, grade.CoreLossPerKg))
             .ToList();
 
         return Task.FromResult(grades);

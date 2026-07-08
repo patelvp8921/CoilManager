@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 export class DashboardPageComponent {
   protected readonly metrics = [
     {
-      label: 'Raw coil inventory',
+      label: 'Mother coil inventory',
       value: '0',
       icon: 'inventory_2',
     },

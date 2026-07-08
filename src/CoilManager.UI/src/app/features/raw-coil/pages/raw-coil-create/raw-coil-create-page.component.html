@@ -1,7 +1,7 @@
 <section class="page-title-bar">
   <div>
-    <h1>Create Raw Coil</h1>
-    <nav><a routerLink="/raw-coils">Raw Coils</a><mat-icon>chevron_right</mat-icon><strong>Create</strong></nav>
+    <h1>Create Mother Coil</h1>
+    <nav><a routerLink="/mother-coils">Mother Coils</a><mat-icon>chevron_right</mat-icon><strong>Create</strong></nav>
   </div>
 </section>
 
@@ -32,7 +32,7 @@
 
                 <div class="form-grid">
                   <mat-form-field appearance="outline">
-                    <mat-label>Coil ID</mat-label>
+                    <mat-label>Mother Coil ID</mat-label>
                     <input matInput [value]="nextCoilId || 'Loading...'" readonly>
                   </mat-form-field>
 
@@ -106,9 +106,13 @@
                   </mat-form-field>
 
                   <mat-form-field appearance="outline">
-                    <mat-label>Thickness</mat-label>
-                    <input matInput type="number" step="0.001" formControlName="thickness">
-                    <mat-error>{{ errorFor('thickness') }}</mat-error>
+                    <mat-label>Thickness(mm)</mat-label>
+                    <input matInput type="number" formControlName="thickness" readonly>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Category</mat-label>
+                    <input matInput formControlName="category" readonly>
                   </mat-form-field>
 
                   <mat-form-field appearance="outline">
@@ -130,9 +134,8 @@
                   </mat-form-field>
 
                   <mat-form-field appearance="outline">
-                    <mat-label>Watt Loss/Kg</mat-label>
-                    <input matInput type="number" step="0.0001" formControlName="wattLossPerKg">
-                    <mat-error>{{ errorFor('wattLossPerKg') }}</mat-error>
+                    <mat-label>Core Loss/Kg</mat-label>
+                    <input matInput type="number" formControlName="coreLossPerKg" readonly>
                   </mat-form-field>
 
                   <mat-form-field appearance="outline">
@@ -150,7 +153,7 @@
               <section class="form-section">
                 <header>
                   <h2>Status</h2>
-                  <span>Operational status for this raw coil.</span>
+                  <span>Operational status for this mother coil.</span>
                 </header>
 
                 <div class="form-grid compact">
@@ -182,8 +185,8 @@
         </mat-tab-group>
 
         <div class="actions">
-          <a mat-stroked-button routerLink="/raw-coils">Cancel</a>
-          <button mat-flat-button type="submit" [disabled]="isSubmitting || isLoadingLookups">Create Raw Coil</button>
+          <a mat-stroked-button routerLink="/mother-coils">Cancel</a>
+          <button mat-flat-button type="submit" [disabled]="isSubmitting || isLoadingLookups">Create Mother Coil</button>
         </div>
       </form>
     </mat-card>

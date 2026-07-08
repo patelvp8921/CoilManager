@@ -10,4 +10,7 @@ public sealed record UpdateMasterRequest(
     string? Email,
     string? ContactNo,
     bool IsActive,
-    string? RowVersion);
+    string? RowVersion,
+    string? Grade = null,
+    decimal? ThicknessMm = null,
+    decimal? CoreLossPerKg = null);

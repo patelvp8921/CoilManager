@@ -36,7 +36,7 @@ export class RawCoilDetailPageComponent implements OnInit {
           this.error.set('');
 
           if (!id) {
-            this.error.set('Raw coil id is missing from the route.');
+            this.error.set('Mother coil id is missing from the route.');
             return EMPTY;
           }
 
@@ -66,13 +66,13 @@ export class RawCoilDetailPageComponent implements OnInit {
       }
 
       const body = error.error as { message?: string; errors?: string[] } | null;
-      return body?.errors?.join('\n') || body?.message || error.message || 'Raw coil could not be loaded.';
+      return body?.errors?.join('\n') || body?.message || error.message || 'Mother coil could not be loaded.';
     }
 
     if (error instanceof Error && error.name === 'TimeoutError') {
-      return 'Raw coil detail request timed out. Please check that the API is running and try again.';
+      return 'Mother coil detail request timed out. Please check that the API is running and try again.';
     }
 
-    return error instanceof Error ? error.message : 'Raw coil could not be loaded.';
+    return error instanceof Error ? error.message : 'Mother coil could not be loaded.';
   }
 }

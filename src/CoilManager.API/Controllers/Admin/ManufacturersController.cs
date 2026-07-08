@@ -52,7 +52,7 @@ public sealed class ManufacturersController : MasterDataController<Manufacturer>
 
         return Success<object>(
             new { deletedRawCoils, deletedManufacturers },
-            "Inactive manufacturers and linked raw coils were deleted successfully.");
+            "Inactive manufacturers and linked mother coils were deleted successfully.");
     }
 
     protected override IQueryable<Manufacturer> ApplySearch(IQueryable<Manufacturer> query, string search)

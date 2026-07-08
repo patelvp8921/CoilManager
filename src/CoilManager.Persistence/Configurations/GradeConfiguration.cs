@@ -20,6 +20,18 @@ public sealed class GradeConfiguration : IEntityTypeConfiguration<Grade>
             .HasMaxLength(150)
             .IsRequired();
 
+        builder.Property(grade => grade.ThicknessMm)
+            .HasPrecision(18, 3)
+            .IsRequired();
+
+        builder.Property(grade => grade.Category)
+            .HasMaxLength(10)
+            .IsRequired();
+
+        builder.Property(grade => grade.CoreLossPerKg)
+            .HasPrecision(18, 4)
+            .IsRequired();
+
         builder.Property(grade => grade.Description)
             .HasMaxLength(250);
 

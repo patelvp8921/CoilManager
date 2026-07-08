@@ -28,6 +28,12 @@
       <span>Thickness</span>
       <strong>{{ formatNumber(preview.thickness) }}</strong>
 
+      <span>Category</span>
+      <strong>{{ preview.category || placeholder }}</strong>
+
+      <span>Core Loss/Kg</span>
+      <strong>{{ formatNumber(preview.coreLossPerKg) }}</strong>
+
       <span>Width</span>
       <strong>{{ formatNumber(preview.width) }}</strong>
 
@@ -53,7 +59,7 @@
         @if (isQrGenerating) {
           <mat-progress-spinner mode="indeterminate" diameter="34" />
         } @else if (qrCodeDataUrl) {
-          <img [src]="qrCodeDataUrl" alt="Generated coil QR code">
+          <img [src]="qrCodeDataUrl" alt="Generated mother coil QR code">
         } @else {
           <div class="qr-placeholder">
             <mat-icon>qr_code</mat-icon>

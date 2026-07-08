@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -65,15 +66,20 @@ export class RawCoilEditPageComponent implements OnInit {
     supplierId: ['', [Validators.required]],
     manufacturerId: ['', [Validators.required]],
     gradeId: ['', [Validators.required]],
-    thickness: [null as number | null, [this.positiveOptional]],
+    thickness: [null as number | null],
+    category: [''],
+    coreLossPerKg: [null as number | null],
     width: [1250 as number | null, [this.positiveOptional]],
     weight: [null as number | null, [Validators.required, Validators.min(0.001)]],
     length: [0, [Validators.required, Validators.min(0)]],
-    wattLossPerKg: [null as number | null, [this.positiveOptional]],
     warehouseLocation: ['', [Validators.maxLength(100)]],
     status: [CoilStatus.Available, [Validators.required]],
     receivedDate: [this.today, [Validators.required, this.notFutureDate]],
   });
+
+  constructor() {
+    this.form.controls.gradeId.valueChanges.pipe(takeUntilDestroyed()).subscribe((gradeId) => this.populateGradeDetails(gradeId));
+  }
 
   ngOnInit(): void {
     this.loadPageData();
@@ -84,14 +90,14 @@ export class RawCoilEditPageComponent implements OnInit {
     this.form.markAllAsTouched();
 
     if (this.form.invalid) {
-      this.apiErrors.set(['Please fix the highlighted fields before updating the raw coil.']);
+      this.apiErrors.set(['Please fix the highlighted fields before updating the mother coil.']);
       this.focusFirstInvalidControl();
       return;
     }
 
     const rawCoil = this.rawCoil();
     if (!rawCoil) {
-      this.apiErrors.set(['Raw coil details are still loading. Try again in a moment.']);
+      this.apiErrors.set(['Mother coil details are still loading. Try again in a moment.']);
       return;
     }
 
@@ -103,9 +109,9 @@ export class RawCoilEditPageComponent implements OnInit {
         finalize(() => this.isSubmitting.set(false)),
       )
       .subscribe({
-        next: (rawCoil) => {
-          this.snackBar.open('Raw coil updated.', 'Close', { duration: 3000 });
-          void this.router.navigate(['/raw-coils']);
+        next: () => {
+          this.snackBar.open('Mother coil saved.', 'Close', { duration: 3000 });
+          void this.router.navigate(['/mother-coils']);
         },
         error: (error: HttpErrorResponse) => this.captureError(error),
       });
@@ -150,7 +156,7 @@ export class RawCoilEditPageComponent implements OnInit {
           this.rawCoil.set(rawCoil);
           this.suppliers.set(this.withCurrentLookup(suppliers, rawCoil.supplierId, rawCoil.supplierName));
           this.manufacturers.set(this.withCurrentLookup(manufacturers, rawCoil.manufacturerId, rawCoil.manufacturerName));
-          this.grades.set(this.withCurrentLookup(grades, rawCoil.gradeId, rawCoil.grade));
+          this.grades.set(this.withCurrentGradeLookup(grades, rawCoil));
           this.form.patchValue({
             coilNumber: rawCoil.coilNumber,
             heatNumber: rawCoil.heatNumber,
@@ -162,10 +168,11 @@ export class RawCoilEditPageComponent implements OnInit {
             manufacturerId: rawCoil.manufacturerId,
             gradeId: rawCoil.gradeId,
             thickness: rawCoil.thickness,
+            category: rawCoil.category,
+            coreLossPerKg: rawCoil.coreLossPerKg,
             width: rawCoil.width,
             weight: rawCoil.weight,
             length: rawCoil.length,
-            wattLossPerKg: rawCoil.wattLossPerKg,
             warehouseLocation: rawCoil.warehouseLocation ?? '',
             status: rawCoil.status,
             receivedDate: rawCoil.receivedDate.slice(0, 10),
@@ -178,17 +185,21 @@ export class RawCoilEditPageComponent implements OnInit {
   private toRequest(rowVersion: string): UpdateRawCoilRequest {
     const value = this.form.getRawValue();
     return {
-      ...value,
+      coilNumber: value.coilNumber,
+      heatNumber: value.heatNumber,
+      supplierId: value.supplierId,
+      manufacturerId: value.manufacturerId,
+      gradeId: value.gradeId,
       poNumber: value.poNumber || null,
       invoiceNo: value.invoiceNo || null,
       millTCNo: value.millTCNo || null,
       bisLicNumber: value.bisLicNumber || null,
       warehouseLocation: value.warehouseLocation || null,
-      thickness: value.thickness ?? null,
       width: value.width ?? null,
-      wattLossPerKg: value.wattLossPerKg ?? null,
       weight: value.weight ?? 0,
       length: value.length ?? 0,
+      receivedDate: value.receivedDate,
+      status: value.status,
       rowVersion,
     };
   }
@@ -210,6 +221,36 @@ export class RawCoilEditPageComponent implements OnInit {
     }
 
     return [{ id, name, code: 'Inactive' }, ...items];
+  }
+
+  private withCurrentGradeLookup(items: readonly LookupItem[], rawCoil: RawCoil): readonly LookupItem[] {
+    if (!rawCoil.gradeId || items.some((item) => item.id === rawCoil.gradeId)) {
+      return items;
+    }
+
+    return [
+      {
+        id: rawCoil.gradeId,
+        name: rawCoil.grade,
+        code: rawCoil.grade,
+        thicknessMm: rawCoil.thickness,
+        category: rawCoil.category,
+        coreLossPerKg: rawCoil.coreLossPerKg,
+      },
+      ...items,
+    ];
+  }
+
+  private populateGradeDetails(gradeId: string): void {
+    const grade = this.grades().find((item) => item.id === gradeId);
+    this.form.patchValue(
+      {
+        thickness: grade?.thicknessMm ?? null,
+        category: grade?.category ?? '',
+        coreLossPerKg: grade?.coreLossPerKg ?? null,
+      },
+      { emitEvent: false },
+    );
   }
 
   private focusFirstInvalidControl(): void {

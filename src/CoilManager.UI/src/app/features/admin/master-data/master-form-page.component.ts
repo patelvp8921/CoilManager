@@ -1,4 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { DecimalPipe } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -18,6 +20,7 @@ import { MasterRecord, MasterRouteData } from './master-data.model';
   selector: 'app-master-form-page',
   imports: [
     ReactiveFormsModule,
+    DecimalPipe,
     RouterLink,
     MatButtonModule,
     MatCardModule,
@@ -25,6 +28,7 @@ import { MasterRecord, MasterRouteData } from './master-data.model';
     MatIconModule,
     MatInputModule,
     MatProgressBarModule,
+    MatSelectModule,
     MatSlideToggleModule,
     MatSnackBarModule,
   ],
@@ -38,6 +42,13 @@ export class MasterFormPageComponent implements OnInit {
   protected readonly recordId = this.route.snapshot.paramMap.get('id');
   protected readonly isManufacturer = this.routeData.type === 'manufacturers';
   protected readonly isSupplier = this.routeData.type === 'suppliers';
+  protected readonly isGrade = this.routeData.type === 'grades';
+  protected readonly thicknessOptions = [
+    { thicknessMm: 0.23, category: 'M3' },
+    { thicknessMm: 0.27, category: 'M4' },
+    { thicknessMm: 0.30, category: 'M5' },
+    { thicknessMm: 0.35, category: 'M6' },
+  ];
   protected readonly isEditMode = computed(() => !!this.recordId);
   protected readonly isLoading = signal(false);
   protected readonly isSubmitting = signal(false);
@@ -57,6 +68,9 @@ export class MasterFormPageComponent implements OnInit {
     email: ['', [Validators.email, Validators.maxLength(150)]],
     contactNo: ['', [Validators.maxLength(30)]],
     description: ['', [Validators.maxLength(250)]],
+    thicknessMm: [null as number | null],
+    category: [''],
+    coreLossPerKg: [null as number | null],
     isActive: [true],
   });
 
@@ -64,6 +78,20 @@ export class MasterFormPageComponent implements OnInit {
     if (this.isSupplier) {
       this.form.controls.code.clearValidators();
       this.form.controls.code.updateValueAndValidity();
+    }
+
+    if (this.isGrade) {
+      this.form.controls.name.clearValidators();
+      this.form.controls.name.updateValueAndValidity();
+      this.form.controls.description.clearValidators();
+      this.form.controls.description.updateValueAndValidity();
+      this.form.controls.thicknessMm.setValidators([Validators.required]);
+      this.form.controls.thicknessMm.updateValueAndValidity();
+      this.form.controls.coreLossPerKg.setValidators([Validators.required, Validators.min(0.0001)]);
+      this.form.controls.coreLossPerKg.updateValueAndValidity();
+      this.form.controls.thicknessMm.valueChanges.subscribe((thicknessMm) => {
+        this.form.controls.category.setValue(this.categoryForThickness(thicknessMm), { emitEvent: false });
+      });
     }
 
     if (this.recordId) {
@@ -82,13 +110,16 @@ export class MasterFormPageComponent implements OnInit {
     const value = this.form.getRawValue();
     const request = {
       code: this.isSupplier ? null : value.code.trim(),
-      name: value.name.trim(),
-      description: value.description.trim() || null,
+      name: this.isGrade ? value.code.trim() : value.name.trim(),
+      description: this.isGrade ? null : value.description.trim() || null,
       country: this.isManufacturer ? value.country.trim() || null : null,
       address: this.isSupplier ? value.address.trim() || null : null,
       gst: this.isSupplier ? value.gst.trim() || null : null,
       email: this.isSupplier ? value.email.trim() || null : null,
       contactNo: this.isSupplier ? value.contactNo.trim() || null : null,
+      grade: this.isGrade ? value.code.trim() : null,
+      thicknessMm: this.isGrade ? value.thicknessMm : null,
+      coreLossPerKg: this.isGrade ? value.coreLossPerKg : null,
       isActive: value.isActive,
       rowVersion: this.record()?.rowVersion ?? null,
     };
@@ -132,6 +163,9 @@ export class MasterFormPageComponent implements OnInit {
             email: record.email ?? '',
             contactNo: record.contactNo ?? '',
             description: record.description ?? '',
+            thicknessMm: record.thicknessMm ?? null,
+            category: record.category ?? this.categoryForThickness(record.thicknessMm ?? null),
+            coreLossPerKg: record.coreLossPerKg ?? null,
             isActive: record.isActive,
           });
         },
@@ -144,5 +178,9 @@ export class MasterFormPageComponent implements OnInit {
     const errors = body?.errors?.length ? body.errors : [body?.message || error.message || 'Request failed.'];
     this.apiErrors.set(errors);
     this.snackBar.open(errors.join('\n'), 'Close', { duration: 6000 });
+  }
+
+  private categoryForThickness(thicknessMm: number | null): string {
+    return this.thicknessOptions.find((option) => option.thicknessMm === thicknessMm)?.category ?? '';
   }
 }

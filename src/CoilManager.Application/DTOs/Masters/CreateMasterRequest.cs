@@ -9,4 +9,7 @@ public sealed record CreateMasterRequest(
     string? GST,
     string? Email,
     string? ContactNo,
-    bool IsActive = true);
+    bool IsActive = true,
+    string? Grade = null,
+    decimal? ThicknessMm = null,
+    decimal? CoreLossPerKg = null);
