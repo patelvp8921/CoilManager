@@ -1,0 +1,157 @@
+.section-card {
+  overflow: hidden;
+  border: 1px solid rgba(11, 99, 206, 0.24);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 14px 30px rgba(16, 24, 40, 0.08);
+}
+
+mat-card-header {
+  border-bottom: 1px solid #e3ebf4;
+  padding: 18px;
+  background:
+    linear-gradient(135deg, rgba(11, 99, 206, 0.1), rgba(20, 184, 166, 0.06)),
+    #ffffff;
+}
+
+mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #101828;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+mat-card-title mat-icon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 8px;
+  background: #0b63ce;
+  color: #ffffff;
+}
+
+mat-card-subtitle {
+  color: #475467;
+}
+
+mat-card-content {
+  padding: 18px;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.status-grid div,
+.breakdown-row {
+  border: 1px solid #e5ebf2;
+  border-radius: 8px;
+  padding: 12px;
+  background: #f8fafc;
+}
+
+.status-grid div {
+  position: relative;
+  min-height: 82px;
+}
+
+.status-grid div::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 8px;
+  height: 8px;
+  border-radius: 99px;
+  background: #0b63ce;
+}
+
+.status-grid div:nth-child(1)::before {
+  background: #12b76a;
+}
+
+.status-grid div:nth-child(2)::before {
+  background: #7a5af8;
+}
+
+.status-grid div:nth-child(3)::before {
+  background: #f79009;
+}
+
+.status-grid div:nth-child(4)::before {
+  background: #f04438;
+}
+
+.status-grid div:nth-child(5)::before,
+.status-grid div:nth-child(6)::before {
+  background: #0e9384;
+}
+
+.status-grid span,
+small,
+p {
+  color: #667085;
+}
+
+.status-grid span {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-grid strong {
+  display: block;
+  margin-top: 8px;
+  color: #101828;
+  font-size: 23px;
+  line-height: 28px;
+}
+
+.breakdowns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+h3 {
+  margin: 0 0 10px;
+  color: #101828;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.breakdown-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 9px;
+  background: #ffffff;
+}
+
+.breakdown-row span {
+  color: #101828;
+  font-weight: 700;
+}
+
+.breakdown-row strong {
+  color: #0b63ce;
+  font-size: 13px;
+}
+
+@media (max-width: 760px) {
+  .status-grid,
+  .breakdowns {
+    grid-template-columns: 1fr;
+  }
+
+  .breakdown-row {
+    grid-template-columns: 1fr;
+  }
+}

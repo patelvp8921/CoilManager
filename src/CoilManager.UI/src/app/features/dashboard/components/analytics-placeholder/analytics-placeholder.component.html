@@ -1,0 +1,17 @@
+<mat-card appearance="outlined" class="analytics-card">
+  <mat-card-header>
+    <mat-card-title><mat-icon>analytics</mat-icon>Analytics</mat-card-title>
+    <mat-card-subtitle>Chart-ready placeholders for Sprint 2 reporting</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="analytics-grid">
+      @for (card of analytics.cards; track card.title) {
+        <section>
+          <mat-icon>{{ card.icon }}</mat-icon>
+          <h3>{{ card.title }}</h3>
+          <p>{{ card.description }}</p>
+        </section>
+      }
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -52,7 +52,7 @@
                     <mat-label>Supplier</mat-label>
                     <mat-select formControlName="supplierId">
                       @for (supplier of suppliers; track supplier.id) {
-                        <mat-option [value]="supplier.id">{{ supplier.name }} ({{ supplier.code }})</mat-option>
+                        <mat-option [value]="supplier.id">{{ supplier.name }}</mat-option>
                       }
                     </mat-select>
                     <mat-error>{{ errorFor('supplierId') }}</mat-error>
@@ -86,13 +86,23 @@
 
                 <div class="form-grid">
                   <mat-form-field appearance="outline">
-                    <mat-label>Mill</mat-label>
+                    <mat-label>Mill Name</mat-label>
                     <mat-select formControlName="manufacturerId">
                       @for (manufacturer of manufacturers; track manufacturer.id) {
-                        <mat-option [value]="manufacturer.id">{{ manufacturer.name }} ({{ manufacturer.code }})</mat-option>
+                        <mat-option [value]="manufacturer.id">{{ manufacturer.name }}</mat-option>
                       }
                     </mat-select>
                     <mat-error>{{ errorFor('manufacturerId') }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Mill TC No</mat-label>
+                    <input matInput formControlName="millTCNo">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>BIS No</mat-label>
+                    <input matInput formControlName="bisLicNumber">
                   </mat-form-field>
 
                   <mat-form-field appearance="outline">
@@ -106,7 +116,7 @@
                   </mat-form-field>
 
                   <mat-form-field appearance="outline">
-                    <mat-label>Thickness(mm)</mat-label>
+                    <mat-label>Thickness (mm)</mat-label>
                     <input matInput type="number" formControlName="thickness" readonly>
                   </mat-form-field>
 
@@ -116,19 +126,19 @@
                   </mat-form-field>
 
                   <mat-form-field appearance="outline">
-                    <mat-label>Width</mat-label>
+                    <mat-label>Width (mm)</mat-label>
                     <input matInput type="number" step="0.001" formControlName="width">
                     <mat-error>{{ errorFor('width') }}</mat-error>
                   </mat-form-field>
 
                   <mat-form-field appearance="outline">
-                    <mat-label>Weight</mat-label>
+                    <mat-label>Weight (kg)</mat-label>
                     <input matInput type="number" step="0.001" formControlName="weight">
                     <mat-error>{{ errorFor('weight') }}</mat-error>
                   </mat-form-field>
 
                   <mat-form-field appearance="outline">
-                    <mat-label>Length</mat-label>
+                    <mat-label>Length (mm)</mat-label>
                     <input matInput type="number" step="0.001" formControlName="length">
                     <mat-error>{{ errorFor('length') }}</mat-error>
                   </mat-form-field>
@@ -136,16 +146,6 @@
                   <mat-form-field appearance="outline">
                     <mat-label>Core Loss/Kg</mat-label>
                     <input matInput type="number" formControlName="coreLossPerKg" readonly>
-                  </mat-form-field>
-
-                  <mat-form-field appearance="outline">
-                    <mat-label>Mill TC No</mat-label>
-                    <input matInput formControlName="millTCNo">
-                  </mat-form-field>
-
-                  <mat-form-field appearance="outline">
-                    <mat-label>BIS Licence No</mat-label>
-                    <input matInput formControlName="bisLicNumber">
                   </mat-form-field>
                 </div>
               </section>

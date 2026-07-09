@@ -1,0 +1,55 @@
+<section class="analytics-page">
+  <header class="analytics-header">
+    <div>
+      <nav aria-label="Breadcrumb">
+        <a routerLink="/dashboard">Home</a>
+        <mat-icon>chevron_right</mat-icon>
+        <strong>Analytics</strong>
+      </nav>
+      <h1>Analytics</h1>
+      <p>Administrative insights, shortcuts, alerts, and recent operational movement.</p>
+    </div>
+
+    <div class="header-actions">
+      @if (dashboard(); as data) {
+        <span>Updated {{ data.generatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+      }
+      <button mat-flat-button type="button" (click)="loadAnalytics()" [disabled]="isLoading()">
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+    </div>
+  </header>
+
+  @if (isLoading() && !dashboard()) {
+    <mat-card appearance="outlined" class="state-card">
+      <mat-progress-spinner mode="indeterminate" diameter="42" />
+      <span>Loading analytics...</span>
+    </mat-card>
+  }
+
+  @if (error()) {
+    <mat-card appearance="outlined" class="state-card error-card">
+      <mat-icon>error</mat-icon>
+      <span>{{ error() }}</span>
+      <button mat-button type="button" (click)="loadAnalytics()">Retry</button>
+    </mat-card>
+  }
+
+  @if (dashboard(); as data) {
+    <section class="analytics-layout">
+      <main class="analytics-main">
+        <app-analytics-placeholder [analytics]="data.analytics" />
+
+        <section class="bottom-grid">
+          <app-quick-actions [actions]="data.quickActions" />
+          <app-recent-activities [activities]="data.recentActivities" />
+        </section>
+      </main>
+
+      <aside>
+        <app-notification-panel [notifications]="data.notifications" />
+      </aside>
+    </section>
+  }
+</section>

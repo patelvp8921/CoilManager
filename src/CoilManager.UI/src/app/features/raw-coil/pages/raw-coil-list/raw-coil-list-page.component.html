@@ -101,12 +101,12 @@
         </ng-container>
 
         <ng-container matColumnDef="width">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="width">Width</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="width">Width (mm)</th>
           <td mat-cell *matCellDef="let row">{{ row.width | number:'1.0-3' }}</td>
         </ng-container>
 
         <ng-container matColumnDef="weight">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="weight">Weight</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="weight">Weight (kg)</th>
           <td mat-cell *matCellDef="let row">{{ row.weight | number:'1.3-3' }}</td>
         </ng-container>
 

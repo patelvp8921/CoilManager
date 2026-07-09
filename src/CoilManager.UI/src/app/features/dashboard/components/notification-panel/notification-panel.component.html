@@ -1,0 +1,20 @@
+<mat-card appearance="outlined" class="notification-card">
+  <mat-card-header>
+    <mat-card-title><mat-icon>notifications</mat-icon>Notifications</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    @for (notification of notifications; track notification.title) {
+      <article [class]="notification.severity">
+        <mat-icon>{{ notification.icon }}</mat-icon>
+        <div>
+          @if (notification.route) {
+            <a [routerLink]="notification.route">{{ notification.title }}</a>
+          } @else {
+            <strong>{{ notification.title }}</strong>
+          }
+          <p>{{ notification.message }}</p>
+        </div>
+      </article>
+    }
+  </mat-card-content>
+</mat-card>

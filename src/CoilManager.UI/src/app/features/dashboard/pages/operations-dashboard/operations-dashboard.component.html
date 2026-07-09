@@ -1,0 +1,53 @@
+<section class="dashboard-page">
+  <header class="dashboard-header">
+    <div class="header-copy">
+      <h1>Operations Dashboard</h1>
+      <p>{{ dashboardRole() }} view for inventory, planning, quality, and dispatch readiness.</p>
+    </div>
+    <div class="header-actions">
+      @if (dashboard(); as headerData) {
+        <div class="header-metrics">
+          <span><strong>{{ headerData.inventory.totalMotherCoils }}</strong> Mother Coils</span>
+          <span><strong>{{ headerData.inventory.totalWeight | number:'1.0-0' }}</strong> kg stock</span>
+          <span>Updated {{ headerData.generatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+      }
+      <button mat-flat-button type="button" (click)="loadDashboard()" [disabled]="isLoading()">
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+    </div>
+  </header>
+
+  @if (isLoading() && !dashboard()) {
+    <mat-card appearance="outlined" class="loading-card">
+      <mat-progress-spinner mode="indeterminate" diameter="42" />
+      <span>Loading operations dashboard...</span>
+    </mat-card>
+  }
+
+  @if (error()) {
+    <mat-card appearance="outlined" class="error-card">
+      <mat-icon>error</mat-icon>
+      <span>{{ error() }}</span>
+      <button mat-button type="button" (click)="loadDashboard()">Retry</button>
+    </mat-card>
+  }
+
+  @if (dashboard(); as data) {
+    <app-kpi-card-grid [kpis]="data.kpis" />
+
+    <div class="dashboard-shell">
+      <main class="dashboard-main">
+        <section class="section-grid">
+          <app-inventory-summary [inventory]="data.inventory" />
+          <app-production-summary [production]="data.production" />
+          <app-slitting-summary [slitting]="data.slitting" />
+          <app-quality-summary [quality]="data.quality" />
+          <app-procurement-summary [procurement]="data.procurement" />
+          <app-dispatch-summary [dispatch]="data.dispatch" />
+        </section>
+      </main>
+    </div>
+  }
+</section>

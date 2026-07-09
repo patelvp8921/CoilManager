@@ -16,6 +16,7 @@ interface NavigationItem {
 
 interface AdminNavigationItem {
   label: string;
+  icon: string;
   route: string;
 }
 
@@ -46,8 +47,9 @@ export class ShellComponent {
   ];
 
   protected readonly adminItems: AdminNavigationItem[] = [
-    { label: 'Manufacturers', route: '/admin/manufacturers' },
-    { label: 'Suppliers', route: '/admin/suppliers' },
-    { label: 'Grades', route: '/admin/grades' },
+    { label: 'Manufacturers', icon: 'factory', route: '/admin/manufacturers' },
+    { label: 'Suppliers', icon: 'storefront', route: '/admin/suppliers' },
+    { label: 'Grades', icon: 'category', route: '/admin/grades' },
+    { label: 'Analytics', icon: 'analytics', route: '/admin/analytics' },
   ];
 }

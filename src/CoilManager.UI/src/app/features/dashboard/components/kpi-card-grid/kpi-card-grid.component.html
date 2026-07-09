@@ -1,0 +1,14 @@
+<section class="kpi-grid">
+  @for (kpi of kpis; track kpi.label) {
+    <mat-card appearance="outlined" class="kpi-card" [class]="kpi.tone">
+      <mat-card-content>
+        <span class="kpi-icon"><mat-icon>{{ kpi.icon }}</mat-icon></span>
+        <span class="kpi-label">{{ kpi.label }}</span>
+        <strong>{{ kpi.value }}</strong>
+        @if (kpi.hint) {
+          <small>{{ kpi.hint }}</small>
+        }
+      </mat-card-content>
+    </mat-card>
+  }
+</section>

@@ -28,7 +28,7 @@
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: false }"
         >
-          <mat-icon class="nav-leading">admin_panel_settings</mat-icon>
+          <mat-icon class="nav-leading">{{ item.icon }}</mat-icon>
           <span class="module-label">{{ item.label }}</span>
         </a>
       }

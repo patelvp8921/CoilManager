@@ -1,0 +1,72 @@
+.summary-card {
+  overflow: hidden;
+  height: 100%;
+  border: 1px solid #dde5ef;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(16, 24, 40, 0.06);
+}
+
+mat-card-header {
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #edf1f6;
+  padding: 16px 18px 14px;
+  background: linear-gradient(180deg, #fbfdff, #ffffff);
+}
+
+mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #101828;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+mat-card-title mat-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 8px;
+  background: #eef6ff;
+  color: #0b63ce;
+}
+
+mat-chip {
+  min-height: 24px;
+  border: 1px solid #d9e6f2;
+  background: #f3f8fc;
+  color: #23527c;
+  font-size: 12px;
+}
+
+.metric-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 16px 18px 18px;
+}
+
+.metric-list div {
+  border: 1px solid #e5ebf2;
+  border-radius: 8px;
+  padding: 12px;
+  background: #f8fafc;
+}
+
+.metric-list span {
+  display: block;
+  color: #667085;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.metric-list strong {
+  display: block;
+  margin-top: 6px;
+  color: #101828;
+  font-size: 22px;
+  line-height: 26px;
+}

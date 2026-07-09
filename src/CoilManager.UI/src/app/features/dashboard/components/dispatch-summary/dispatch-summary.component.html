@@ -1,0 +1,11 @@
+<mat-card appearance="outlined" class="summary-card">
+  <mat-card-header>
+    <mat-card-title><mat-icon>local_shipping</mat-icon>Dispatch Summary</mat-card-title>
+    <mat-chip>{{ dispatch.status }}</mat-chip>
+  </mat-card-header>
+  <mat-card-content class="metric-list">
+    <div><span>Dispatches</span><strong>{{ dispatch.dispatches }}</strong></div>
+    <div><span>Pending Dispatches</span><strong>{{ dispatch.pendingDispatches }}</strong></div>
+    <div><span>Dispatch Weight</span><strong>{{ dispatch.dispatchWeight | number:'1.3-3' }}</strong></div>
+  </mat-card-content>
+</mat-card>

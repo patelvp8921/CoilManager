@@ -51,7 +51,6 @@ export class RawCoilListPageComponent implements OnInit {
   protected readonly statusOptions = COIL_STATUS_OPTIONS;
   protected readonly displayedColumns = [
     'rawCoilNumber',
-    'supplierName',
     'manufacturerName',
     'grade',
     'thickness',

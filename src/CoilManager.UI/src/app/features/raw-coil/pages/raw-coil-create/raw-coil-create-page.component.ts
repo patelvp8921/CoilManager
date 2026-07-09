@@ -290,9 +290,9 @@ export class RawCoilCreatePageComponent {
     const selectedGrade = this.selectedGrade(value.gradeId);
     this.preview.set({
       coilId: this.nextCoilId,
-      supplier: this.lookupName(this.suppliers, value.supplierId),
-      manufacturer: this.lookupName(this.manufacturers, value.manufacturerId),
-      grade: this.lookupName(this.grades, value.gradeId),
+      supplier: this.lookupNameOnly(this.suppliers, value.supplierId),
+      manufacturer: this.lookupNameOnly(this.manufacturers, value.manufacturerId),
+      grade: this.lookupCodeOnly(this.grades, value.gradeId),
       thickness: selectedGrade?.thicknessMm ?? value.thickness,
       category: selectedGrade?.category ?? value.category,
       coreLossPerKg: selectedGrade?.coreLossPerKg ?? value.coreLossPerKg,
@@ -324,6 +324,15 @@ export class RawCoilCreatePageComponent {
     }
 
     return match.code ? `${match.name} (${match.code})` : match.name;
+  }
+
+  private lookupNameOnly(items: readonly LookupItem[], id: string): string {
+    return items.find((item) => item.id === id)?.name ?? '';
+  }
+
+  private lookupCodeOnly(items: readonly LookupItem[], id: string): string {
+    const match = items.find((item) => item.id === id);
+    return match?.code || match?.name || '';
   }
 
   private selectedGrade(id: string): LookupItem | undefined {

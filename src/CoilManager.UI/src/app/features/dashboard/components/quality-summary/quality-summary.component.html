@@ -1,0 +1,11 @@
+<mat-card appearance="outlined" class="summary-card">
+  <mat-card-header>
+    <mat-card-title><mat-icon>rule</mat-icon>Quality Summary</mat-card-title>
+    <mat-chip>{{ quality.status }}</mat-chip>
+  </mat-card-header>
+  <mat-card-content class="metric-list">
+    <div><span>Pending QA</span><strong>{{ quality.pendingQa }}</strong></div>
+    <div><span>Hold Coils</span><strong>{{ quality.holdCoils }}</strong></div>
+    <div><span>Rejected Coils</span><strong>{{ quality.rejectedCoils }}</strong></div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,23 @@
+<mat-card appearance="outlined" class="panel-card">
+  <mat-card-header>
+    <mat-card-title><mat-icon>bolt</mat-icon>Quick Actions</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="action-grid">
+    @for (action of actions; track action.label) {
+      @if (action.enabled && action.route) {
+        <a mat-stroked-button [routerLink]="action.route">
+          <mat-icon>{{ action.icon }}</mat-icon>
+          {{ action.label }}
+        </a>
+      } @else {
+        <button mat-stroked-button type="button" disabled>
+          <mat-icon>{{ action.icon }}</mat-icon>
+          {{ action.label }}
+          @if (action.badge) {
+            <mat-chip>{{ action.badge }}</mat-chip>
+          }
+        </button>
+      }
+    }
+  </mat-card-content>
+</mat-card>

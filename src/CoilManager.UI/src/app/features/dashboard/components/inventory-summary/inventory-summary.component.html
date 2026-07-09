@@ -1,0 +1,45 @@
+<mat-card appearance="outlined" class="section-card">
+  <mat-card-header>
+    <mat-card-title><mat-icon>inventory_2</mat-icon>Inventory Summary</mat-card-title>
+    <mat-card-subtitle>Live Mother Coil stock</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="status-grid">
+      <div><span>Available</span><strong>{{ inventory.availableMotherCoils }}</strong></div>
+      <div><span>Reserved</span><strong>{{ inventory.reservedMotherCoils }}</strong></div>
+      <div><span>Hold</span><strong>{{ inventory.holdMotherCoils }}</strong></div>
+      <div><span>Rejected</span><strong>{{ inventory.rejectedMotherCoils }}</strong></div>
+      <div><span>Total Weight</span><strong>{{ inventory.totalWeight | number:'1.3-3' }}</strong></div>
+      <div><span>Available Weight</span><strong>{{ inventory.availableWeight | number:'1.3-3' }}</strong></div>
+    </div>
+
+    <div class="breakdowns">
+      <section>
+        <h3>Grade-wise stock</h3>
+        @for (item of inventory.gradeWiseStock; track item.name) {
+          <div class="breakdown-row">
+            <span>{{ item.name }}</span>
+            <strong>{{ item.count }} coils</strong>
+            <small>{{ item.weight | number:'1.3-3' }} kg</small>
+          </div>
+        } @empty {
+          <p>No grade stock yet.</p>
+        }
+      </section>
+
+      <section>
+        <h3>Supplier-wise stock</h3>
+        @for (item of inventory.supplierWiseStock; track item.name) {
+          <div class="breakdown-row">
+            <span>{{ item.name }}</span>
+            <strong>{{ item.count }} coils</strong>
+            <small>{{ item.weight | number:'1.3-3' }} kg</small>
+          </div>
+        } @empty {
+          <p>No supplier stock yet.</p>
+        }
+      </section>
+    </div>
+  </mat-card-content>
+</mat-card>

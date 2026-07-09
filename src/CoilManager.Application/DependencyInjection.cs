@@ -15,6 +15,7 @@ public static class DependencyInjection
         services.AddValidatorsFromAssembly(typeof(AssemblyReference).Assembly);
         services.AddScoped<IRawCoilService, RawCoilService>();
         services.AddScoped<ILookupService, LookupService>();
+        services.AddScoped<IOperationsDashboardService, OperationsDashboardService>();
 
         return services;
     }

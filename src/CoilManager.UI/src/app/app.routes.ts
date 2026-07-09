@@ -14,7 +14,7 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () =>
-          import('./features/dashboard/dashboard-page.component').then((component) => component.DashboardPageComponent),
+          import('./features/dashboard/pages/operations-dashboard/operations-dashboard.component').then((component) => component.OperationsDashboardComponent),
         title: 'Dashboard | CoilManager',
       },
       {
@@ -80,6 +80,12 @@ export const routes: Routes = [
         path: 'raw-coils',
         redirectTo: '/mother-coils',
         pathMatch: 'full',
+      },
+      {
+        path: 'admin/analytics',
+        loadComponent: () =>
+          import('./features/dashboard/pages/admin-analytics/admin-analytics.component').then((component) => component.AdminAnalyticsComponent),
+        title: 'Analytics | CoilManager',
       },
       {
         path: 'admin/manufacturers/create',

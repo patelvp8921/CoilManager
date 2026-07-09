@@ -1,0 +1,11 @@
+<mat-card appearance="outlined" class="summary-card">
+  <mat-card-header>
+    <mat-card-title><mat-icon>precision_manufacturing</mat-icon>Slitting Summary</mat-card-title>
+    <mat-chip>{{ slitting.status }}</mat-chip>
+  </mat-card-header>
+  <mat-card-content class="metric-list">
+    <div><span>Slit Coils</span><strong>{{ slitting.slitCoils }}</strong></div>
+    <div><span>Slitting Jobs</span><strong>{{ slitting.slittingJobs }}</strong></div>
+    <div><span>Slit Weight</span><strong>{{ slitting.slitWeight | number:'1.3-3' }}</strong></div>
+  </mat-card-content>
+</mat-card>

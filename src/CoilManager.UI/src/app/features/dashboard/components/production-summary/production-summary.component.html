@@ -1,0 +1,12 @@
+<mat-card appearance="outlined" class="summary-card">
+  <mat-card-header>
+    <mat-card-title><mat-icon>factory</mat-icon>Production Summary</mat-card-title>
+    <mat-chip>{{ production.status }}</mat-chip>
+  </mat-card-header>
+  <mat-card-content class="metric-list">
+    <div><span>Work Orders</span><strong>{{ production.workOrders }}</strong></div>
+    <div><span>Finished Coils</span><strong>{{ production.finishedCoils }}</strong></div>
+    <div><span>Planned Weight</span><strong>{{ production.plannedWeight | number:'1.3-3' }}</strong></div>
+    <div><span>Produced Weight</span><strong>{{ production.producedWeight | number:'1.3-3' }}</strong></div>
+  </mat-card-content>
+</mat-card>

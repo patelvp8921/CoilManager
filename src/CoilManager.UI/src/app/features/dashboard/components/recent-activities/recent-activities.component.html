@@ -1,0 +1,21 @@
+<mat-card appearance="outlined" class="panel-card">
+  <mat-card-header>
+    <mat-card-title><mat-icon>history</mat-icon>Recent Activities</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    @for (activity of activities; track activity.title + activity.timestamp) {
+      <article>
+        <span class="activity-icon"><mat-icon>{{ activity.icon }}</mat-icon></span>
+        <div>
+          @if (activity.route) {
+            <a [routerLink]="activity.route">{{ activity.title }}</a>
+          } @else {
+            <strong>{{ activity.title }}</strong>
+          }
+          <p>{{ activity.description }}</p>
+          <small>{{ activity.timestamp | date:'dd/MM/yyyy HH:mm' }}</small>
+        </div>
+      </article>
+    }
+  </mat-card-content>
+</mat-card>
