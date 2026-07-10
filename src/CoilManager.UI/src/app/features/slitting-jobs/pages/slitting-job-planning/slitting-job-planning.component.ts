@@ -115,10 +115,10 @@ export class SlittingJobPlanningComponent implements OnInit {
     return this.items.controls.map((control, index) => {
       const value = control.getRawValue();
       const sequenceNo = index + 1;
-      const width = Number(value.width ?? 0);
+      const width = this.parseNumber(value.width);
       return {
         sequenceNo,
-        slitCoilId: motherCoil ? this.generateSlitCoilId(motherCoil.motherCoilId, sequenceNo) : '',
+        slitCoilId: motherCoil ? this.generateSlitCoilId(this.displayedJobNumber(), sequenceNo) : '',
         width,
         estimatedWeight: this.estimateWeight(width),
         remarks: value.remarks ?? '',
@@ -132,8 +132,8 @@ export class SlittingJobPlanningComponent implements OnInit {
     const motherWidth = motherCoil?.width ?? 0;
     const totalSlitWidth = this.slitRows().reduce((total, row) => total + row.width, 0);
     const numberOfCuts = Math.max(this.slitRows().length - 1, 0);
-    const knifeLoss = numberOfCuts * Number(this.form.controls.knifeThickness.value || 0);
-    const edgeTrim = Number(this.form.controls.leftEdgeTrim.value || 0) + Number(this.form.controls.rightEdgeTrim.value || 0);
+    const knifeLoss = numberOfCuts * this.parseNumber(this.form.controls.knifeThickness.value);
+    const edgeTrim = this.parseNumber(this.form.controls.leftEdgeTrim.value) + this.parseNumber(this.form.controls.rightEdgeTrim.value);
     const totalPlannedWidth = totalSlitWidth + knifeLoss + edgeTrim;
     const remainingWidth = Math.max(motherWidth - totalPlannedWidth, 0);
     const excessWidth = Math.max(totalPlannedWidth - motherWidth, 0);
@@ -150,6 +150,32 @@ export class SlittingJobPlanningComponent implements OnInit {
       excessWidth,
       utilizationPercent,
       isOverAllocated: excessWidth > 0,
+    };
+  });
+
+  protected readonly weightSummary = computed(() => {
+    this.formRevision();
+    const motherCoil = this.selectedMotherCoil();
+    const motherWeight = motherCoil?.weight ?? 0;
+    const totalSlitWeight = this.slitRows().reduce((total, row) => total + row.estimatedWeight, 0);
+    const trimScrapWeight = this.estimateWeight(this.summary().edgeTrim);
+    const knifeLossWeight = this.estimateWeight(this.summary().knifeLoss);
+    const processScrapWeight = trimScrapWeight + knifeLossWeight;
+    const balanceWeight = motherWeight > 0
+      ? Math.max(motherWeight - totalSlitWeight - processScrapWeight, 0)
+      : this.estimateWeight(this.summary().remainingWidth);
+    const yieldPercent = motherWeight > 0
+      ? totalSlitWeight / motherWeight * 100
+      : this.summary().utilizationPercent;
+
+    return {
+      motherWeight,
+      totalSlitWeight,
+      trimScrapWeight,
+      knifeLossWeight,
+      processScrapWeight,
+      balanceWeight,
+      yieldPercent,
     };
   });
 
@@ -457,7 +483,16 @@ export class SlittingJobPlanningComponent implements OnInit {
 
   private estimateWeight(width: number): number {
     const motherCoil = this.selectedMotherCoil();
-    if (!motherCoil || width <= 0 || motherCoil.thickness <= 0 || motherCoil.length <= 0) {
+    if (!motherCoil || width <= 0) {
+      return 0;
+    }
+
+    if (motherCoil.width > 0 && motherCoil.weight > 0) {
+      const proportionalWeight = motherCoil.weight * width / motherCoil.width;
+      return Math.round(proportionalWeight * 1000) / 1000;
+    }
+
+    if (motherCoil.thickness <= 0 || motherCoil.length <= 0) {
       return 0;
     }
 
@@ -472,11 +507,12 @@ export class SlittingJobPlanningComponent implements OnInit {
       : length;
   }
 
-  private generateSlitCoilId(motherCoilId: string, sequenceNo: number): string {
+  private generateSlitCoilId(slittingJobNo: string, sequenceNo: number): string {
     const sequence = sequenceNo.toString().padStart(2, '0');
-    return motherCoilId.startsWith('MC-')
-      ? `SC-${motherCoilId.slice(3)}-${sequence}`
-      : `SC-${motherCoilId}-${sequence}`;
+    const normalizedJobNo = slittingJobNo.replace(/\//g, '-');
+    return normalizedJobNo.startsWith('AE-S-')
+      ? `SC-${normalizedJobNo.slice(5)}-${sequence}`
+      : `SC-${normalizedJobNo}-${sequence}`;
   }
 
   private collectSubmitValidationErrors(): readonly string[] {
@@ -494,13 +530,9 @@ export class SlittingJobPlanningComponent implements OnInit {
       errors.push('Generate at least one slit row.');
     }
 
-    const invalidSlitRow = this.items.controls.some((control) => {
-      const width = Number(control.get('width')?.value ?? 0);
-      return control.invalid || width <= 0;
-    });
-
-    if (invalidSlitRow) {
-      errors.push('Every slit row must have a valid width greater than 0.');
+    const invalidSlitRows = this.getInvalidSlitRowNumbers();
+    if (invalidSlitRows.length) {
+      errors.push(`Enter width greater than 0 for slit row ${invalidSlitRows.join(', ')}.`);
     }
 
     if (this.form.controls.numberOfSlits.invalid) {
@@ -516,6 +548,28 @@ export class SlittingJobPlanningComponent implements OnInit {
     }
 
     return errors;
+  }
+
+  private getInvalidSlitRowNumbers(): readonly number[] {
+    return this.items.controls
+      .map((control, index) => ({
+        sequenceNo: index + 1,
+        width: this.parseNumber(control.get('width')?.value),
+      }))
+      .filter((row) => !Number.isFinite(row.width) || row.width <= 0)
+      .map((row) => row.sequenceNo);
+  }
+
+  private parseNumber(value: unknown): number {
+    if (typeof value === 'number') {
+      return value;
+    }
+
+    if (typeof value === 'string') {
+      return Number(value.trim().replace(/,/g, ''));
+    }
+
+    return Number(value ?? 0);
   }
 
   private captureError(error: unknown): void {

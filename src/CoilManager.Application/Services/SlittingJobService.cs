@@ -48,9 +48,11 @@ public sealed class SlittingJobService(
     {
         string? normalizedSearch = Normalize(search);
         IReadOnlyList<RawCoil> rawCoils = await rawCoilRepository.GetAllAsync(cancellationToken);
+        IReadOnlySet<Guid> draftMotherCoilIds = await slittingJobRepository.GetDraftMotherCoilIdsAsync(cancellationToken);
 
         return rawCoils
             .Where(rawCoil => rawCoil.Status == CoilStatus.Available)
+            .Where(rawCoil => !draftMotherCoilIds.Contains(rawCoil.Id))
             .Where(rawCoil => normalizedSearch is null
                 || rawCoil.RawCoilNumber.Contains(normalizedSearch, StringComparison.OrdinalIgnoreCase)
                 || rawCoil.CoilNumber.Contains(normalizedSearch, StringComparison.OrdinalIgnoreCase)
@@ -93,6 +95,11 @@ public sealed class SlittingJobService(
             return Result<SlittingJobDto>.Failure(Error.Validation("Mother coil is required."));
         }
 
+        if (await slittingJobRepository.DraftExistsForMotherCoilAsync(request.MotherCoilId, cancellationToken))
+        {
+            return Result<SlittingJobDto>.Failure(Error.Validation("This Mother Coil is already used in a draft slitting job. Release or update the existing draft before creating another job."));
+        }
+
         Result widthValidation = ValidateWidth(motherCoil.Width, request.Items, request.KnifeThickness, request.LeftEdgeTrim, request.RightEdgeTrim);
         if (widthValidation.IsFailure)
         {
@@ -112,7 +119,7 @@ public sealed class SlittingJobService(
             NormalizeParameter(request.RightEdgeTrim, DefaultRightEdgeTrim),
             request.Remarks);
 
-        job.ReplaceItems(BuildItems(motherCoil, request.Items));
+        job.ReplaceItems(BuildItems(job.SlittingJobNo, motherCoil, request.Items));
 
         await slittingJobRepository.AddAsync(job, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
@@ -159,7 +166,7 @@ public sealed class SlittingJobService(
             return Result<SlittingJobDto>.Failure(widthValidation.Error);
         }
 
-        IReadOnlyList<SlittingJobItem> rebuiltItems = BuildItems(motherCoil, request.Items);
+        IReadOnlyList<SlittingJobItem> rebuiltItems = BuildItems(job.SlittingJobNo, motherCoil, request.Items);
 
         job.UpdatePlanningDetails(
             request.PlanningDate,
@@ -207,15 +214,15 @@ public sealed class SlittingJobService(
         return Result<SlittingJobDto>.Success(SlittingJobDtoMapper.MapToDto(savedJob ?? job));
     }
 
-    private static IReadOnlyList<SlittingJobItem> BuildItems(RawCoil motherCoil, IEnumerable<SlittingJobItemRequest> itemRequests)
+    private static IReadOnlyList<SlittingJobItem> BuildItems(string slittingJobNo, RawCoil motherCoil, IEnumerable<SlittingJobItemRequest> itemRequests)
     {
         return itemRequests
             .OrderBy(item => item.SequenceNo)
             .Select(item => new SlittingJobItem(
                 item.SequenceNo,
-                SlitCoilIdGenerator.Generate(motherCoil.RawCoilNumber, item.SequenceNo),
+                SlitCoilIdGenerator.Generate(slittingJobNo, item.SequenceNo),
                 item.Width,
-                SlittingPlanningCalculator.EstimateWeight(item.Width, motherCoil.Thickness, motherCoil.Length),
+                SlittingPlanningCalculator.EstimateWeight(item.Width, motherCoil.Width, motherCoil.Weight, motherCoil.Thickness, motherCoil.Length),
                 item.Remarks))
             .ToArray();
     }

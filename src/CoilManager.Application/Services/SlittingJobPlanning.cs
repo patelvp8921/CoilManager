@@ -10,12 +10,13 @@ public static class SlittingJobNumberGenerator
 
 public static class SlitCoilIdGenerator
 {
-    public static string Generate(string motherCoilId, int sequenceNo)
+    public static string Generate(string slittingJobNo, int sequenceNo)
     {
         string suffix = sequenceNo.ToString("00");
-        return motherCoilId.StartsWith("MC-", StringComparison.OrdinalIgnoreCase)
-            ? $"SC-{motherCoilId[3..]}-{suffix}"
-            : $"SC-{motherCoilId}-{suffix}";
+        string normalizedJobNo = slittingJobNo.Replace('/', '-');
+        return normalizedJobNo.StartsWith("AE-S-", StringComparison.OrdinalIgnoreCase)
+            ? $"SC-{normalizedJobNo[5..]}-{suffix}"
+            : $"SC-{normalizedJobNo}-{suffix}";
     }
 }
 
@@ -70,6 +71,26 @@ public static class SlittingPlanningCalculator
 
         decimal lengthInMillimeters = NormalizeLengthToMillimeters(length);
         return Math.Round(slitWidth * thickness * lengthInMillimeters * CrgoDensityKgPerCubicMeter / CubicMillimetersPerCubicMeter, 3);
+    }
+
+    public static decimal EstimateWeight(
+        decimal slitWidth,
+        decimal motherCoilWidth,
+        decimal motherCoilWeight,
+        decimal thickness,
+        decimal length)
+    {
+        if (slitWidth <= 0)
+        {
+            return 0;
+        }
+
+        if (motherCoilWidth > 0 && motherCoilWeight > 0)
+        {
+            return Math.Round(motherCoilWeight * slitWidth / motherCoilWidth, 3);
+        }
+
+        return EstimateWeight(slitWidth, thickness, length);
     }
 
     private static decimal NormalizeLengthToMillimeters(decimal length)

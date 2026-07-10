@@ -17,11 +17,11 @@ public sealed class SlittingJobPlanningTests
     }
 
     [Fact]
-    public void SlitCoilIdGenerator_UsesMotherCoilSequence()
+    public void SlitCoilIdGenerator_UsesJobNumberSequence()
     {
-        string slitCoilId = SlitCoilIdGenerator.Generate("MC-2026-00001", 6);
+        string slitCoilId = SlitCoilIdGenerator.Generate("AE/S/2026/00002", 6);
 
-        Assert.Equal("SC-2026-00001-06", slitCoilId);
+        Assert.Equal("SC-2026-00002-06", slitCoilId);
     }
 
     [Fact]
@@ -62,6 +62,19 @@ public sealed class SlittingJobPlanningTests
             length: 100m);
 
         Assert.Equal(41.310m, estimatedWeight);
+    }
+
+    [Fact]
+    public void Calculator_UsesMotherCoilWeightWhenLengthIsMissing()
+    {
+        decimal estimatedWeight = SlittingPlanningCalculator.EstimateWeight(
+            slitWidth: 250m,
+            motherCoilWidth: 1250m,
+            motherCoilWeight: 10m,
+            thickness: 0.23m,
+            length: 0m);
+
+        Assert.Equal(2.000m, estimatedWeight);
     }
 
     [Fact]

@@ -3,6 +3,7 @@ using CoilManager.Application.DTOs.SlittingJobs;
 using CoilManager.Application.Interfaces.Repositories;
 using CoilManager.Application.Mappings;
 using CoilManager.Domain.Entities;
+using CoilManager.Domain.Enums;
 using CoilManager.Shared.Pagination;
 using Microsoft.EntityFrameworkCore;
 
@@ -59,6 +60,23 @@ public sealed class SlittingJobRepository : Repository<SlittingJob>, ISlittingJo
     {
         return _dbContext.SlittingJobs
             .AnyAsync(job => job.SlittingJobNo == slittingJobNo, cancellationToken);
+    }
+
+    public Task<bool> DraftExistsForMotherCoilAsync(Guid motherCoilId, CancellationToken cancellationToken = default)
+    {
+        return _dbContext.SlittingJobs
+            .AnyAsync(job => job.MotherCoilId == motherCoilId && job.Status == SlittingJobStatus.Draft, cancellationToken);
+    }
+
+    public async Task<IReadOnlySet<Guid>> GetDraftMotherCoilIdsAsync(CancellationToken cancellationToken = default)
+    {
+        Guid[] motherCoilIds = await _dbContext.SlittingJobs
+            .Where(job => job.Status == SlittingJobStatus.Draft)
+            .Select(job => job.MotherCoilId)
+            .Distinct()
+            .ToArrayAsync(cancellationToken);
+
+        return motherCoilIds.ToHashSet();
     }
 
     public async Task DeleteItemsForRebuildAsync(SlittingJob job, CancellationToken cancellationToken = default)

@@ -173,6 +173,11 @@
               <mat-form-field appearance="outline" subscriptSizing="dynamic">
                 <mat-label>Width</mat-label>
                 <input matInput type="number" step="0.001" formControlName="width">
+                @if (items.at(index).get('width')?.hasError('required')) {
+                  <mat-error>Required</mat-error>
+                } @else if (items.at(index).get('width')?.hasError('min')) {
+                  <mat-error>Must be greater than 0</mat-error>
+                }
               </mat-form-field>
               <span>{{ row.estimatedWeight | number:'1.3-3' }}</span>
               <mat-form-field appearance="outline" subscriptSizing="dynamic">
@@ -183,6 +188,21 @@
           } @empty {
             <div class="empty-grid">Generate slits to start planning.</div>
           }
+        </div>
+      </section>
+
+      <section class="form-section weight-summary-section">
+        <header>
+          <h2>Weight & Yield</h2>
+        </header>
+        <div class="weight-summary-strip">
+          <div><span>Mother Coil Weight</span><strong>{{ weightSummary().motherWeight | number:'1.3-3' }} kg</strong></div>
+          <div><span>Total Slit Weight</span><strong>{{ weightSummary().totalSlitWeight | number:'1.3-3' }} kg</strong></div>
+          <div><span>Trim Scrap Weight</span><strong>{{ weightSummary().trimScrapWeight | number:'1.3-3' }} kg</strong></div>
+          <div><span>Knife Loss Weight</span><strong>{{ weightSummary().knifeLossWeight | number:'1.3-3' }} kg</strong></div>
+          <div><span>Process Scrap Weight</span><strong>{{ weightSummary().processScrapWeight | number:'1.3-3' }} kg</strong></div>
+          <div><span>Balance Weight</span><strong>{{ weightSummary().balanceWeight | number:'1.3-3' }} kg</strong></div>
+          <div><span>Yield</span><strong>{{ weightSummary().yieldPercent | number:'1.2-2' }}%</strong></div>
         </div>
       </section>
 
