@@ -16,6 +16,7 @@ public static class DependencyInjection
         services.AddScoped<IRawCoilService, RawCoilService>();
         services.AddScoped<ILookupService, LookupService>();
         services.AddScoped<IOperationsDashboardService, OperationsDashboardService>();
+        services.AddScoped<ISlittingJobService, SlittingJobService>();
 
         return services;
     }

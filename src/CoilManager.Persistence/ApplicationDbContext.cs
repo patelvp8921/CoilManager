@@ -13,6 +13,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Supplier> Suppliers => Set<Supplier>();
     public DbSet<Manufacturer> Manufacturers => Set<Manufacturer>();
     public DbSet<Grade> Grades => Set<Grade>();
+    public DbSet<SlittingJob> SlittingJobs => Set<SlittingJob>();
+    public DbSet<SlittingJobItem> SlittingJobItems => Set<SlittingJobItem>();
     public DbSet<User> Users => Set<User>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<UserRole> UserRoles => Set<UserRole>();

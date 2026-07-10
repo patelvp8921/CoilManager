@@ -1,0 +1,35 @@
+<mat-card appearance="outlined" class="layout-card" [class.invalid]="summary().isInvalid">
+  @if (summary().isInvalid) {
+    <header>
+      <div class="warning">
+        <mat-icon>warning</mat-icon>
+        <span>Planned width exceeds Mother Coil width by {{ summary().excessWidth | number:'1.0-3' }} mm.</span>
+      </div>
+    </header>
+  }
+
+  <div class="layout-scroll">
+    <div class="layout-bar" aria-label="Visual slitting layout">
+      @for (segment of segments(); track segment.label + segment.detail + $index) {
+        <div
+          class="segment"
+          [class.edge]="segment.cssClass === 'edge'"
+          [class.slit]="segment.cssClass === 'slit'"
+          [class.knife]="segment.cssClass === 'knife'"
+          [class.remaining]="segment.cssClass === 'remaining'"
+          [class.excess]="segment.cssClass === 'excess'"
+          [style.flex-basis.%]="segment.percent"
+        >
+          @if (segment.label) {
+            <strong>{{ segment.label }}</strong>
+          }
+          @if (segment.detail) {
+            <span>{{ segment.detail }}</span>
+          }
+        </div>
+      } @empty {
+        <div class="empty-layout">Select a Mother Coil and generate slits.</div>
+      }
+    </div>
+  </div>
+</mat-card>

@@ -1,0 +1,139 @@
+<section class="page-title-bar">
+  <div>
+    <nav aria-label="Breadcrumb">
+      <a routerLink="/dashboard">Home</a>
+      <mat-icon>chevron_right</mat-icon>
+      <strong>Slitting Jobs</strong>
+    </nav>
+  </div>
+
+  <a mat-flat-button routerLink="/slitting-jobs/create" class="primary-action">
+    <mat-icon>add</mat-icon>
+    Create Slitting Job
+  </a>
+</section>
+
+<section class="slitting-job-page">
+  <mat-card appearance="outlined" class="filter-panel">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Search</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="Job, Mother Coil, heat, grade">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Status</mat-label>
+      <mat-select [formControl]="statusControl">
+        <mat-option [value]="null">All statuses</mat-option>
+        @for (option of statusOptions; track option.value) {
+          <mat-option [value]="option.value">{{ option.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="filter-actions">
+      <button mat-flat-button type="button" (click)="applyFilters()">
+        <mat-icon>search</mat-icon>
+        Search
+      </button>
+      <button mat-stroked-button type="button" (click)="resetFilters()">
+        <mat-icon>restart_alt</mat-icon>
+        Reset
+      </button>
+      <button mat-icon-button type="button" aria-label="Refresh slitting jobs" (click)="loadSlittingJobs()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+  </mat-card>
+
+  <mat-card appearance="outlined" class="table-panel">
+    @if (isLoading()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+
+    <div class="table-wrap">
+      <table mat-table matSort [dataSource]="slittingJobs()" (matSortChange)="onSortChange($event)">
+        <ng-container matColumnDef="slittingJobNo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="slittingJobNo">Job No</th>
+          <td mat-cell *matCellDef="let row">{{ row.slittingJobNo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="planningDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="planningDate">Planning Date</th>
+          <td mat-cell *matCellDef="let row">{{ row.planningDate | date:'dd/MM/yyyy' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="motherCoilNo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="motherCoilNo">Mother Coil ID</th>
+          <td mat-cell *matCellDef="let row">{{ row.motherCoilNo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="grade">
+          <th mat-header-cell *matHeaderCellDef>Grade</th>
+          <td mat-cell *matCellDef="let row">{{ row.grade || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="thickness">
+          <th mat-header-cell *matHeaderCellDef>Thickness(mm)</th>
+          <td mat-cell *matCellDef="let row">{{ row.thickness | number:'1.2-3' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="motherCoilWidth">
+          <th mat-header-cell *matHeaderCellDef>Mother Width</th>
+          <td mat-cell *matCellDef="let row">{{ row.motherCoilWidth | number:'1.0-3' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="motherCoilWeight">
+          <th mat-header-cell *matHeaderCellDef>Mother Weight</th>
+          <td mat-cell *matCellDef="let row">{{ row.motherCoilWeight | number:'1.3-3' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="totalPlannedWidth">
+          <th mat-header-cell *matHeaderCellDef>Total Planned</th>
+          <td mat-cell *matCellDef="let row">{{ row.totalPlannedWidth | number:'1.0-3' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="status">Status</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="status-pill" [class.released]="row.status === 1" [class.completed]="row.status === 3" [class.cancelled]="row.status === 4">
+              {{ labelForStatus(row.status) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let row">
+            @if (canEdit(row)) {
+              <a mat-icon-button [routerLink]="['/slitting-jobs', row.id, 'edit']" aria-label="Edit slitting job">
+                <mat-icon>edit</mat-icon>
+              </a>
+            } @else {
+              <span class="muted-action">-</span>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      @if (!isLoading() && slittingJobs().length === 0) {
+        <div class="empty-state">
+          <mat-icon>precision_manufacturing</mat-icon>
+          <span>No slitting jobs found.</span>
+        </div>
+      }
+    </div>
+
+    <mat-paginator
+      [length]="totalCount()"
+      [pageIndex]="pageIndex()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="[10, 25, 50, 100]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+    />
+  </mat-card>
+</section>

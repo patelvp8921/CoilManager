@@ -44,6 +44,12 @@ export class ShellComponent {
       route: '/mother-coils',
       exact: false,
     },
+    {
+      label: 'Slitting Jobs',
+      icon: 'precision_manufacturing',
+      route: '/slitting-jobs',
+      exact: false,
+    },
   ];
 
   protected readonly adminItems: AdminNavigationItem[] = [

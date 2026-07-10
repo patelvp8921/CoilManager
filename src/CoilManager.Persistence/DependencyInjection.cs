@@ -27,6 +27,7 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IRawCoilRepository, RawCoilRepository>();
+        services.AddScoped<ISlittingJobRepository, SlittingJobRepository>();
 
         return services;
     }

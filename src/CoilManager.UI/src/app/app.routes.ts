@@ -52,6 +52,24 @@ export const routes: Routes = [
         title: 'Mother Coils | CoilManager',
       },
       {
+        path: 'slitting-jobs/create',
+        loadComponent: () =>
+          import('./features/slitting-jobs/pages/slitting-job-planning/slitting-job-planning.component').then((component) => component.SlittingJobPlanningComponent),
+        title: 'Create Slitting Job | CoilManager',
+      },
+      {
+        path: 'slitting-jobs/:id/edit',
+        loadComponent: () =>
+          import('./features/slitting-jobs/pages/slitting-job-planning/slitting-job-planning.component').then((component) => component.SlittingJobPlanningComponent),
+        title: 'Edit Slitting Job | CoilManager',
+      },
+      {
+        path: 'slitting-jobs',
+        loadComponent: () =>
+          import('./features/slitting-jobs/pages/slitting-job-list/slitting-job-list-page.component').then((component) => component.SlittingJobListPageComponent),
+        title: 'Slitting Jobs | CoilManager',
+      },
+      {
         path: 'raw-coils/create',
         redirectTo: '/mother-coils/create',
         pathMatch: 'full',

@@ -1,0 +1,139 @@
+.layout-card {
+  display: grid;
+  gap: 10px;
+  border-radius: 8px;
+  padding: 12px;
+  background: #ffffff;
+}
+
+.layout-card.invalid {
+  border-color: #fda29b;
+  background: #fffafa;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+header span {
+  display: inline-block;
+  color: #667085;
+  font-size: 12px;
+}
+
+.warning {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #fda29b;
+  border-radius: 6px;
+  padding: 6px 8px;
+  background: #fef3f2;
+  color: #b42318;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.warning mat-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+}
+
+.layout-scroll {
+  overflow-x: hidden;
+  padding-bottom: 2px;
+}
+
+.layout-bar {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 64px;
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.segment {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border-right: 1px solid rgba(15, 23, 42, 0.16);
+  padding: 7px 6px;
+  color: #101828;
+  text-align: center;
+}
+
+.segment:last-child {
+  border-right: 0;
+}
+
+.segment strong {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.segment span {
+  max-width: 100%;
+  overflow: hidden;
+  color: inherit;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.edge {
+  background: #e0f2fe;
+  color: #075985;
+}
+
+.slit {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.knife {
+  min-width: 2px;
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.remaining {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.excess {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.empty-layout {
+  display: grid;
+  width: 100%;
+  place-items: center;
+  color: #667085;
+}
+
+@media (max-width: 720px) {
+  header {
+    flex-direction: column;
+  }
+
+  .layout-card {
+    padding: 10px;
+  }
+}
