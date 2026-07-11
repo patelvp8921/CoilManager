@@ -10,5 +10,6 @@ public enum CoilStatus
     Scrapped = 3,
     Consumed = 4,
     Dispatched = 5,
-    UnderInspection = 6
+    UnderInspection = 6,
+    InProcess = 7
 }

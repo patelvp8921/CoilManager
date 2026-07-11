@@ -7,6 +7,8 @@ public sealed record OperationsDashboardDto(
     InventorySummaryDto Inventory,
     ProductionSummaryDto Production,
     SlittingSummaryDto Slitting,
+    SlittingJobMetricsDto SlittingJobMetrics,
+    IReadOnlyList<ProductionQueueItemDto> ProductionQueue,
     QualitySummaryDto Quality,
     ProcurementSummaryDto Procurement,
     DispatchSummaryDto Dispatch,
@@ -60,6 +62,27 @@ public sealed record SlittingSummaryDto(
     int SlittingJobs,
     decimal SlitWeight,
     string Status);
+
+public sealed record SlittingJobMetricsDto(
+    int DraftJobs,
+    int ReleasedJobs,
+    int InProgressJobs,
+    int CompletedToday,
+    int CancelledJobs,
+    decimal AverageWaitingMinutes,
+    decimal AverageProcessingMinutes);
+
+public sealed record ProductionQueueItemDto(
+    Guid SlittingJobId,
+    string SlittingJobNo,
+    string MotherCoilNumber,
+    string Status,
+    DateTimeOffset? ReleasedOn,
+    DateTimeOffset? StartedOn,
+    decimal WaitingMinutes,
+    Guid? MachineId,
+    string? Shift,
+    string Route);
 
 public sealed record QualitySummaryDto(
     int PendingQa,

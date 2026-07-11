@@ -5,6 +5,8 @@ export interface OperationsDashboard {
   inventory: InventorySummary;
   production: ProductionSummary;
   slitting: SlittingSummary;
+  slittingJobMetrics: SlittingJobMetrics;
+  productionQueue: readonly ProductionQueueItem[];
   quality: QualitySummary;
   procurement: ProcurementSummary;
   dispatch: DispatchSummary;
@@ -64,6 +66,29 @@ export interface SlittingSummary {
   slittingJobs: number;
   slitWeight: number;
   status: string;
+}
+
+export interface SlittingJobMetrics {
+  draftJobs: number;
+  releasedJobs: number;
+  inProgressJobs: number;
+  completedToday: number;
+  cancelledJobs: number;
+  averageWaitingMinutes: number;
+  averageProcessingMinutes: number;
+}
+
+export interface ProductionQueueItem {
+  slittingJobId: string;
+  slittingJobNo: string;
+  motherCoilNumber: string;
+  status: string;
+  releasedOn?: string | null;
+  startedOn?: string | null;
+  waitingMinutes: number;
+  machineId?: string | null;
+  shift?: string | null;
+  route: string;
 }
 
 export interface QualitySummary {

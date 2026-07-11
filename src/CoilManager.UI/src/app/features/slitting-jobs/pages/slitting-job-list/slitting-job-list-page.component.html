@@ -96,7 +96,7 @@
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef mat-sort-header="status">Status</th>
           <td mat-cell *matCellDef="let row">
-            <span class="status-pill" [class.released]="row.status === 1" [class.completed]="row.status === 3" [class.cancelled]="row.status === 4">
+            <span class="status-pill" [class.released]="row.status === 1" [class.in-progress]="row.status === 2" [class.completed]="row.status === 3" [class.cancelled]="row.status === 4">
               {{ labelForStatus(row.status) }}
             </span>
           </td>
@@ -109,7 +109,29 @@
               <a mat-icon-button [routerLink]="['/slitting-jobs', row.id, 'edit']" aria-label="Edit slitting job">
                 <mat-icon>edit</mat-icon>
               </a>
-            } @else {
+            }
+            @if (canStart(row)) {
+              <button mat-icon-button type="button" aria-label="Start slitting" (click)="start(row)">
+                <mat-icon>play_circle</mat-icon>
+              </button>
+              <button mat-icon-button type="button" aria-label="Cancel slitting job" (click)="cancel(row)">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            }
+            @if (canComplete(row)) {
+              <a mat-icon-button [routerLink]="['/slitting-jobs', row.id, 'complete']" aria-label="Complete slitting">
+                <mat-icon>task_alt</mat-icon>
+              </a>
+            }
+            @if (canViewSlitCoils(row)) {
+              <a mat-icon-button routerLink="/slit-coils" aria-label="View slit coils">
+                <mat-icon>inventory_2</mat-icon>
+              </a>
+              <button mat-icon-button type="button" disabled aria-label="Print labels">
+                <mat-icon>print</mat-icon>
+              </button>
+            }
+            @if (!canEdit(row) && !canStart(row) && !canComplete(row) && !canViewSlitCoils(row)) {
               <span class="muted-action">-</span>
             }
           </td>

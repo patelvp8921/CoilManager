@@ -6,14 +6,18 @@ using CoilManager.Domain.Enums;
 
 namespace CoilManager.Application.Services;
 
-public sealed class OperationsDashboardService(IRawCoilRepository rawCoilRepository) : IOperationsDashboardService
+public sealed class OperationsDashboardService(
+    IRawCoilRepository rawCoilRepository,
+    ISlittingJobRepository slittingJobRepository) : IOperationsDashboardService
 {
     private const string ComingSoon = "Coming soon";
 
     public async Task<OperationsDashboardDto> GetOperationsDashboardAsync(CancellationToken cancellationToken = default)
     {
         IReadOnlyList<RawCoil> motherCoils = await rawCoilRepository.GetAllAsync(cancellationToken);
+        IReadOnlyList<SlittingJob> slittingJobs = await slittingJobRepository.GetForDashboardAsync(cancellationToken);
         RawCoil[] coils = motherCoils.ToArray();
+        SlittingJob[] jobs = slittingJobs.ToArray();
 
         int totalMotherCoils = coils.Length;
         int availableMotherCoils = CountByStatus(coils, CoilStatus.Available);
@@ -38,7 +42,8 @@ public sealed class OperationsDashboardService(IRawCoilRepository rawCoilReposit
             BuildRecentReceivedCoils(coils));
 
         ProductionSummaryDto production = new(0, 0, 0, 0, ComingSoon);
-        SlittingSummaryDto slitting = new(0, 0, 0, ComingSoon);
+        SlittingJobMetricsDto slittingMetrics = BuildSlittingJobMetrics(jobs);
+        SlittingSummaryDto slitting = new(0, jobs.Length, 0, BuildSlittingStatus(slittingMetrics));
         QualitySummaryDto quality = new(0, holdMotherCoils, rejectedMotherCoils, ComingSoon);
         ProcurementSummaryDto procurement = new(0, coils.Select(coil => coil.SupplierId).Distinct().Count(), 0, ComingSoon);
         DispatchSummaryDto dispatch = new(0, 0, 0, ComingSoon);
@@ -47,10 +52,12 @@ public sealed class OperationsDashboardService(IRawCoilRepository rawCoilReposit
         return new OperationsDashboardDto(
             DashboardRole: GetDashboardRole(),
             GeneratedAt: DateTimeOffset.UtcNow,
-            Kpis: BuildKpis(totalMotherCoils),
+            Kpis: BuildKpis(totalMotherCoils, slittingMetrics),
             Inventory: inventory,
             Production: production,
             Slitting: slitting,
+            SlittingJobMetrics: slittingMetrics,
+            ProductionQueue: BuildProductionQueue(jobs),
             Quality: quality,
             Procurement: procurement,
             Dispatch: dispatch,
@@ -65,17 +72,89 @@ public sealed class OperationsDashboardService(IRawCoilRepository rawCoilReposit
         return coils.Count(coil => coil.Status == status);
     }
 
-    private static IReadOnlyList<DashboardKpiDto> BuildKpis(int totalMotherCoils)
+    private static IReadOnlyList<DashboardKpiDto> BuildKpis(int totalMotherCoils, SlittingJobMetricsDto slittingMetrics)
     {
         return
         [
             new("Mother Coils", totalMotherCoils.ToString("N0"), "inventory_2", "primary", "Live inventory"),
             new("Slit Coils", "0", "splitscreen", "neutral", ComingSoon),
             new("Finished Coils", "0", "task_alt", "neutral", ComingSoon),
-            new("Work Orders", "0", "assignment", "neutral", ComingSoon),
-            new("Slitting Jobs", "0", "precision_manufacturing", "neutral", ComingSoon),
+            new("Waiting to Start", slittingMetrics.ReleasedJobs.ToString("N0"), "pending_actions", "warning", "Released slitting jobs"),
+            new("Running Jobs", slittingMetrics.InProgressJobs.ToString("N0"), "precision_manufacturing", "success", "In progress slitting jobs"),
+            new("Completed Today", slittingMetrics.CompletedToday.ToString("N0"), "task_alt", "primary", "Slitting jobs completed today"),
             new("Dispatches", "0", "local_shipping", "neutral", ComingSoon)
         ];
+    }
+
+    private static SlittingJobMetricsDto BuildSlittingJobMetrics(IReadOnlyList<SlittingJob> jobs)
+    {
+        DateTime today = DateTime.UtcNow.Date;
+        decimal averageWaiting = AverageMinutes(jobs
+            .Where(job => job.ReleasedOn.HasValue && job.StartedOn.HasValue)
+            .Select(job => job.StartedOn!.Value - job.ReleasedOn!.Value));
+        decimal averageProcessing = AverageMinutes(jobs
+            .Where(job => job.StartedOn.HasValue && job.CompletedOn.HasValue)
+            .Select(job => job.CompletedOn!.Value - job.StartedOn!.Value));
+
+        return new SlittingJobMetricsDto(
+            jobs.Count(job => job.Status == SlittingJobStatus.Draft),
+            jobs.Count(job => job.Status == SlittingJobStatus.Released),
+            jobs.Count(job => job.Status == SlittingJobStatus.InProgress),
+            jobs.Count(job => job.Status == SlittingJobStatus.Completed && job.CompletedOn?.UtcDateTime.Date == today),
+            jobs.Count(job => job.Status == SlittingJobStatus.Cancelled),
+            averageWaiting,
+            averageProcessing);
+    }
+
+    private static IReadOnlyList<ProductionQueueItemDto> BuildProductionQueue(IReadOnlyList<SlittingJob> jobs)
+    {
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        return jobs
+            .Where(job => job.Status is SlittingJobStatus.InProgress or SlittingJobStatus.Released)
+            .OrderBy(job => job.Status == SlittingJobStatus.InProgress ? 0 : 1)
+            .ThenBy(job => job.ReleasedOn ?? DateTimeOffset.MaxValue)
+            .Select(job => new ProductionQueueItemDto(
+                job.Id,
+                job.SlittingJobNo,
+                job.MotherCoil?.RawCoilNumber ?? "-",
+                job.Status == SlittingJobStatus.Released ? "Waiting to Start" : "Running",
+                job.ReleasedOn,
+                job.StartedOn,
+                CalculateWaitingMinutes(job, now),
+                job.MachineId,
+                job.Shift,
+                job.Status == SlittingJobStatus.InProgress
+                    ? $"/slitting-jobs/{job.Id}/complete"
+                    : $"/slitting-jobs/{job.Id}/edit"))
+            .ToArray();
+    }
+
+    private static decimal AverageMinutes(IEnumerable<TimeSpan> durations)
+    {
+        TimeSpan[] values = durations.ToArray();
+        return values.Length == 0
+            ? 0
+            : Math.Round((decimal)values.Average(duration => duration.TotalMinutes), 1);
+    }
+
+    private static decimal CalculateWaitingMinutes(SlittingJob job, DateTimeOffset now)
+    {
+        DateTimeOffset? start = job.Status == SlittingJobStatus.InProgress
+            ? job.StartedOn
+            : job.ReleasedOn;
+
+        return start.HasValue
+            ? Math.Max(0, Math.Round((decimal)(now - start.Value).TotalMinutes, 1))
+            : 0;
+    }
+
+    private static string BuildSlittingStatus(SlittingJobMetricsDto metrics)
+    {
+        return metrics.InProgressJobs > 0
+            ? "Running"
+            : metrics.ReleasedJobs > 0
+                ? "Waiting to Start"
+                : "Ready";
     }
 
     private static IReadOnlyList<InventoryBreakdownDto> BuildGradeWiseStock(IEnumerable<RawCoil> coils)
@@ -192,6 +271,7 @@ public sealed class OperationsDashboardService(IRawCoilRepository rawCoilReposit
             CoilStatus.Draft => "Draft",
             CoilStatus.Available => "Available",
             CoilStatus.Reserved => "Reserved",
+            CoilStatus.InProcess => "In Process",
             CoilStatus.Rejected => "Rejected",
             CoilStatus.Consumed => "Consumed",
             CoilStatus.Dispatched => "Dispatched",

@@ -104,6 +104,65 @@ public sealed class SlittingJobsController(ISlittingJobService slittingJobServic
             : ToFailure<SlittingJobDto>(result.Error);
     }
 
+    [HttpPost("{id:guid}/start")]
+    [ProducesResponseType(typeof(ApiResponse<StartSlittingResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<StartSlittingResponse>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<StartSlittingResponse>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiResponse<StartSlittingResponse>), StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<ApiResponse<StartSlittingResponse>>> Start(
+        Guid id,
+        [FromBody] StartSlittingRequest request,
+        CancellationToken cancellationToken)
+    {
+        CoilManager.Shared.Results.Result<StartSlittingResponse> result = await slittingJobService.StartSlittingAsync(id, request, cancellationToken);
+
+        return result.IsSuccess
+            ? Success(result.Value, "Slitting started successfully.")
+            : ToFailure<StartSlittingResponse>(result.Error);
+    }
+
+    [HttpPost("{id:guid}/complete")]
+    [ProducesResponseType(typeof(ApiResponse<CompleteSlittingResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<CompleteSlittingResponse>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<CompleteSlittingResponse>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiResponse<CompleteSlittingResponse>), StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<ApiResponse<CompleteSlittingResponse>>> Complete(
+        Guid id,
+        [FromBody] CompleteSlittingRequest request,
+        CancellationToken cancellationToken)
+    {
+        CoilManager.Shared.Results.Result<CompleteSlittingResponse> result = await slittingJobService.CompleteAsync(id, request, cancellationToken);
+
+        return result.IsSuccess
+            ? Success(result.Value, "Slitting completed and slit coil inventory generated successfully.")
+            : ToFailure<CompleteSlittingResponse>(result.Error);
+    }
+
+    [HttpPost("{id:guid}/cancel")]
+    [ProducesResponseType(typeof(ApiResponse<SlittingJobDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<SlittingJobDto>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<SlittingJobDto>), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ApiResponse<SlittingJobDto>>> Cancel(Guid id, CancellationToken cancellationToken)
+    {
+        CoilManager.Shared.Results.Result<SlittingJobDto> result = await slittingJobService.CancelAsync(id, cancellationToken);
+
+        return result.IsSuccess
+            ? Success(result.Value, "Slitting job cancelled successfully.")
+            : ToFailure<SlittingJobDto>(result.Error);
+    }
+
+    [HttpGet("{id:guid}/completion")]
+    [ProducesResponseType(typeof(ApiResponse<SlittingJobCompletionDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<SlittingJobCompletionDto>), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ApiResponse<SlittingJobCompletionDto>>> GetCompletion(Guid id, CancellationToken cancellationToken)
+    {
+        CoilManager.Shared.Results.Result<SlittingJobCompletionDto> result = await slittingJobService.GetCompletionAsync(id, cancellationToken);
+
+        return result.IsSuccess
+            ? Success(result.Value)
+            : ToFailure<SlittingJobCompletionDto>(result.Error);
+    }
+
     private ObjectResult ToFailure<T>(Error error)
     {
         int statusCode = error.Code switch

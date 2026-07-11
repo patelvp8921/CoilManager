@@ -1,0 +1,113 @@
+<section class="page-title-bar">
+  <div>
+    <h1>Complete Slitting</h1>
+    <nav>
+      <a routerLink="/dashboard">Home</a>
+      <mat-icon>chevron_right</mat-icon>
+      <a routerLink="/slitting-jobs">Slitting Jobs</a>
+      <mat-icon>chevron_right</mat-icon>
+      <strong>Complete Slitting</strong>
+    </nav>
+  </div>
+  @if (job(); as job) {
+    <mat-chip>{{ labelForStatus(job.status) }}</mat-chip>
+  }
+</section>
+
+<section class="complete-page">
+  <mat-card appearance="outlined">
+    @if (isLoading() || isSubmitting()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+
+    @if (errors().length) {
+      <div class="warning-panel">
+        @for (error of errors(); track error) {
+          <span>{{ error }}</span>
+        }
+      </div>
+    }
+
+    @if (job(); as job) {
+      <section class="summary-card">
+        <div><span>Slitting Job Number</span><strong>{{ job.slittingJobNo }}</strong></div>
+        <div><span>Planning Date</span><strong>{{ job.planningDate | date:'dd/MM/yyyy' }}</strong></div>
+        <div><span>Mother Coil</span><strong>{{ job.motherCoilNo }}</strong></div>
+      </section>
+
+      <app-slitting-job-timeline [job]="job" />
+
+      <section class="summary-grid">
+        <div><span>Grade</span><strong>{{ job.grade || '-' }}</strong></div>
+        <div><span>Thickness</span><strong>{{ job.thickness | number:'1.2-3' }} mm</strong></div>
+        <div><span>Category</span><strong>{{ job.category }}</strong></div>
+        <div><span>Core Loss/Kg</span><strong>{{ job.coreLossPerKg | number:'1.2-4' }}</strong></div>
+        <div><span>Width</span><strong>{{ job.motherCoilWidth | number:'1.0-3' }} mm</strong></div>
+        <div><span>Weight</span><strong>{{ job.motherCoilWeight | number:'1.3-3' }} kg</strong></div>
+        <div><span>Supplier</span><strong>{{ job.supplierName || '-' }}</strong></div>
+        <div><span>Manufacturer</span><strong>{{ job.manufacturerName || '-' }}</strong></div>
+      </section>
+
+      <form [formGroup]="form">
+        <section class="completion-grid" formArrayName="slits">
+          <div class="grid-header">
+            <span>Seq</span>
+            <span>Slit Coil Number</span>
+            <span>Planned Width</span>
+            <span>Actual Width</span>
+            <span>Actual Weight</span>
+            <span>Remarks</span>
+            <span>Status</span>
+          </div>
+          @for (item of job.items; track item.id; let index = $index) {
+            <div class="grid-row" [formGroupName]="index">
+              <strong>{{ item.sequenceNo }}</strong>
+              <span>{{ item.slitCoilId }}</span>
+              <span>{{ item.width | number:'1.0-3' }}</span>
+              <span class="readonly-width">{{ item.width | number:'1.0-3' }}</span>
+              <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                <mat-label>Actual Weight</mat-label>
+                <input matInput type="number" step="0.001" formControlName="actualWeight">
+              </mat-form-field>
+              <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                <mat-label>Remarks</mat-label>
+                <input matInput formControlName="remarks">
+              </mat-form-field>
+              <span class="ok">Ready</span>
+            </div>
+          }
+        </section>
+      </form>
+
+      <section class="summary-grid totals">
+        <div><span>Mother Coil Weight</span><strong>{{ summary().motherWeight | number:'1.3-3' }} kg</strong></div>
+        <div><span>Total Actual Slit Weight</span><strong>{{ summary().totalActualWeight | number:'1.3-3' }} kg</strong></div>
+        <div><span>Weight Difference</span><strong>{{ summary().weightDifference | number:'1.3-3' }} kg</strong></div>
+        <div><span>Total Planned Width</span><strong>{{ summary().totalPlannedWidth | number:'1.0-3' }} mm</strong></div>
+        <div><span>Remaining Width</span><strong>{{ summary().remainingWidth | number:'1.0-3' }} mm</strong></div>
+        <div><span>Generated Slit Count</span><strong>{{ summary().generatedSlitCount }}</strong></div>
+      </section>
+
+      @if (generatedCoils().length) {
+        <section class="result-panel">
+          <h2>Generated Slit Coils</h2>
+          @for (coil of generatedCoils(); track coil) {
+            <span>{{ coil }}</span>
+          }
+          <div class="result-actions">
+            <a mat-stroked-button routerLink="/slit-coils">View Slit Coil Inventory</a>
+            <button mat-stroked-button type="button" disabled>Print Labels</button>
+            <a mat-flat-button [routerLink]="['/slitting-jobs', job.id, 'complete']">View Slitting Job</a>
+          </div>
+        </section>
+      }
+
+      <div class="actions">
+        <a mat-stroked-button routerLink="/slitting-jobs">Back to Job</a>
+        <button mat-flat-button type="button" (click)="complete()" [disabled]="job.status !== 2 || isSubmitting() || generatedCoils().length > 0">
+          Complete Slitting
+        </button>
+      </div>
+    }
+  </mat-card>
+</section>

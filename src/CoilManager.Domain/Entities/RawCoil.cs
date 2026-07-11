@@ -141,4 +141,9 @@ public sealed class RawCoil : SoftDeletableEntity
         Manufacturer = manufacturer;
         Grade = grade;
     }
+
+    public void SetStatus(CoilStatus status)
+    {
+        Status = status;
+    }
 }

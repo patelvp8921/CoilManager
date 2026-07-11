@@ -292,5 +292,10 @@ public sealed class RawCoilServiceTests
         {
             return Task.FromResult(1);
         }
+
+        public async Task ExecuteInTransactionAsync(Func<CancellationToken, Task> operation, CancellationToken cancellationToken = default)
+        {
+            await operation(cancellationToken);
+        }
     }
 }

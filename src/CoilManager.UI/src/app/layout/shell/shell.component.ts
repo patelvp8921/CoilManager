@@ -50,6 +50,12 @@ export class ShellComponent {
       route: '/slitting-jobs',
       exact: false,
     },
+    {
+      label: 'Slit Coil Inventory',
+      icon: 'view_list',
+      route: '/slit-coils',
+      exact: false,
+    },
   ];
 
   protected readonly adminItems: AdminNavigationItem[] = [

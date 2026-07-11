@@ -118,7 +118,7 @@ export class SlittingJobPlanningComponent implements OnInit {
       const width = this.parseNumber(value.width);
       return {
         sequenceNo,
-        slitCoilId: motherCoil ? this.generateSlitCoilId(this.displayedJobNumber(), sequenceNo) : '',
+        slitCoilId: motherCoil ? this.generateSlitCoilId(motherCoil.motherCoilId, sequenceNo) : '',
         width,
         estimatedWeight: this.estimateWeight(width),
         remarks: value.remarks ?? '',
@@ -507,12 +507,11 @@ export class SlittingJobPlanningComponent implements OnInit {
       : length;
   }
 
-  private generateSlitCoilId(slittingJobNo: string, sequenceNo: number): string {
+  private generateSlitCoilId(motherCoilNumber: string, sequenceNo: number): string {
     const sequence = sequenceNo.toString().padStart(2, '0');
-    const normalizedJobNo = slittingJobNo.replace(/\//g, '-');
-    return normalizedJobNo.startsWith('AE-S-')
-      ? `SC-${normalizedJobNo.slice(5)}-${sequence}`
-      : `SC-${normalizedJobNo}-${sequence}`;
+    return motherCoilNumber.startsWith('MC-')
+      ? `SC-${motherCoilNumber.slice(3)}-${sequence}`
+      : `SC-${motherCoilNumber}-${sequence}`;
   }
 
   private collectSubmitValidationErrors(): readonly string[] {

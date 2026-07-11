@@ -49,6 +49,14 @@ public sealed class SlittingJob : AuditableEntity
     public decimal LeftEdgeTrim { get; private set; }
     public decimal RightEdgeTrim { get; private set; }
     public string? Remarks { get; private set; }
+    public string? ReleasedBy { get; private set; }
+    public DateTimeOffset? ReleasedOn { get; private set; }
+    public string? StartedBy { get; private set; }
+    public DateTimeOffset? StartedOn { get; private set; }
+    public string? CompletedBy { get; private set; }
+    public DateTimeOffset? CompletedOn { get; private set; }
+    public string? CancelledBy { get; private set; }
+    public DateTimeOffset? CancelledOn { get; private set; }
     public byte[] RowVersion { get; private set; } = [];
     public IReadOnlyCollection<SlittingJobItem> Items => _items;
 
@@ -160,7 +168,7 @@ public sealed class SlittingJob : AuditableEntity
         _items.AddRange(requestedItems);
     }
 
-    public void Release()
+    public void Release(string? releasedBy, DateTimeOffset releasedOn)
     {
         if (Status != SlittingJobStatus.Draft)
         {
@@ -168,10 +176,60 @@ public sealed class SlittingJob : AuditableEntity
         }
 
         Status = SlittingJobStatus.Released;
+        ReleasedBy = Normalize(releasedBy);
+        ReleasedOn = releasedOn;
         foreach (SlittingJobItem item in _items)
         {
             item.SetStatus(SlittingJobStatus.Released);
         }
+    }
+
+    public void Start(string? startedBy, DateTimeOffset startedOn, Guid? machineId, string? shift, string? remarks)
+    {
+        if (Status != SlittingJobStatus.Released)
+        {
+            throw new InvalidOperationException("Only released slitting jobs can be started.");
+        }
+
+        if (StartedOn.HasValue)
+        {
+            throw new InvalidOperationException("Slitting job is already started.");
+        }
+
+        Status = SlittingJobStatus.InProgress;
+        StartedBy = Normalize(startedBy);
+        StartedOn = startedOn;
+        MachineId = machineId ?? MachineId;
+        Shift = Normalize(shift) ?? Shift;
+        Remarks = Normalize(remarks) ?? Remarks;
+        foreach (SlittingJobItem item in _items)
+        {
+            item.SetStatus(SlittingJobStatus.InProgress);
+        }
+    }
+
+    public void Complete(string? completedBy, DateTimeOffset completedOn)
+    {
+        if (Status != SlittingJobStatus.InProgress)
+        {
+            throw new InvalidOperationException("Only in progress slitting jobs can be completed.");
+        }
+
+        Status = SlittingJobStatus.Completed;
+        CompletedBy = Normalize(completedBy);
+        CompletedOn = completedOn;
+    }
+
+    public void Cancel(string? cancelledBy, DateTimeOffset cancelledOn)
+    {
+        if (Status != SlittingJobStatus.Released)
+        {
+            throw new InvalidOperationException("Only released slitting jobs can be cancelled.");
+        }
+
+        Status = SlittingJobStatus.Cancelled;
+        CancelledBy = Normalize(cancelledBy);
+        CancelledOn = cancelledOn;
     }
 
     private static string? Normalize(string? value)

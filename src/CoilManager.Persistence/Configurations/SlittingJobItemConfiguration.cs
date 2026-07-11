@@ -28,6 +28,12 @@ public sealed class SlittingJobItemConfiguration : IEntityTypeConfiguration<Slit
         builder.Property(item => item.EstimatedWeight)
             .HasPrecision(18, 3);
 
+        builder.Property(item => item.ActualWidth)
+            .HasPrecision(18, 3);
+
+        builder.Property(item => item.ActualWeight)
+            .HasPrecision(18, 3);
+
         builder.Property(item => item.Status)
             .HasConversion<string>()
             .HasMaxLength(30);

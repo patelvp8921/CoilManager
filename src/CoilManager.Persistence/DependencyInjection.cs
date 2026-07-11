@@ -28,6 +28,8 @@ public static class DependencyInjection
         services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IRawCoilRepository, RawCoilRepository>();
         services.AddScoped<ISlittingJobRepository, SlittingJobRepository>();
+        services.AddScoped<ISlitCoilRepository, SlitCoilRepository>();
+        services.AddScoped<IInventoryTransactionRepository, InventoryTransactionRepository>();
 
         return services;
     }

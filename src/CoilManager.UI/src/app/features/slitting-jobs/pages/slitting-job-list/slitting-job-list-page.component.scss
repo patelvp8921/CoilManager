@@ -97,6 +97,12 @@ td {
   color: #15803d;
 }
 
+.status-pill.in-progress {
+  border-color: #fed7aa;
+  background: #fff7ed;
+  color: #c2410c;
+}
+
 .status-pill.completed {
   border-color: #d1d5db;
   background: #f9fafb;

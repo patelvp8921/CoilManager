@@ -52,6 +52,14 @@ public static class SlittingJobDtoMapper
             job.CreatedBy,
             job.UpdatedAtUtc,
             job.UpdatedBy,
+            job.ReleasedBy,
+            job.ReleasedOn,
+            job.StartedBy,
+            job.StartedOn,
+            job.CompletedBy,
+            job.CompletedOn,
+            job.CancelledBy,
+            job.CancelledOn,
             Convert.ToBase64String(job.RowVersion),
             job.Items
                 .OrderBy(item => item.SequenceNo)

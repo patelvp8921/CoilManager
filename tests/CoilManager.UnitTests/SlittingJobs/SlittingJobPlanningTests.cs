@@ -96,7 +96,7 @@ public sealed class SlittingJobPlanningTests
             new SlittingJobItem(2, "SC-2026-00001-02", 300m, 150m)
         ]);
 
-        job.Release();
+        job.Release("Unit Tester", DateTimeOffset.UtcNow);
 
         Assert.Equal(SlittingJobStatus.Released, job.Status);
         Assert.All(job.Items, item => Assert.Equal(SlittingJobStatus.Released, item.Status));

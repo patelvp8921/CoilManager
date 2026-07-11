@@ -12,6 +12,7 @@ public interface ISlittingJobRepository : IRepository<SlittingJob>
     Task<bool> ExistsByJobNumberAsync(string slittingJobNo, CancellationToken cancellationToken = default);
     Task<bool> DraftExistsForMotherCoilAsync(Guid motherCoilId, CancellationToken cancellationToken = default);
     Task<IReadOnlySet<Guid>> GetDraftMotherCoilIdsAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<SlittingJob>> GetForDashboardAsync(CancellationToken cancellationToken = default);
     Task DeleteItemsForRebuildAsync(SlittingJob job, CancellationToken cancellationToken = default);
     void TrackRebuiltItemsAsAdded(IEnumerable<SlittingJobItem> items);
 }

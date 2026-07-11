@@ -1,0 +1,51 @@
+.page-title-bar {
+  border-bottom: 1px solid #dde4ee;
+  padding: 24px 32px;
+  background: #ffffff;
+}
+
+h1 {
+  margin: 0;
+  color: #111827;
+  font-size: 26px;
+}
+
+.slit-coil-page {
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+  background: #f5f7fa;
+}
+
+.filter-panel {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) 220px auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.table-panel {
+  overflow: hidden;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  min-width: 1180px;
+  width: 100%;
+}
+
+@media (max-width: 760px) {
+  .filter-panel {
+    grid-template-columns: 1fr;
+  }
+}

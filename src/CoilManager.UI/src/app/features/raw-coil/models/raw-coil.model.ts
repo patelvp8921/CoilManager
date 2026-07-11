@@ -8,12 +8,14 @@ export enum CoilStatus {
   Consumed = 4,
   Dispatched = 5,
   UnderInspection = 6,
+  InProcess = 7,
 }
 
 export const COIL_STATUS_OPTIONS: readonly { value: CoilStatus; label: string }[] = [
   { value: CoilStatus.Draft, label: 'Draft' },
   { value: CoilStatus.Available, label: 'Available' },
   { value: CoilStatus.Reserved, label: 'Reserved' },
+  { value: CoilStatus.InProcess, label: 'In Process' },
   { value: CoilStatus.Rejected, label: 'Rejected' },
   { value: CoilStatus.UnderInspection, label: 'Under Inspection' },
   { value: CoilStatus.Consumed, label: 'Consumed' },

@@ -5,10 +5,14 @@ import { environment } from '../../../../environments/environment';
 import {
   ApiPagedResponse,
   ApiResponse,
+  CompleteSlittingRequest,
+  CompleteSlittingResponse,
   CreateSlittingJobRequest,
   SlittingJob,
   SlittingJobQuery,
   SlittingMotherCoilLookup,
+  StartSlittingRequest,
+  StartSlittingResponse,
   UpdateSlittingJobRequest,
 } from '../models/slitting-job.model';
 
@@ -58,6 +62,20 @@ export class SlittingJobService {
 
   releaseSlittingJob(id: string): Observable<SlittingJob> {
     return this.http.post<ApiResponse<SlittingJob>>(`${this.endpoint}/${id}/release`, {}).pipe(map((response) => this.unwrap(response)));
+  }
+
+  cancelSlittingJob(id: string): Observable<SlittingJob> {
+    return this.http.post<ApiResponse<SlittingJob>>(`${this.endpoint}/${id}/cancel`, {}).pipe(map((response) => this.unwrap(response)));
+  }
+
+  startSlittingJob(id: string, request: StartSlittingRequest): Observable<StartSlittingResponse> {
+    return this.http.post<ApiResponse<StartSlittingResponse>>(`${this.endpoint}/${id}/start`, request)
+      .pipe(map((response) => this.unwrap(response)));
+  }
+
+  completeSlittingJob(id: string, request: CompleteSlittingRequest): Observable<CompleteSlittingResponse> {
+    return this.http.post<ApiResponse<CompleteSlittingResponse>>(`${this.endpoint}/${id}/complete`, request)
+      .pipe(map((response) => this.unwrap(response)));
   }
 
   private setOptional(params: HttpParams, key: string, value: unknown): HttpParams {

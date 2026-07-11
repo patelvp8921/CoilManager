@@ -55,6 +55,8 @@ export interface SlittingJobItem {
   slitCoilId: string;
   width: number;
   estimatedWeight: number;
+  actualWidth?: number | null;
+  actualWeight?: number | null;
   status: SlittingJobStatus;
   remarks?: string | null;
 }
@@ -92,6 +94,17 @@ export interface SlittingJob {
   remainingWidth: number;
   utilizationPercent: number;
   createdOn: string;
+  createdBy?: string | null;
+  modifiedOn?: string | null;
+  modifiedBy?: string | null;
+  releasedBy?: string | null;
+  releasedOn?: string | null;
+  startedBy?: string | null;
+  startedOn?: string | null;
+  completedBy?: string | null;
+  completedOn?: string | null;
+  cancelledBy?: string | null;
+  cancelledOn?: string | null;
   rowVersion: string;
   items: readonly SlittingJobItem[];
 }
@@ -118,6 +131,65 @@ export interface ApiPagedResponse<T> {
   data: readonly T[];
   pagination: PaginationResult;
   errors: readonly string[];
+}
+
+export interface CompleteSlittingItemRequest {
+  slittingJobItemId: string;
+  actualWeight: number;
+  actualWidth?: number | null;
+  remarks?: string | null;
+}
+
+export interface CompleteSlittingRequest {
+  rowVersion: string;
+  slits: readonly CompleteSlittingItemRequest[];
+}
+
+export interface StartSlittingRequest {
+  rowVersion: string;
+  machineId?: string | null;
+  shift?: string | null;
+  remarks?: string | null;
+}
+
+export interface StartSlittingResponse {
+  slittingJobId: string;
+  slittingJobNo: string;
+  status: SlittingJobStatus;
+  motherCoilNumber: string;
+  motherCoilStatus: CoilStatus;
+  startedBy?: string | null;
+  startedOn: string;
+}
+
+export interface GeneratedSlitCoil {
+  id: string;
+  coilNumber: string;
+  parentCoilNumber: string;
+  motherCoilNumber: string;
+  slittingJobNo: string;
+  width: number;
+  weight: number;
+  grade?: string | null;
+  thickness: number;
+  category: string;
+  coreLossPerKg: number;
+  status: CoilStatus;
+  barcodeValue: string;
+  qrCodeValue: string;
+  labelVersion: string;
+}
+
+export interface CompleteSlittingResponse {
+  slittingJobId: string;
+  slittingJobNo: string;
+  motherCoilNumber: string;
+  generatedSlitCoils: readonly GeneratedSlitCoil[];
+  totalGeneratedWeight: number;
+  completedOn: string;
+  remainingWidth: number;
+  unusedEstimatedWeight: number;
+  warnings: readonly string[];
 }
 
 export const SLITTING_JOB_STATUS_OPTIONS: readonly { value: SlittingJobStatus; label: string }[] = [

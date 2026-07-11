@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { DispatchSummaryComponent } from '../../components/dispatch-summary/dispatch-summary.component';
 import { InventorySummaryComponent } from '../../components/inventory-summary/inventory-summary.component';
@@ -25,6 +26,7 @@ import { DashboardService } from '../../services/dashboard.service';
     MatIconModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    RouterLink,
     DatePipe,
     DecimalPipe,
     DispatchSummaryComponent,

@@ -64,10 +64,22 @@ export const routes: Routes = [
         title: 'Edit Slitting Job | CoilManager',
       },
       {
+        path: 'slitting-jobs/:id/complete',
+        loadComponent: () =>
+          import('./features/slitting-jobs/pages/complete-slitting/complete-slitting.component').then((component) => component.CompleteSlittingComponent),
+        title: 'Complete Slitting | CoilManager',
+      },
+      {
         path: 'slitting-jobs',
         loadComponent: () =>
           import('./features/slitting-jobs/pages/slitting-job-list/slitting-job-list-page.component').then((component) => component.SlittingJobListPageComponent),
         title: 'Slitting Jobs | CoilManager',
+      },
+      {
+        path: 'slit-coils',
+        loadComponent: () =>
+          import('./features/slit-coils/pages/slit-coil-list/slit-coil-list.component').then((component) => component.SlitCoilListComponent),
+        title: 'Slit Coil Inventory | CoilManager',
       },
       {
         path: 'raw-coils/create',

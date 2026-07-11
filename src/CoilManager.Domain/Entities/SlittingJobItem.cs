@@ -30,6 +30,8 @@ public sealed class SlittingJobItem : BaseEntity
     public string SlitCoilId { get; private set; } = string.Empty;
     public decimal Width { get; private set; }
     public decimal EstimatedWeight { get; private set; }
+    public decimal? ActualWidth { get; private set; }
+    public decimal? ActualWeight { get; private set; }
     public SlittingJobStatus Status { get; private set; }
     public string? Remarks { get; private set; }
 
@@ -50,6 +52,14 @@ public sealed class SlittingJobItem : BaseEntity
     public void SetStatus(SlittingJobStatus status)
     {
         Status = status;
+    }
+
+    public void Complete(decimal actualWidth, decimal actualWeight, string? remarks)
+    {
+        ActualWidth = actualWidth;
+        ActualWeight = actualWeight;
+        Remarks = Normalize(remarks);
+        Status = SlittingJobStatus.Completed;
     }
 
     private static string? Normalize(string? value)

@@ -29,4 +29,13 @@ public sealed class UnitOfWork(ApplicationDbContext dbContext) : IUnitOfWork
     {
         return dbContext.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task ExecuteInTransactionAsync(Func<CancellationToken, Task> operation, CancellationToken cancellationToken = default)
+    {
+        await using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction =
+            await dbContext.Database.BeginTransactionAsync(cancellationToken);
+
+        await operation(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+    }
 }

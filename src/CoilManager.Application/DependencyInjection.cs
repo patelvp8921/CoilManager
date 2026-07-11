@@ -1,15 +1,18 @@
 using FluentValidation;
 using CoilManager.Application.Interfaces.Services;
 using CoilManager.Application.Services;
+using CoilManager.Application.Settings;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoilManager.Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configuration);
 
         services.AddAutoMapper(_ => { }, typeof(AssemblyReference).Assembly);
         services.AddValidatorsFromAssembly(typeof(AssemblyReference).Assembly);
@@ -17,6 +20,9 @@ public static class DependencyInjection
         services.AddScoped<ILookupService, LookupService>();
         services.AddScoped<IOperationsDashboardService, OperationsDashboardService>();
         services.AddScoped<ISlittingJobService, SlittingJobService>();
+        services.AddScoped<ISlitCoilService, SlitCoilService>();
+        services.AddScoped<ICoilNumberingService, CoilNumberingService>();
+        services.Configure<SlittingSettings>(configuration.GetSection(SlittingSettings.SectionName));
 
         return services;
     }

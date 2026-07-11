@@ -45,6 +45,18 @@ public sealed class SlittingJobConfiguration : IEntityTypeConfiguration<Slitting
         builder.Property(job => job.Remarks)
             .HasMaxLength(500);
 
+        builder.Property(job => job.ReleasedBy)
+            .HasMaxLength(100);
+
+        builder.Property(job => job.StartedBy)
+            .HasMaxLength(100);
+
+        builder.Property(job => job.CompletedBy)
+            .HasMaxLength(100);
+
+        builder.Property(job => job.CancelledBy)
+            .HasMaxLength(100);
+
         builder.Property(job => job.CreatedBy)
             .HasMaxLength(100);
 

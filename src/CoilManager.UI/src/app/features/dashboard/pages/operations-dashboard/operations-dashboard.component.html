@@ -47,6 +47,42 @@
           <app-procurement-summary [procurement]="data.procurement" />
           <app-dispatch-summary [dispatch]="data.dispatch" />
         </section>
+
+        <mat-card appearance="outlined" class="queue-panel">
+          <header>
+            <div>
+              <h2>Production Queue</h2>
+              <p>Released jobs waiting to start and running slitting jobs.</p>
+            </div>
+            <div class="queue-metrics">
+              <span><strong>{{ data.slittingJobMetrics.releasedJobs }}</strong> Waiting</span>
+              <span><strong>{{ data.slittingJobMetrics.inProgressJobs }}</strong> Running</span>
+              <span><strong>{{ data.slittingJobMetrics.averageWaitingMinutes | number:'1.0-1' }}</strong> min avg wait</span>
+              <span><strong>{{ data.slittingJobMetrics.averageProcessingMinutes | number:'1.0-1' }}</strong> min avg run</span>
+            </div>
+          </header>
+
+          @if (data.productionQueue.length) {
+            <div class="queue-list">
+              @for (item of data.productionQueue; track item.slittingJobId) {
+                <a class="queue-item" [routerLink]="item.route">
+                  <span class="queue-status" [class.running]="item.status === 'Running'">{{ item.status }}</span>
+                  <strong>{{ item.slittingJobNo }}</strong>
+                  <span>{{ item.motherCoilNumber }}</span>
+                  <span>Released {{ item.releasedOn ? (item.releasedOn | date:'dd/MM/yyyy HH:mm') : '-' }}</span>
+                  <span>Started {{ item.startedOn ? (item.startedOn | date:'dd/MM/yyyy HH:mm') : '-' }}</span>
+                  <span>{{ item.waitingMinutes | number:'1.0-1' }} min</span>
+                  <span>{{ item.shift || '-' }}</span>
+                </a>
+              }
+            </div>
+          } @else {
+            <div class="empty-queue">
+              <mat-icon>playlist_add_check</mat-icon>
+              <span>No released or running slitting jobs.</span>
+            </div>
+          }
+        </mat-card>
       </main>
     </div>
   }

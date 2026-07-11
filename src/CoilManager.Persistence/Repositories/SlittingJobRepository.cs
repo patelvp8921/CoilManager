@@ -79,6 +79,13 @@ public sealed class SlittingJobRepository : Repository<SlittingJob>, ISlittingJo
         return motherCoilIds.ToHashSet();
     }
 
+    public async Task<IReadOnlyList<SlittingJob>> GetForDashboardAsync(CancellationToken cancellationToken = default)
+    {
+        return await BaseQuery()
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task DeleteItemsForRebuildAsync(SlittingJob job, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(job);

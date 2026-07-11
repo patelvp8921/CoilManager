@@ -4,6 +4,7 @@ import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -23,6 +24,7 @@ import {
   slittingJobStatusLabel,
 } from '../../models/slitting-job.model';
 import { SlittingJobService } from '../../services/slitting-job.service';
+import { StartSlittingDialogComponent } from '../../components/start-slitting-dialog/start-slitting-dialog.component';
 
 @Component({
   selector: 'app-slitting-job-list-page',
@@ -33,6 +35,7 @@ import { SlittingJobService } from '../../services/slitting-job.service';
     RouterLink,
     MatButtonModule,
     MatCardModule,
+    MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
@@ -75,6 +78,7 @@ export class SlittingJobListPageComponent implements OnInit {
 
   private readonly slittingJobService = inject(SlittingJobService);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
 
   ngOnInit(): void {
     this.loadSlittingJobs();
@@ -113,6 +117,65 @@ export class SlittingJobListPageComponent implements OnInit {
 
   protected canEdit(job: SlittingJob): boolean {
     return job.status === SlittingJobStatus.Draft;
+  }
+
+  protected canComplete(job: SlittingJob): boolean {
+    return job.status === SlittingJobStatus.InProgress;
+  }
+
+  protected canStart(job: SlittingJob): boolean {
+    return job.status === SlittingJobStatus.Released;
+  }
+
+  protected canCancel(job: SlittingJob): boolean {
+    return job.status === SlittingJobStatus.Released;
+  }
+
+  protected canViewSlitCoils(job: SlittingJob): boolean {
+    return job.status === SlittingJobStatus.Completed;
+  }
+
+  protected start(job: SlittingJob): void {
+    const ref = this.dialog.open(StartSlittingDialogComponent, {
+      width: '620px',
+      data: job,
+    });
+
+    ref.afterClosed().subscribe((request) => {
+      if (!request) {
+        return;
+      }
+
+      this.isLoading.set(true);
+      this.slittingJobService
+        .startSlittingJob(job.id, request)
+        .pipe(finalize(() => this.isLoading.set(false)))
+        .subscribe({
+          next: () => {
+            this.snackBar.open('Slitting started successfully.', 'Close', { duration: 4000 });
+            this.loadSlittingJobs();
+          },
+          error: (error: HttpErrorResponse) => this.showError(error),
+        });
+    });
+  }
+
+  protected cancel(job: SlittingJob): void {
+    if (!window.confirm(`Cancel released slitting job ${job.slittingJobNo}?`)) {
+      return;
+    }
+
+    this.isLoading.set(true);
+    this.slittingJobService
+      .cancelSlittingJob(job.id)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: () => {
+          this.snackBar.open('Slitting job cancelled and Mother Coil released.', 'Close', { duration: 4000 });
+          this.loadSlittingJobs();
+        },
+        error: (error: HttpErrorResponse) => this.showError(error),
+      });
   }
 
   protected loadSlittingJobs(sort: Sort | null = this.sort ?? null): void {
