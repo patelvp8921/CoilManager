@@ -96,7 +96,7 @@
           }
           <div class="result-actions">
             <a mat-stroked-button routerLink="/slit-coils">View Slit Coil Inventory</a>
-            <button mat-stroked-button type="button" disabled>Print Labels</button>
+            <a mat-stroked-button [routerLink]="['/slitting-jobs', job.id, 'labels']">Print Labels</a>
             <a mat-flat-button [routerLink]="['/slitting-jobs', job.id, 'complete']">View Slitting Job</a>
           </div>
         </section>

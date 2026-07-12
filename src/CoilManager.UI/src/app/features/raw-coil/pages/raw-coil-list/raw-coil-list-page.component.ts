@@ -49,6 +49,7 @@ export class RawCoilListPageComponent implements OnInit {
   @ViewChild(MatSort) private sort?: MatSort;
 
   protected readonly statusOptions = COIL_STATUS_OPTIONS;
+  protected readonly CoilStatus = CoilStatus;
   protected readonly displayedColumns = [
     'rawCoilNumber',
     'manufacturerName',

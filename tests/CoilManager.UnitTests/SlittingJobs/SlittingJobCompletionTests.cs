@@ -398,9 +398,9 @@ public sealed class SlittingJobCompletionTests
             return Task.CompletedTask;
         }
 
-        public Task<PagedResult<SlitCoilDto>> GetPagedAsync(SlitCoilQueryRequest request, CancellationToken cancellationToken = default)
+        public Task<PagedResult<SlitCoilListItemDto>> GetPagedAsync(SlitCoilQueryRequest request, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(new PagedResult<SlitCoilDto>([], request.NormalizedPage, request.NormalizedPageSize, 0));
+            return Task.FromResult(new PagedResult<SlitCoilListItemDto>([], request.NormalizedPage, request.NormalizedPageSize, 0));
         }
 
         public Task<SlitCoil?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken = default)
@@ -422,6 +422,12 @@ public sealed class SlittingJobCompletionTests
         {
             return Task.FromResult<IReadOnlyList<SlitCoil>>(Added.Where(coil => coil.SlittingJobId == slittingJobId).ToArray());
         }
+
+        public Task<IReadOnlyList<SlitCoil>> GetByMotherCoilIdAsync(Guid motherCoilId, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<SlitCoil>>(Added.Where(coil => coil.MotherCoilId == motherCoilId).ToArray());
+
+        public Task<IReadOnlyList<SlitCoil>> GetAllWithDetailsAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<SlitCoil>>(Added);
     }
 
     private sealed class FakeInventoryTransactionRepository : RepositoryFake<InventoryTransaction>, IInventoryTransactionRepository
@@ -433,6 +439,9 @@ public sealed class SlittingJobCompletionTests
             Added.Add(entity);
             return Task.CompletedTask;
         }
+
+        public Task<IReadOnlyList<InventoryTransaction>> GetByCoilNumberAsync(string coilNumber, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<InventoryTransaction>>(Added.Where(row => row.CoilNumber == coilNumber).OrderByDescending(row => row.TransactionDate).ToArray());
     }
 
     private abstract class RepositoryFake<TEntity> : IRepository<TEntity>

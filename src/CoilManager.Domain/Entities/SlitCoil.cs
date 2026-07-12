@@ -73,6 +73,10 @@ public sealed class SlitCoil : SoftDeletableEntity
     public string BarcodeValue { get; private set; } = string.Empty;
     public string QrCodeValue { get; private set; } = string.Empty;
     public string LabelVersion { get; private set; } = "1";
+    public bool LabelPrinted { get; private set; }
+    public int LabelPrintCount { get; private set; }
+    public DateTimeOffset? LabelLastPrintedOn { get; private set; }
+    public string? LabelLastPrintedBy { get; private set; }
     public byte[] RowVersion { get; private set; } = [];
 
     public RawCoil? MotherCoil { get; private set; }
@@ -80,4 +84,23 @@ public sealed class SlitCoil : SoftDeletableEntity
     public Grade? Grade { get; private set; }
     public Supplier? Supplier { get; private set; }
     public Manufacturer? Manufacturer { get; private set; }
+
+    public LabelPrintType RecordLabelPrint(DateTimeOffset printedOn, string? printedBy)
+    {
+        if (string.IsNullOrWhiteSpace(CoilNumber)) throw new InvalidOperationException("Coil Number is required for label printing.");
+        BarcodeValue = CoilNumber;
+        QrCodeValue = CoilNumber;
+        LabelPrintType type = LabelPrinted ? LabelPrintType.Reprint : LabelPrintType.Initial;
+        LabelPrinted = true;
+        LabelPrintCount++;
+        LabelLastPrintedOn = printedOn;
+        LabelLastPrintedBy = printedBy;
+        return type;
+    }
+
+    public void IncrementLabelVersion()
+    {
+        int version = int.TryParse(LabelVersion, out int current) ? current : 1;
+        LabelVersion = (version + 1).ToString();
+    }
 }

@@ -1,46 +1,7 @@
 import { CoilStatus, PaginationResult } from '../../raw-coil/models/raw-coil.model';
-
-export interface SlitCoil {
-  id: string;
-  coilNumber: string;
-  motherCoilId: string;
-  motherCoilNumber: string;
-  slittingJobId: string;
-  slittingJobNo: string;
-  grade?: string | null;
-  thickness: number;
-  category: string;
-  coreLossPerKg: number;
-  width: number;
-  weight: number;
-  status: CoilStatus;
-  warehouseLocation?: string | null;
-  barcodeValue: string;
-  qrCodeValue: string;
-  labelVersion: string;
-  createdOn: string;
-}
-
-export interface SlitCoilQuery {
-  page: number;
-  pageSize: number;
-  search?: string;
-  status?: CoilStatus | null;
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc' | '';
-}
-
-export interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  data: T | null;
-  errors: readonly string[];
-}
-
-export interface ApiPagedResponse<T> {
-  success: boolean;
-  message: string;
-  data: readonly T[];
-  pagination: PaginationResult;
-  errors: readonly string[];
-}
+export interface SlitCoil { id:string; coilNumber:string; motherCoilId:string; motherCoilNumber:string; slittingJobId:string; slittingJobNo:string; grade?:string|null; thickness:number; category:string; width:number; weight:number; supplier?:string|null; manufacturer?:string|null; status:CoilStatus; warehouseLocation?:string|null; createdOn:string; labelVersion:string; labelPrinted:boolean; labelPrintCount:number; labelLastPrintedOn?:string|null; hasBarcode:boolean; hasQrCode:boolean; }
+export interface SlitCoilDetails extends SlitCoil { generationLevel:number; slitSequence:number; barcodeValue:string; qrCodeValue:string; createdBy?:string|null; modifiedOn?:string|null; modifiedBy?:string|null; coreLossPerKg:number; heatNumber:string; parentCoilId:string; parentCoilNumber:string; rootMotherCoilId:string; rootMotherCoilNumber:string; canViewMotherCoil:boolean; canViewParentCoil:boolean; canViewSlittingJob:boolean; canPrintLabel:boolean; }
+export interface SlitCoilQuery { page:number; pageSize:number; search?:string; coilNumber?:string; motherCoilNumber?:string; slittingJobNo?:string; gradeId?:string|null; status?:CoilStatus|null; supplierId?:string|null; manufacturerId?:string|null; thickness?:number|null; widthFrom?:number|null; widthTo?:number|null; weightFrom?:number|null; weightTo?:number|null; createdFrom?:string; createdTo?:string; sortBy?:string; sortDirection?:'asc'|'desc'|''; }
+export interface InventoryTransaction { id:string; transactionType:number; coilType:number; coilNumber:string; relatedDocumentNumber?:string|null; fromStatus?:CoilStatus|null; toStatus:CoilStatus; quantityWeight:number; transactionDate:string; remarks?:string|null; createdBy?:string|null; }
+export interface ApiResponse<T> { success:boolean; message:string; data:T|null; errors:readonly string[]; }
+export interface ApiPagedResponse<T> { success:boolean; message:string; data:readonly T[]; pagination:PaginationResult; errors:readonly string[]; }

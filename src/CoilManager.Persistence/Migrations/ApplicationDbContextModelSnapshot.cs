@@ -458,6 +458,19 @@ namespace CoilManager.Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("LabelLastPrintedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset?>("LabelLastPrintedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("LabelPrintCount")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("LabelPrinted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LabelVersion")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -525,8 +538,12 @@ namespace CoilManager.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BarcodeValue");
+
                     b.HasIndex("CoilNumber")
                         .IsUnique();
+
+                    b.HasIndex("CreatedAtUtc");
 
                     b.HasIndex("GradeId");
 
@@ -535,6 +552,8 @@ namespace CoilManager.Persistence.Migrations
                     b.HasIndex("MotherCoilId");
 
                     b.HasIndex("ParentCoilId");
+
+                    b.HasIndex("QrCodeValue");
 
                     b.HasIndex("RootMotherCoilId");
 
@@ -545,6 +564,71 @@ namespace CoilManager.Persistence.Migrations
                     b.HasIndex("SupplierId");
 
                     b.ToTable("SlitCoils", "app");
+                });
+
+            modelBuilder.Entity("CoilManager.Domain.Entities.SlitCoilLabelPrintHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CoilNumber")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.Property<int>("Copies")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LabelVersion")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("PrintType")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("PrintedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTimeOffset>("PrintedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("PrinterName")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Remarks")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("SlitCoilId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("UpdatedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CoilNumber");
+
+                    b.HasIndex("PrintedOn");
+
+                    b.HasIndex("SlitCoilId");
+
+                    b.ToTable("SlitCoilLabelPrintHistories", "app");
                 });
 
             modelBuilder.Entity("CoilManager.Domain.Entities.SlittingJob", b =>
@@ -924,6 +1008,17 @@ namespace CoilManager.Persistence.Migrations
                     b.Navigation("SlittingJob");
 
                     b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("CoilManager.Domain.Entities.SlitCoilLabelPrintHistory", b =>
+                {
+                    b.HasOne("CoilManager.Domain.Entities.SlitCoil", "SlitCoil")
+                        .WithMany()
+                        .HasForeignKey("SlitCoilId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("SlitCoil");
                 });
 
             modelBuilder.Entity("CoilManager.Domain.Entities.SlittingJob", b =>

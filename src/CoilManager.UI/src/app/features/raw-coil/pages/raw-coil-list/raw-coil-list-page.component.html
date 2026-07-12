@@ -113,7 +113,13 @@
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef mat-sort-header="status">Status</th>
           <td mat-cell *matCellDef="let row">
-            <span class="status-pill" [class.on-hold]="row.status === 2" [class.scrapped]="row.status === 3">
+            <span
+              class="status-pill"
+              [class.on-hold]="row.status === CoilStatus.Reserved"
+              [class.scrapped]="row.status === CoilStatus.Rejected"
+              [class.in-process]="row.status === CoilStatus.InProcess"
+              [class.consumed]="row.status === CoilStatus.Consumed"
+            >
               {{ labelForStatus(row.status) }}
             </span>
           </td>

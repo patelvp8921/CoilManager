@@ -1,0 +1,33 @@
+@if (loading()) {
+  <div class="loading"><mat-spinner diameter="48" /></div>
+}
+@if (label(); as l) {
+  <header class="page-header">
+    <div>
+      <span>Slit Coil Label</span>
+      <h1>{{ l.coilNumber }}</h1>
+      <p>Label Version {{ l.labelVersion }} · Print Count {{ l.labelPrintCount }}</p>
+      <small>Last Printed: {{ l.labelLastPrintedOn ? (l.labelLastPrintedOn | date:'medium') : 'Never' }} by {{ l.labelLastPrintedBy || '-' }}</small>
+    </div>
+    <div class="actions">
+      <button mat-flat-button (click)="openPrint()"><mat-icon>print</mat-icon>{{ l.labelPrinted ? 'Reprint Label' : 'Print Label' }}</button>
+      <button mat-stroked-button (click)="history()"><mat-icon>history</mat-icon>View Print History</button>
+      <button mat-stroked-button (click)="increment()"><mat-icon>upgrade</mat-icon>Increment Label Version</button>
+      <a mat-stroked-button routerLink="/slit-coils"><mat-icon>arrow_back</mat-icon>Back to Inventory</a>
+    </div>
+  </header>
+  <main>
+    <mat-card appearance="outlined">
+      <mat-card-header><mat-card-title>Label Preview</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <app-slit-coil-label-preview [label]="l" />
+        <p class="note">For best results, disable browser headers and footers and set scale to 100%.</p>
+      </mat-card-content>
+    </mat-card>
+  </main>
+  <section class="print-area">
+    @for (copy of copies(); track copy) {
+      <app-slit-coil-label-preview [label]="l" [printedOn]="result()?.printedOn || null" [printedBy]="result()?.printedBy || null" [printNumber]="result()?.printCount || null" [printable]="true" />
+    }
+  </section>
+}

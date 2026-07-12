@@ -17,6 +17,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<SlittingJobItem> SlittingJobItems => Set<SlittingJobItem>();
     public DbSet<SlitCoil> SlitCoils => Set<SlitCoil>();
     public DbSet<InventoryTransaction> InventoryTransactions => Set<InventoryTransaction>();
+    public DbSet<SlitCoilLabelPrintHistory> SlitCoilLabelPrintHistories => Set<SlitCoilLabelPrintHistory>();
     public DbSet<User> Users => Set<User>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<UserRole> UserRoles => Set<UserRole>();

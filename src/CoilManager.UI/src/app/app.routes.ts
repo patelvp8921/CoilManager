@@ -58,6 +58,11 @@ export const routes: Routes = [
         title: 'Create Slitting Job | CoilManager',
       },
       {
+        path: 'slitting-jobs/:id/labels',
+        loadComponent: () => import('./features/slit-coils/label-printing/pages/slit-coil-batch-print-page/slit-coil-batch-print-page.component').then(c => c.SlitCoilBatchPrintPageComponent),
+        title: 'Slitting Job Labels | CoilManager',
+      },
+      {
         path: 'slitting-jobs/:id/edit',
         loadComponent: () =>
           import('./features/slitting-jobs/pages/slitting-job-planning/slitting-job-planning.component').then((component) => component.SlittingJobPlanningComponent),
@@ -82,10 +87,35 @@ export const routes: Routes = [
         title: 'Slitting Jobs | CoilManager',
       },
       {
+        path: 'slit-coils/labels/batch',
+        loadComponent: () => import('./features/slit-coils/label-printing/pages/slit-coil-batch-print-page/slit-coil-batch-print-page.component').then(c => c.SlitCoilBatchPrintPageComponent),
+        title: 'Batch Print Slit Coil Labels | CoilManager',
+      },
+      {
+        path: 'slit-coils/:id/label',
+        loadComponent: () => import('./features/slit-coils/label-printing/pages/slit-coil-label-page/slit-coil-label-page.component').then(c => c.SlitCoilLabelPageComponent),
+        title: 'Slit Coil Label | CoilManager',
+      },
+      {
+        path: 'slit-coils/:id',
+        loadComponent: () => import('./features/slit-coils/pages/slit-coil-detail/slit-coil-detail.component').then(c => c.SlitCoilDetailComponent),
+        title: 'Coil Details | CoilManager',
+      },
+      {
         path: 'slit-coils',
         loadComponent: () =>
           import('./features/slit-coils/pages/slit-coil-list/slit-coil-list.component').then((component) => component.SlitCoilListComponent),
         title: 'Slit Coil Inventory | CoilManager',
+      },
+      {
+        path: 'coil-search',
+        loadComponent: () => import('./features/coil-search/pages/coil-search/coil-search.component').then(c => c.CoilSearchComponent),
+        title: 'Coil Search | CoilManager',
+      },
+      {
+        path: 'coils/:coilNumber/traceability',
+        loadComponent: () => import('./features/traceability/pages/coil-traceability/coil-traceability.component').then(c => c.CoilTraceabilityComponent),
+        title: 'Coil Traceability | CoilManager',
       },
       {
         path: 'raw-coils/create',

@@ -1,4 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { Component, ElementRef, OnInit, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -17,11 +18,15 @@ import { LookupItem } from '../../../../shared/models/lookup-item.model';
 import { LookupService } from '../../../../shared/services/lookup.service';
 import { COIL_STATUS_OPTIONS, CoilStatus, RawCoil, UpdateRawCoilRequest } from '../../models/raw-coil.model';
 import { RawCoilService } from '../../services/raw-coil.service';
+import { SlitCoil } from '../../../slit-coils/models/slit-coil.model';
+import { SlitCoilService } from '../../../slit-coils/services/slit-coil.service';
 
 @Component({
   selector: 'app-raw-coil-edit-page',
   imports: [
     ReactiveFormsModule,
+    DatePipe,
+    DecimalPipe,
     RouterLink,
     MatButtonModule,
     MatCardModule,
@@ -46,6 +51,7 @@ export class RawCoilEditPageComponent implements OnInit {
   protected readonly suppliers = signal<readonly LookupItem[]>([]);
   protected readonly manufacturers = signal<readonly LookupItem[]>([]);
   protected readonly grades = signal<readonly LookupItem[]>([]);
+  protected readonly generatedSlitCoils = signal<readonly SlitCoil[]>([]);
 
   private readonly fb = inject(FormBuilder);
   private readonly elementRef = inject(ElementRef<HTMLElement>);
@@ -53,6 +59,7 @@ export class RawCoilEditPageComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly lookupService = inject(LookupService);
   private readonly rawCoilService = inject(RawCoilService);
+  private readonly slitCoilService = inject(SlitCoilService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly id = this.route.snapshot.paramMap.get('id') ?? '';
 
@@ -87,6 +94,10 @@ export class RawCoilEditPageComponent implements OnInit {
 
   protected submit(): void {
     this.apiErrors.set([]);
+    if (this.isFrozen()) {
+      this.apiErrors.set(['Consumed Mother Coil details are frozen and cannot be edited.']);
+      return;
+    }
     this.form.markAllAsTouched();
 
     if (this.form.invalid) {
@@ -154,6 +165,7 @@ export class RawCoilEditPageComponent implements OnInit {
       .subscribe({
         next: ({ rawCoil, suppliers, manufacturers, grades }) => {
           this.rawCoil.set(rawCoil);
+          this.slitCoilService.getSlitCoils({ page: 1, pageSize: 100, motherCoilNumber: rawCoil.rawCoilNumber }).subscribe(response => this.generatedSlitCoils.set(response.data));
           this.suppliers.set(this.withCurrentLookup(suppliers, rawCoil.supplierId, rawCoil.supplierName));
           this.manufacturers.set(this.withCurrentLookup(manufacturers, rawCoil.manufacturerId, rawCoil.manufacturerName));
           this.grades.set(this.withCurrentGradeLookup(grades, rawCoil));
@@ -177,9 +189,16 @@ export class RawCoilEditPageComponent implements OnInit {
             status: rawCoil.status,
             receivedDate: rawCoil.receivedDate.slice(0, 10),
           });
+          if (rawCoil.status === CoilStatus.Consumed) {
+            this.form.disable({ emitEvent: false });
+          }
         },
         error: (error: HttpErrorResponse) => this.captureError(error),
       });
+  }
+
+  protected isFrozen(): boolean {
+    return this.rawCoil()?.status === CoilStatus.Consumed;
   }
 
   private toRequest(rowVersion: string): UpdateRawCoilRequest {

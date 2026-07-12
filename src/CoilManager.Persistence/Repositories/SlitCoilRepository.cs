@@ -18,7 +18,7 @@ public sealed class SlitCoilRepository : Repository<SlitCoil>, ISlitCoilReposito
         _dbContext = dbContext;
     }
 
-    public async Task<PagedResult<SlitCoilDto>> GetPagedAsync(SlitCoilQueryRequest request, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<SlitCoilListItemDto>> GetPagedAsync(SlitCoilQueryRequest request, CancellationToken cancellationToken = default)
     {
         IQueryable<SlitCoil> query = ApplyFilters(BaseQuery().AsNoTracking(), request);
         int totalCount = await query.CountAsync(cancellationToken);
@@ -28,8 +28,14 @@ public sealed class SlitCoilRepository : Repository<SlitCoil>, ISlitCoilReposito
             .Take(request.NormalizedPageSize)
             .ToListAsync(cancellationToken);
 
-        return new PagedResult<SlitCoilDto>(
-            coils.Select(SlitCoilDtoMapper.MapToDto).ToArray(),
+        return new PagedResult<SlitCoilListItemDto>(
+            coils.Select(coil => new SlitCoilListItemDto(coil.Id, coil.CoilNumber,
+                coil.MotherCoil!.RawCoilNumber, coil.MotherCoilId, coil.SlittingJob!.SlittingJobNo,
+                coil.SlittingJobId, coil.Grade?.Code, coil.Thickness, coil.Category, coil.Width,
+                coil.Weight, coil.MotherCoil?.Supplier?.Name, coil.MotherCoil?.Manufacturer?.Name, coil.Status,
+                coil.WarehouseLocation, coil.CreatedAtUtc, coil.LabelVersion, coil.LabelPrinted,
+                coil.LabelPrintCount, coil.LabelLastPrintedOn,
+                !string.IsNullOrEmpty(coil.BarcodeValue), !string.IsNullOrEmpty(coil.QrCodeValue))).ToArray(),
             request.NormalizedPage,
             request.NormalizedPageSize,
             totalCount);
@@ -58,10 +64,20 @@ public sealed class SlitCoilRepository : Repository<SlitCoil>, ISlitCoilReposito
             .ToArrayAsync(cancellationToken);
     }
 
+    public async Task<IReadOnlyList<SlitCoil>> GetByMotherCoilIdAsync(Guid motherCoilId, CancellationToken cancellationToken = default) =>
+        await BaseQuery().AsNoTracking().Where(coil => coil.MotherCoilId == motherCoilId)
+            .OrderBy(coil => coil.SlitSequence).ToArrayAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<SlitCoil>> GetAllWithDetailsAsync(CancellationToken cancellationToken = default) =>
+        await BaseQuery().AsNoTracking().ToArrayAsync(cancellationToken);
+
     private IQueryable<SlitCoil> BaseQuery()
     {
         return _dbContext.SlitCoils
             .Include(coil => coil.MotherCoil)
+                .ThenInclude(motherCoil => motherCoil!.Supplier)
+            .Include(coil => coil.MotherCoil)
+                .ThenInclude(motherCoil => motherCoil!.Manufacturer)
             .Include(coil => coil.SlittingJob)
             .Include(coil => coil.Grade)
             .Include(coil => coil.Supplier)
@@ -78,8 +94,25 @@ public sealed class SlitCoilRepository : Repository<SlitCoil>, ISlitCoilReposito
                 coil.CoilNumber.Contains(search)
                 || coil.MotherCoil!.RawCoilNumber.Contains(search)
                 || coil.SlittingJob!.SlittingJobNo.Contains(search)
+                || coil.BarcodeValue.Contains(search)
+                || coil.QrCodeValue.Contains(search)
+                || coil.HeatNumber.Contains(search)
                 || coil.Grade!.Code.Contains(search));
         }
+
+        if (Normalize(request.CoilNumber) is { } coilNumber) query = query.Where(coil => coil.CoilNumber.Contains(coilNumber));
+        if (Normalize(request.MotherCoilNumber) is { } motherNumber) query = query.Where(coil => coil.MotherCoil!.RawCoilNumber.Contains(motherNumber));
+        if (Normalize(request.SlittingJobNo) is { } jobNumber) query = query.Where(coil => coil.SlittingJob!.SlittingJobNo.Contains(jobNumber));
+        if (request.GradeId.HasValue) query = query.Where(coil => coil.GradeId == request.GradeId.Value);
+        if (request.SupplierId.HasValue) query = query.Where(coil => coil.SupplierId == request.SupplierId.Value);
+        if (request.ManufacturerId.HasValue) query = query.Where(coil => coil.ManufacturerId == request.ManufacturerId.Value);
+        if (request.Thickness.HasValue) query = query.Where(coil => coil.Thickness == request.Thickness.Value);
+        if (request.WidthFrom.HasValue) query = query.Where(coil => coil.Width >= request.WidthFrom.Value);
+        if (request.WidthTo.HasValue) query = query.Where(coil => coil.Width <= request.WidthTo.Value);
+        if (request.WeightFrom.HasValue) query = query.Where(coil => coil.Weight >= request.WeightFrom.Value);
+        if (request.WeightTo.HasValue) query = query.Where(coil => coil.Weight <= request.WeightTo.Value);
+        if (request.CreatedFrom.HasValue) query = query.Where(coil => coil.CreatedAtUtc >= request.CreatedFrom.Value);
+        if (request.CreatedTo.HasValue) query = query.Where(coil => coil.CreatedAtUtc <= request.CreatedTo.Value);
 
         if (request.Status.HasValue)
         {

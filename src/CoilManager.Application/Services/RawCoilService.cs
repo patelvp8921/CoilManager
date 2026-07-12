@@ -135,6 +135,11 @@ public sealed class RawCoilService(
             return Result<RawCoilDto>.Failure(Error.NotFound($"Mother coil '{id}' was not found."));
         }
 
+        if (rawCoil.Status == CoilStatus.Consumed)
+        {
+            return Result<RawCoilDto>.Failure(Error.Validation("Consumed Mother Coil details are frozen and cannot be edited."));
+        }
+
         if (await rawCoilRepository.ExistsByCoilNumberAsync(request.CoilNumber, id, cancellationToken))
         {
             return Result<RawCoilDto>.Failure(Error.Conflict($"Mother coil number '{request.CoilNumber}' already exists."));

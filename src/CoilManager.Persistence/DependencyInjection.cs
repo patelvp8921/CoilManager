@@ -30,6 +30,7 @@ public static class DependencyInjection
         services.AddScoped<ISlittingJobRepository, SlittingJobRepository>();
         services.AddScoped<ISlitCoilRepository, SlitCoilRepository>();
         services.AddScoped<IInventoryTransactionRepository, InventoryTransactionRepository>();
+        services.AddScoped<ISlitCoilLabelPrintHistoryRepository, SlitCoilLabelPrintHistoryRepository>();
 
         return services;
     }

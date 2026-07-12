@@ -8,34 +8,34 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoilManager.API.Controllers;
 
 [Route("api/slit-coils")]
-public sealed class SlitCoilsController(ISlitCoilService slitCoilService) : BaseApiController
+public sealed class SlitCoilsController(ISlitCoilService slitCoilService, ISlitCoilLabelService labelService) : BaseApiController
 {
     [HttpGet]
-    [ProducesResponseType(typeof(ApiPagedResponse<SlitCoilDto>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<ApiPagedResponse<SlitCoilDto>>> GetAll(
+    [ProducesResponseType(typeof(ApiPagedResponse<SlitCoilListItemDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<ApiPagedResponse<SlitCoilListItemDto>>> GetAll(
         [FromQuery] SlitCoilQueryRequest request,
         CancellationToken cancellationToken)
     {
-        PagedResult<SlitCoilDto> result = await slitCoilService.GetAsync(request, cancellationToken);
+        PagedResult<SlitCoilListItemDto> result = await slitCoilService.GetAsync(request, cancellationToken);
         return Paged(result.Items, new PaginationResult(result.PageNumber, result.PageSize, result.TotalCount));
     }
 
     [HttpGet("{id:guid}")]
-    [ProducesResponseType(typeof(ApiResponse<SlitCoilDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ApiResponse<SlitCoilDto>), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ApiResponse<SlitCoilDto>>> GetById(Guid id, CancellationToken cancellationToken)
+    [ProducesResponseType(typeof(ApiResponse<SlitCoilDetailsDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<SlitCoilDetailsDto>), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ApiResponse<SlitCoilDetailsDto>>> GetById(Guid id, CancellationToken cancellationToken)
     {
-        CoilManager.Shared.Results.Result<SlitCoilDto> result = await slitCoilService.GetByIdAsync(id, cancellationToken);
-        return result.IsSuccess ? Success(result.Value) : ToFailure<SlitCoilDto>(result.Error);
+        CoilManager.Shared.Results.Result<SlitCoilDetailsDto> result = await slitCoilService.GetByIdAsync(id, cancellationToken);
+        return result.IsSuccess ? Success(result.Value) : ToFailure<SlitCoilDetailsDto>(result.Error);
     }
 
     [HttpGet("by-number/{coilNumber}")]
-    [ProducesResponseType(typeof(ApiResponse<SlitCoilDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ApiResponse<SlitCoilDto>), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ApiResponse<SlitCoilDto>>> GetByNumber(string coilNumber, CancellationToken cancellationToken)
+    [ProducesResponseType(typeof(ApiResponse<SlitCoilDetailsDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<SlitCoilDetailsDto>), StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ApiResponse<SlitCoilDetailsDto>>> GetByNumber(string coilNumber, CancellationToken cancellationToken)
     {
-        CoilManager.Shared.Results.Result<SlitCoilDto> result = await slitCoilService.GetByNumberAsync(coilNumber, cancellationToken);
-        return result.IsSuccess ? Success(result.Value) : ToFailure<SlitCoilDto>(result.Error);
+        CoilManager.Shared.Results.Result<SlitCoilDetailsDto> result = await slitCoilService.GetByNumberAsync(coilNumber, cancellationToken);
+        return result.IsSuccess ? Success(result.Value) : ToFailure<SlitCoilDetailsDto>(result.Error);
     }
 
     [HttpGet("{id:guid}/genealogy")]
@@ -45,6 +45,41 @@ public sealed class SlitCoilsController(ISlitCoilService slitCoilService) : Base
     {
         CoilManager.Shared.Results.Result<SlitCoilGenealogyDto> result = await slitCoilService.GetGenealogyAsync(id, cancellationToken);
         return result.IsSuccess ? Success(result.Value) : ToFailure<SlitCoilGenealogyDto>(result.Error);
+    }
+
+    [HttpGet("{id:guid}/label")]
+    public async Task<ActionResult<ApiResponse<SlitCoilLabelDto>>> GetLabel(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await labelService.GetLabelAsync(id, cancellationToken);
+        return result.IsSuccess ? Success(result.Value) : ToFailure<SlitCoilLabelDto>(result.Error);
+    }
+
+    [HttpPost("{id:guid}/label/print")]
+    public async Task<ActionResult<ApiResponse<PrintSlitCoilLabelResultDto>>> PrintLabel(Guid id, PrintSlitCoilLabelRequest request, CancellationToken cancellationToken)
+    {
+        var result = await labelService.PrintAsync(id, request, cancellationToken);
+        return result.IsSuccess ? Success(result.Value, "Slit Coil label printed successfully.") : ToFailure<PrintSlitCoilLabelResultDto>(result.Error);
+    }
+
+    [HttpPost("{id:guid}/label/version/increment")]
+    public async Task<ActionResult<ApiResponse<SlitCoilLabelDto>>> IncrementLabelVersion(Guid id, IncrementLabelVersionRequest request, CancellationToken cancellationToken)
+    {
+        var result = await labelService.IncrementVersionAsync(id, request, cancellationToken);
+        return result.IsSuccess ? Success(result.Value, "Label Version incremented successfully.") : ToFailure<SlitCoilLabelDto>(result.Error);
+    }
+
+    [HttpGet("{id:guid}/label/print-history")]
+    public async Task<ActionResult<ApiResponse<IReadOnlyList<LabelPrintHistoryDto>>>> GetPrintHistory(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await labelService.GetHistoryAsync(id, cancellationToken);
+        return result.IsSuccess ? Success(result.Value) : ToFailure<IReadOnlyList<LabelPrintHistoryDto>>(result.Error);
+    }
+
+    [HttpPost("labels/batch")]
+    public async Task<ActionResult<ApiResponse<BatchPrintSlitCoilLabelsResultDto>>> BatchPrint(BatchPrintSlitCoilLabelsRequest request, CancellationToken cancellationToken)
+    {
+        var result = await labelService.BatchPrintAsync(request, cancellationToken);
+        return Success(result, result.Failed.Count == 0 ? "Slit Coil labels printed successfully." : "Batch Print completed with partial failures.");
     }
 
     private ObjectResult ToFailure<T>(Error error)

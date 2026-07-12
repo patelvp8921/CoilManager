@@ -1,4 +1,5 @@
 using CoilManager.Application.DTOs.SlittingJobs;
+using CoilManager.Application.DTOs.SlitCoils;
 using CoilManager.Application.Interfaces.Services;
 using CoilManager.Shared.Errors;
 using CoilManager.Shared.Pagination;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoilManager.API.Controllers;
 
 [Route("api/slitting-jobs")]
-public sealed class SlittingJobsController(ISlittingJobService slittingJobService) : BaseApiController
+public sealed class SlittingJobsController(ISlittingJobService slittingJobService, ISlitCoilLabelService labelService) : BaseApiController
 {
     [HttpGet]
     [ProducesResponseType(typeof(ApiPagedResponse<SlittingJobDto>), StatusCodes.Status200OK)]
@@ -161,6 +162,20 @@ public sealed class SlittingJobsController(ISlittingJobService slittingJobServic
         return result.IsSuccess
             ? Success(result.Value)
             : ToFailure<SlittingJobCompletionDto>(result.Error);
+    }
+
+    [HttpGet("{id:guid}/slit-coil-labels")]
+    public async Task<ActionResult<ApiResponse<IReadOnlyList<SlitCoilLabelDto>>>> GetSlitCoilLabels(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await labelService.GetJobLabelsAsync(id, cancellationToken);
+        return result.IsSuccess ? Success(result.Value) : ToFailure<IReadOnlyList<SlitCoilLabelDto>>(result.Error);
+    }
+
+    [HttpPost("{id:guid}/slit-coil-labels/print")]
+    public async Task<ActionResult<ApiResponse<BatchPrintSlitCoilLabelsResultDto>>> PrintSlitCoilLabels(Guid id, PrintSlitCoilLabelRequest request, CancellationToken cancellationToken)
+    {
+        var result = await labelService.PrintJobLabelsAsync(id, request, cancellationToken);
+        return result.IsSuccess ? Success(result.Value, "Slit Coil labels printed successfully.") : ToFailure<BatchPrintSlitCoilLabelsResultDto>(result.Error);
     }
 
     private ObjectResult ToFailure<T>(Error error)

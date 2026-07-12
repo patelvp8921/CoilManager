@@ -1,0 +1,11 @@
+<article class="thermal-label" [class.printable-label]="printable()">
+ <header><div><strong>{{label().companyName}}</strong><span>SLIT COIL LABEL</span></div>@if(label().companyLogoUrl){<img [src]="label().companyLogoUrl" alt="Company logo">}</header>
+ <section class="identity">
+  <div class="identity-row primary"><span>Slit Coil Number</span><h1>{{label().coilNumber}}</h1></div>
+  <div class="identity-row"><span>Mother Coil Number</span><b>{{label().motherCoilNumber}}</b></div>
+  <div class="identity-row"><span>Slitting Job Number</span><b>{{label().slittingJobNo}}</b></div>
+ </section>
+ <section class="material"><div><span>Grade</span><b>{{label().grade||'-'}}</b></div><div><span>Thickness</span><b>{{label().thickness|number:'1.2-3'}} mm</b></div><div><span>Category</span><b>{{label().category}}</b></div><div><span>Core Loss</span><b>{{label().coreLossPerKg|number:'1.2-4'}} W/kg</b></div><div><span>Width</span><b>{{label().width|number:'1.0-3'}} mm</b></div><div><span>Weight</span><b>{{label().weight|number:'1.3-3'}} kg</b></div><div><span>Heat Number</span><b>{{label().heatNumber}}</b></div><div class="wide"><span>Manufacturer</span><b>{{label().manufacturer||'-'}}</b></div></section>
+ <section class="codes"><app-barcode [value]="label().coilNumber" [height]="32" [width]="1.35"/><app-qr-code [value]="label().coilNumber" [width]="64" [height]="64"/></section>
+ <footer><span>Label Version: {{label().labelVersion}}</span><span>Print Number: {{printNumber()??(label().labelPrintCount+1)}}</span><span>Printed: {{(printedOn()||label().labelLastPrintedOn)|date:'dd-MMM-yyyy HH:mm'}} by {{printedBy()||label().labelLastPrintedBy||'Current User'}}</span></footer>
+</article>

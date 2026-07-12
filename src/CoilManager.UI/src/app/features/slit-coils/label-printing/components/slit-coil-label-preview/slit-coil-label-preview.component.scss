@@ -1,0 +1,21 @@
+:host { display: block; }
+.thermal-label { box-sizing: border-box; width: 100mm; height: 75mm; padding: 3mm; border: 1px solid #111; background: #fff; color: #000; font-family: Arial, sans-serif; overflow: hidden; display: grid; grid-template-rows: auto auto 1fr auto auto; gap: 1mm; }
+.thermal-label header { display: flex; justify-content: space-between; border-bottom: .4mm solid #111; padding-bottom: 1mm; }
+.thermal-label header div { display: grid; }
+.thermal-label header strong { font-size: 12pt; }
+.thermal-label header span { font-size: 8pt; font-weight: 700; letter-spacing: .12em; }
+.thermal-label header img { max-height: 9mm; max-width: 25mm; }
+.identity { display: grid; gap: .4mm; }
+.identity-row { display: grid; grid-template-columns: 30mm 1fr; align-items: baseline; gap: 1mm; font-size: 7.5pt; }
+.identity-row.primary { display: block; }
+.identity-row.primary span { display: block; color: #444; font-size: 6.5pt; }
+.identity h1 { margin: 0; font-size: 17pt; line-height: 1.05; }
+.material { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8mm 2mm; border-top: .2mm solid #555; border-bottom: .2mm solid #555; padding: 1mm 0; font-size: 7pt; }
+.material div { display: grid; }
+.material span { color: #444; }
+.material .wide { grid-column: span 2; }
+.codes { display: grid; grid-template-columns: 1fr 18mm; align-items: center; gap: 2mm; min-height: 18mm; padding: 1mm 0; overflow: hidden; }
+.codes app-qr-code { justify-self: end; align-self: center; }
+.thermal-label footer { display: flex; justify-content: space-between; border-top: .2mm solid #555; padding-top: .8mm; font-size: 6.5pt; }
+@media screen { .thermal-label { box-shadow: 0 8px 24px #0002; transform-origin: top left; max-width: 100%; } }
+@media (max-width: 700px) { .thermal-label { transform: scale(.78); margin-bottom: -16mm; } }

@@ -24,6 +24,10 @@ public sealed class SlitCoilConfiguration : IEntityTypeConfiguration<SlitCoil>
         builder.HasIndex(coil => coil.ParentCoilId);
         builder.HasIndex(coil => coil.SlittingJobId);
         builder.HasIndex(coil => coil.Status);
+        builder.HasIndex(coil => coil.GradeId);
+        builder.HasIndex(coil => coil.CreatedAtUtc);
+        builder.HasIndex(coil => coil.BarcodeValue);
+        builder.HasIndex(coil => coil.QrCodeValue);
 
         builder.Property(coil => coil.HeatNumber)
             .HasMaxLength(50)
@@ -63,6 +67,8 @@ public sealed class SlitCoilConfiguration : IEntityTypeConfiguration<SlitCoil>
         builder.Property(coil => coil.LabelVersion)
             .HasMaxLength(20)
             .IsRequired();
+
+        builder.Property(coil => coil.LabelLastPrintedBy).HasMaxLength(100);
 
         builder.Property(coil => coil.CreatedBy)
             .HasMaxLength(100);

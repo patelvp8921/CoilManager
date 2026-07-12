@@ -2,15 +2,20 @@
   <div>
     <h1>Slit Coil Inventory</h1>
   </div>
+  <a mat-flat-button routerLink="/slit-coils/labels/batch"><mat-icon>print</mat-icon>Batch Print</a>
 </section>
 
 <section class="slit-coil-page">
   <mat-card appearance="outlined" class="filter-panel">
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
       <mat-label>Search</mat-label>
-      <input matInput [formControl]="searchControl" placeholder="Slit coil, mother coil, job, grade">
+      <input matInput [formControl]="searchControl" (keyup.enter)="applyFilters()" placeholder="Coil Number, Barcode, QR Code, job, heat">
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic"><mat-label>Grade</mat-label><input matInput [formControl]="gradeControl"></mat-form-field>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic"><mat-label>Width From</mat-label><input matInput type="number" [formControl]="widthFromControl"></mat-form-field>
+    <mat-form-field appearance="outline" subscriptSizing="dynamic"><mat-label>Width To</mat-label><input matInput type="number" [formControl]="widthToControl"></mat-form-field>
 
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
       <mat-label>Status</mat-label>
@@ -38,12 +43,14 @@
       <table mat-table matSort [dataSource]="slitCoils()" (matSortChange)="onSortChange($event)">
         <ng-container matColumnDef="coilNumber">
           <th mat-header-cell *matHeaderCellDef mat-sort-header="coilNumber">Slit Coil Number</th>
-          <td mat-cell *matCellDef="let row">{{ row.coilNumber }}</td>
+          <td mat-cell *matCellDef="let row"><a [routerLink]="['/slit-coils', row.id]">{{ row.coilNumber }}</a></td>
         </ng-container>
+        <ng-container matColumnDef="category"><th mat-header-cell *matHeaderCellDef>Category</th><td mat-cell *matCellDef="let row">{{ row.category || '-' }}</td></ng-container>
         <ng-container matColumnDef="motherCoilNumber">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header="motherCoilNumber">Mother Coil Number</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="motherCoilNumber">Coil ID</th>
           <td mat-cell *matCellDef="let row">{{ row.motherCoilNumber }}</td>
         </ng-container>
+        <ng-container matColumnDef="manufacturer"><th mat-header-cell *matHeaderCellDef>Manufacturer</th><td mat-cell *matCellDef="let row">{{ row.manufacturer || '-' }}</td></ng-container>
         <ng-container matColumnDef="slittingJobNo">
           <th mat-header-cell *matHeaderCellDef mat-sort-header="slittingJobNumber">Slitting Job Number</th>
           <td mat-cell *matCellDef="let row">{{ row.slittingJobNo }}</td>
@@ -79,9 +86,13 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Actions</th>
           <td mat-cell *matCellDef="let row">
-            <button mat-icon-button type="button" aria-label="View slit coil" (click)="placeholder('View')"><mat-icon>visibility</mat-icon></button>
-            <button mat-icon-button type="button" aria-label="Print label" (click)="placeholder('Print Labels')"><mat-icon>print</mat-icon></button>
-            <button mat-icon-button type="button" aria-label="View genealogy" (click)="placeholder('View Genealogy')"><mat-icon>account_tree</mat-icon></button>
+            <button mat-icon-button [matMenuTriggerFor]="coilMenu" aria-label="Coil actions"><mat-icon>more_vert</mat-icon></button>
+            <mat-menu #coilMenu="matMenu">
+              <a mat-menu-item [routerLink]="['/slit-coils', row.id]"><mat-icon>visibility</mat-icon>View Coil Details</a>
+              <a mat-menu-item [routerLink]="['/slitting-jobs', row.slittingJobId, 'edit']"><mat-icon>precision_manufacturing</mat-icon>View Slitting Job</a>
+              <a mat-menu-item [routerLink]="['/coils', row.coilNumber, 'traceability']"><mat-icon>account_tree</mat-icon>View Traceability</a>
+              <a mat-menu-item [routerLink]="['/slit-coils',row.id,'label']"><mat-icon>print</mat-icon>{{ row.labelPrinted ? 'Reprint Label' : 'Print Label' }}</a>
+            </mat-menu>
           </td>
         </ng-container>
 

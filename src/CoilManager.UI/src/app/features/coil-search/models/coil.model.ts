@@ -1,0 +1,6 @@
+import { CoilStatus } from '../../raw-coil/models/raw-coil.model';
+import { InventoryTransaction } from '../../slit-coils/models/slit-coil.model';
+export interface CoilSearchResult{coilType:number;id:string;coilNumber:string;status:CoilStatus;grade?:string|null;thickness:number;width:number;weight:number;parentCoilNumber?:string|null;rootMotherCoilNumber:string;slittingJobNo?:string|null;navigationRoute:string;}
+export interface TraceabilityNode{id:string;coilNumber:string;coilType:number;status:CoilStatus;generationLevel:number;parentCoilNumber?:string|null;rootMotherCoilNumber:string;grade?:string|null;thickness:number;width:number;weight:number;createdOn:string;slittingJobNo?:string|null;children:readonly TraceabilityNode[];}
+export interface TraceabilityJob{id:string;slittingJobNo:string;status:number;planningDate:string;releasedOn?:string|null;startedOn?:string|null;completedOn?:string|null;}
+export interface CoilTraceability{currentCoil:TraceabilityNode;rootMotherCoil:TraceabilityNode;parentChain:readonly TraceabilityNode[];directChildren:readonly TraceabilityNode[];descendants:readonly TraceabilityNode[];relatedSlittingJobs:readonly TraceabilityJob[];inventoryTransactions:readonly InventoryTransaction[];}

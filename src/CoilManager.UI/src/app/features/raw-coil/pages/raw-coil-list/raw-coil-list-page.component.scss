@@ -104,6 +104,18 @@ th {
   color: #dc2626;
 }
 
+.status-pill.in-process {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.status-pill.consumed {
+  border-color: #d1d5db;
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
 .row-actions {
   display: inline-flex;
   align-items: center;

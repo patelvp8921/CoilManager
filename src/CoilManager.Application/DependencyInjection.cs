@@ -21,8 +21,11 @@ public static class DependencyInjection
         services.AddScoped<IOperationsDashboardService, OperationsDashboardService>();
         services.AddScoped<ISlittingJobService, SlittingJobService>();
         services.AddScoped<ISlitCoilService, SlitCoilService>();
+        services.AddScoped<ISlitCoilLabelService, SlitCoilLabelService>();
+        services.AddScoped<ICoilService, CoilService>();
         services.AddScoped<ICoilNumberingService, CoilNumberingService>();
         services.Configure<SlittingSettings>(configuration.GetSection(SlittingSettings.SectionName));
+        services.Configure<LabelSettings>(configuration.GetSection(LabelSettings.SectionName));
 
         return services;
     }

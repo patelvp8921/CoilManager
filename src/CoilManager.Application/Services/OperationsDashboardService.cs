@@ -8,7 +8,9 @@ namespace CoilManager.Application.Services;
 
 public sealed class OperationsDashboardService(
     IRawCoilRepository rawCoilRepository,
-    ISlittingJobRepository slittingJobRepository) : IOperationsDashboardService
+    ISlittingJobRepository slittingJobRepository,
+    ISlitCoilRepository? slitCoilRepository = null,
+    ISlitCoilLabelPrintHistoryRepository? labelHistoryRepository = null) : IOperationsDashboardService
 {
     private const string ComingSoon = "Coming soon";
 
@@ -16,6 +18,8 @@ public sealed class OperationsDashboardService(
     {
         IReadOnlyList<RawCoil> motherCoils = await rawCoilRepository.GetAllAsync(cancellationToken);
         IReadOnlyList<SlittingJob> slittingJobs = await slittingJobRepository.GetForDashboardAsync(cancellationToken);
+        IReadOnlyList<SlitCoil> slitCoils = slitCoilRepository is null ? [] : await slitCoilRepository.GetAllWithDetailsAsync(cancellationToken);
+        IReadOnlyList<SlitCoilLabelPrintHistory> labelHistory = labelHistoryRepository is null ? [] : await labelHistoryRepository.GetAllAsync(cancellationToken);
         RawCoil[] coils = motherCoils.ToArray();
         SlittingJob[] jobs = slittingJobs.ToArray();
 
@@ -52,7 +56,7 @@ public sealed class OperationsDashboardService(
         return new OperationsDashboardDto(
             DashboardRole: GetDashboardRole(),
             GeneratedAt: DateTimeOffset.UtcNow,
-            Kpis: BuildKpis(totalMotherCoils, slittingMetrics),
+            Kpis: BuildKpis(totalMotherCoils, slittingMetrics, slitCoils, labelHistory),
             Inventory: inventory,
             Production: production,
             Slitting: slitting,
@@ -72,12 +76,20 @@ public sealed class OperationsDashboardService(
         return coils.Count(coil => coil.Status == status);
     }
 
-    private static IReadOnlyList<DashboardKpiDto> BuildKpis(int totalMotherCoils, SlittingJobMetricsDto slittingMetrics)
+    private static IReadOnlyList<DashboardKpiDto> BuildKpis(int totalMotherCoils, SlittingJobMetricsDto slittingMetrics,
+        IReadOnlyList<SlitCoil> slitCoils, IReadOnlyList<SlitCoilLabelPrintHistory> labelHistory)
     {
+        DateOnly today = DateOnly.FromDateTime(DateTime.UtcNow);
+        int labelsPending = slitCoils.Count(coil => !coil.LabelPrinted);
+        int labelsPrintedToday = slitCoils.Count(coil => coil.LabelLastPrintedOn.HasValue && DateOnly.FromDateTime(coil.LabelLastPrintedOn.Value.UtcDateTime) == today);
+        int reprintsToday = labelHistory.Count(row => row.PrintType == LabelPrintType.Reprint && DateOnly.FromDateTime(row.PrintedOn.UtcDateTime) == today);
         return
         [
             new("Mother Coils", totalMotherCoils.ToString("N0"), "inventory_2", "primary", "Live inventory"),
-            new("Slit Coils", "0", "splitscreen", "neutral", ComingSoon),
+            new("Slit Coils", slitCoils.Count.ToString("N0"), "splitscreen", "primary", "Generated inventory"),
+            new("Labels Pending", labelsPending.ToString("N0"), "label_off", "warning", "Slit Coil Labels not yet printed"),
+            new("Labels Printed Today", labelsPrintedToday.ToString("N0"), "print", "success", "Labels printed today"),
+            new("Reprints Today", reprintsToday.ToString("N0"), "history", "neutral", "Slit Coil Label reprints today"),
             new("Finished Coils", "0", "task_alt", "neutral", ComingSoon),
             new("Waiting to Start", slittingMetrics.ReleasedJobs.ToString("N0"), "pending_actions", "warning", "Released slitting jobs"),
             new("Running Jobs", slittingMetrics.InProgressJobs.ToString("N0"), "precision_manufacturing", "success", "In progress slitting jobs"),
@@ -216,7 +228,7 @@ public sealed class OperationsDashboardService(
             new("Manage Manufacturers", "factory", "/admin/manufacturers", true),
             new("Create Work Order", "assignment_add", null, false, ComingSoon),
             new("Create Slitting Job", "precision_manufacturing", null, false, ComingSoon),
-            new("Print QR Labels", "qr_code_2", null, false, ComingSoon)
+            new("Print Pending Slit Coil Labels", "print", "/slit-coils/labels/batch", true)
         ];
     }
 

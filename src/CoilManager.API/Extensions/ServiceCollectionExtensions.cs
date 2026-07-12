@@ -66,6 +66,9 @@ public static class ServiceCollectionExtensions
         {
             options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
             options.AddPolicy("ProductionUser", policy => policy.RequireRole("Admin", "Production"));
+            options.AddPolicy("SlitCoilLabelPrint", policy => policy.RequireRole("Admin", "Production", "Stores"));
+            options.AddPolicy("SlitCoilLabelReprint", policy => policy.RequireRole("Admin", "Production", "Stores"));
+            options.AddPolicy("SlitCoilLabelVersionIncrement", policy => policy.RequireRole("Admin", "Production"));
             options.AddPolicy("StoresUser", policy => policy.RequireRole("Admin", "Stores"));
             options.AddPolicy("QAUser", policy => policy.RequireRole("Admin", "QA"));
             options.AddPolicy("DispatchUser", policy => policy.RequireRole("Admin", "Dispatch"));

@@ -19,6 +19,13 @@
       </div>
     }
 
+    @if (isFrozen()) {
+      <div class="info-banner">
+        <mat-icon>lock</mat-icon>
+        <span>This Mother Coil has been consumed. Its details are frozen and available for viewing only.</span>
+      </div>
+    }
+
     <form [formGroup]="form" (ngSubmit)="submit()">
       <mat-tab-group animationDuration="150ms" class="raw-coil-tabs">
         <mat-tab label="General Information">
@@ -91,6 +98,14 @@
               </div>
             </section>
 
+            <section class="form-section">
+              <header><h2>Generated Slit Coils</h2><a mat-stroked-button [routerLink]="['/coils', rawCoil()?.rawCoilNumber, 'traceability']">View Full Traceability</a></header>
+              <div class="generated-grid generated-head"><span>Slit Coil Number</span><span>Slitting Job Number</span><span>Width</span><span>Weight</span><span>Status</span><span>Created On</span></div>
+              @for (coil of generatedSlitCoils(); track coil.id) {
+                <div class="generated-grid"><a [routerLink]="['/slit-coils', coil.id]">{{ coil.coilNumber }}</a><span>{{ coil.slittingJobNo }}</span><span>{{ coil.width | number:'1.3-3' }} mm</span><span>{{ coil.weight | number:'1.3-3' }} kg</span><span>{{ coil.status }}</span><span>{{ coil.createdOn | date:'short' }}</span></div>
+              } @empty { <p>No generated Slit Coils.</p> }
+            </section>
+
           </div>
         </mat-tab>
 
@@ -108,8 +123,10 @@
       </mat-tab-group>
 
       <div class="actions">
-        <a mat-stroked-button routerLink="/mother-coils">Cancel</a>
-        <button mat-flat-button type="submit" [disabled]="isSubmitting() || isLoading()">Save</button>
+        <a mat-stroked-button routerLink="/mother-coils">{{ isFrozen() ? 'Back' : 'Cancel' }}</a>
+        @if (!isFrozen()) {
+          <button mat-flat-button type="submit" [disabled]="isSubmitting() || isLoading()">Save</button>
+        }
       </div>
     </form>
   </mat-card>
