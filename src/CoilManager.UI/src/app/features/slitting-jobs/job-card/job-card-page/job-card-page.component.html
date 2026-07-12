@@ -1,0 +1,121 @@
+<section class="page-title-bar no-print">
+  <div>
+    <h1>Job Card</h1>
+    <nav>
+      <a routerLink="/dashboard">Home</a>
+      <mat-icon>chevron_right</mat-icon>
+      <a routerLink="/slitting-jobs">Slitting Jobs</a>
+      <mat-icon>chevron_right</mat-icon>
+      <strong>Job Card</strong>
+    </nav>
+  </div>
+
+  <div class="actions">
+    <a mat-stroked-button routerLink="/slitting-jobs"><mat-icon>arrow_back</mat-icon>Back</a>
+    <button mat-flat-button type="button" (click)="print()" [disabled]="!job()"><mat-icon>print</mat-icon>Print</button>
+  </div>
+</section>
+
+@if (isLoading()) {
+  <mat-progress-bar mode="indeterminate" class="no-print" />
+}
+
+@if (error()) {
+  <mat-card appearance="outlined" class="error-card no-print">{{ error() }}</mat-card>
+}
+
+@if (job(); as job) {
+  <main class="print-shell">
+    <article class="job-card">
+      <header class="job-header">
+        <div class="logo-box">CM</div>
+        <div>
+          <h2>Coil Manager</h2>
+          <h1>SLITTING JOB CARD</h1>
+        </div>
+        <div class="job-number">
+          <span>Slitting Job Number</span>
+          <strong>{{ job.slittingJobNo }}</strong>
+          <div class="barcode">{{ job.slittingJobNo }}</div>
+        </div>
+      </header>
+
+      <section class="meta-grid">
+        <div><span>Status</span><strong>{{ labelForStatus(job.status) }}</strong></div>
+        <div><span>Planning Date</span><strong>{{ job.planningDate | date:'dd/MM/yyyy' }}</strong></div>
+        <div><span>Planner</span><strong>{{ job.plannerId || '-' }}</strong></div>
+        <div><span>Machine</span><strong>{{ job.machineId || '-' }}</strong></div>
+        <div><span>Shift</span><strong>{{ job.shift || '-' }}</strong></div>
+      </section>
+
+      <h3>Mother Coil Details</h3>
+      <section class="detail-grid">
+        <div><span>Mother Coil Number</span><strong>{{ job.motherCoilNo }}</strong></div>
+        <div><span>Supplier Coil Number</span><strong>{{ job.supplierCoilNumber || '-' }}</strong></div>
+        <div><span>Supplier</span><strong>{{ job.supplierName || '-' }}</strong></div>
+        <div><span>Manufacturer</span><strong>{{ job.manufacturerName || '-' }}</strong></div>
+        <div><span>Grade</span><strong>{{ job.grade || '-' }}</strong></div>
+        <div><span>Thickness</span><strong>{{ job.thickness | number:'1.2-3' }} mm</strong></div>
+        <div><span>Category</span><strong>{{ job.category }}</strong></div>
+        <div><span>Core Loss</span><strong>{{ job.coreLossPerKg | number:'1.2-4' }} W/kg</strong></div>
+        <div><span>Width</span><strong>{{ job.motherCoilWidth | number:'1.0-3' }} mm</strong></div>
+        <div><span>Weight</span><strong>{{ job.motherCoilWeight | number:'1.3-3' }} kg</strong></div>
+        <div><span>Heat Number</span><strong>{{ job.heatNumber || '-' }}</strong></div>
+        <div><span>Warehouse</span><strong>{{ job.warehouseLocation || '-' }}</strong></div>
+      </section>
+
+      <h3>Slitting Plan</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Seq</th>
+            <th>Slit Coil Number</th>
+            <th>Planned Width (mm)</th>
+            <th>Actual Weight (kg)</th>
+            <th>Operator Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of job.items; track item.id) {
+            <tr>
+              <td>{{ item.sequenceNo }}</td>
+              <td>{{ item.slitCoilId }}</td>
+              <td>{{ item.width | number:'1.0-3' }}</td>
+              <td class="blank"></td>
+              <td class="blank wide"></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <h3>Planning Summary</h3>
+      <section class="summary-grid">
+        <div><span>Mother Coil Width</span><strong>{{ job.motherCoilWidth | number:'1.0-3' }} mm</strong></div>
+        <div><span>Total Slit Width</span><strong>{{ totalSlitWidth(job) | number:'1.0-3' }} mm</strong></div>
+        <div><span>Knife Loss</span><strong>{{ job.knifeLoss | number:'1.0-3' }} mm</strong></div>
+        <div><span>Edge Trim</span><strong>{{ job.edgeTrim | number:'1.0-3' }} mm</strong></div>
+        <div><span>Total Planned Width</span><strong>{{ job.totalPlannedWidth | number:'1.0-3' }} mm</strong></div>
+        <div><span>Remaining Width</span><strong>{{ job.remainingWidth | number:'1.0-3' }} mm</strong></div>
+        <div><span>Utilization</span><strong>{{ job.utilizationPercent | number:'1.1-1' }}%</strong></div>
+      </section>
+
+      <section class="production-details">
+        <h3>Production Details</h3>
+        <div class="write-field operator-name"><span>Operator Name</span></div>
+        <div class="write-field"><span>Start Time</span></div>
+        <div class="write-field"><span>End Time</span></div>
+        <div class="write-field supervisor-line"><span>Supervisor</span></div>
+        <div class="write-field remarks"><span>Remarks</span></div>
+      </section>
+
+      <div class="signature-spacer" aria-hidden="true"></div>
+
+      <footer>
+        <span>Operator Signature</span>
+        <span>Supervisor Signature</span>
+        <span>Date</span>
+        <strong>System Generated Job Card</strong>
+      </footer>
+    </article>
+  </main>
+}

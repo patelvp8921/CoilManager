@@ -127,6 +127,12 @@ export class SlittingJobListPageComponent implements OnInit {
     return job.status === SlittingJobStatus.Released;
   }
 
+  protected canPrintJobCard(job: SlittingJob): boolean {
+    return job.status === SlittingJobStatus.Released
+      || job.status === SlittingJobStatus.InProgress
+      || job.status === SlittingJobStatus.Completed;
+  }
+
   protected canCancel(job: SlittingJob): boolean {
     return job.status === SlittingJobStatus.Released;
   }

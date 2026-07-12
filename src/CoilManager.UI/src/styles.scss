@@ -19,3 +19,39 @@ body {
 a {
   color: inherit;
 }
+
+@media print {
+  body.job-card-print-mode {
+    background: #ffffff !important;
+  }
+
+  body.job-card-print-mode .app-sidebar,
+  body.job-card-print-mode .app-header,
+  body.job-card-print-mode .app-footer,
+  body.job-card-print-mode .no-print,
+  body.job-card-print-mode .cdk-overlay-container,
+  body.job-card-print-mode .mat-mdc-snack-bar-container {
+    display: none !important;
+  }
+
+  body.job-card-print-mode .app-shell,
+  body.job-card-print-mode .app-content,
+  body.job-card-print-mode .content-area,
+  body.job-card-print-mode .mat-drawer-container,
+  body.job-card-print-mode .mat-drawer-content {
+    display: block !important;
+    width: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    transform: none !important;
+  }
+
+  body.job-card-print-mode app-root,
+  body.job-card-print-mode app-shell,
+  body.job-card-print-mode app-job-card-page {
+    display: block !important;
+  }
+}

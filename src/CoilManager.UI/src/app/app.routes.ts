@@ -70,6 +70,12 @@ export const routes: Routes = [
         title: 'Complete Slitting | CoilManager',
       },
       {
+        path: 'slitting-jobs/:id/job-card',
+        loadComponent: () =>
+          import('./features/slitting-jobs/job-card/job-card-page/job-card-page.component').then((component) => component.JobCardPageComponent),
+        title: 'Job Card | CoilManager',
+      },
+      {
         path: 'slitting-jobs',
         loadComponent: () =>
           import('./features/slitting-jobs/pages/slitting-job-list/slitting-job-list-page.component').then((component) => component.SlittingJobListPageComponent),

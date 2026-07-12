@@ -110,6 +110,11 @@
                 <mat-icon>edit</mat-icon>
               </a>
             }
+            @if (canPrintJobCard(row)) {
+              <a mat-icon-button [routerLink]="['/slitting-jobs', row.id, 'job-card']" aria-label="Print Job Card">
+                <mat-icon>article</mat-icon>
+              </a>
+            }
             @if (canStart(row)) {
               <button mat-icon-button type="button" aria-label="Start slitting" (click)="start(row)">
                 <mat-icon>play_circle</mat-icon>
@@ -131,7 +136,7 @@
                 <mat-icon>print</mat-icon>
               </button>
             }
-            @if (!canEdit(row) && !canStart(row) && !canComplete(row) && !canViewSlitCoils(row)) {
+            @if (!canEdit(row) && !canPrintJobCard(row) && !canStart(row) && !canComplete(row) && !canViewSlitCoils(row)) {
               <span class="muted-action">-</span>
             }
           </td>
