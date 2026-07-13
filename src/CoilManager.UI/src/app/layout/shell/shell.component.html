@@ -1,73 +1,91 @@
-<mat-sidenav-container class="app-shell">
-  <mat-sidenav class="app-sidebar" mode="side" opened>
+<mat-sidenav-container class="app-shell" autosize>
+  <mat-sidenav
+    class="app-sidebar"
+    [class.collapsed]="layout.effectiveCollapsed()"
+    [mode]="layout.sidenavMode()"
+    [opened]="layout.sidebarVisible()"
+    (closedStart)="layout.closeMobile()"
+  >
     <div class="brand">
-      <img class="brand-mark" src="coil-mark.svg" alt="Steel coil">
-      <span class="brand-name">Coil Manager</span>
+      <img class="brand-mark" src="coil-mark.svg" alt="CoilManager">
+      @if (!layout.effectiveCollapsed()) { <span class="brand-name">Coil Manager</span> }
     </div>
-
     <mat-divider />
 
-    <mat-nav-list class="nav-list">
-      @for (item of navigationItems; track item.route) {
-        <a
-          class="module-link"
-          [routerLink]="item.route"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: item.exact }"
-        >
+    <mat-nav-list class="nav-list" aria-label="Main navigation">
+      @for (item of primaryItems; track item.route) {
+        <a class="module-link" [routerLink]="item.route" routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.exact ?? false }" (click)="routeSelected()"
+          [matTooltip]="item.label" [matTooltipDisabled]="!layout.effectiveCollapsed()" matTooltipPosition="right"
+          [attr.aria-label]="item.label">
           <mat-icon class="nav-leading">{{ item.icon }}</mat-icon>
-          <span class="module-label">{{ item.label }}</span>
+          @if (!layout.effectiveCollapsed()) { <span class="module-label">{{ item.label }}</span> }
         </a>
       }
 
-      <span class="nav-section">Admin</span>
-      @for (item of adminItems; track item.route) {
-        <a
-          class="module-link"
-          [routerLink]="item.route"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: false }"
-        >
-          <mat-icon class="nav-leading">{{ item.icon }}</mat-icon>
-          <span class="module-label">{{ item.label }}</span>
-        </a>
+      @for (group of groups; track group.label) {
+        <button class="group-toggle" [class.active-parent]="groupActive(group)" type="button" (click)="toggleGroup(group.label)"
+          [matTooltip]="group.label" [matTooltipDisabled]="!layout.effectiveCollapsed()" matTooltipPosition="right"
+          [attr.aria-label]="group.label" [attr.aria-expanded]="groupExpanded(group.label)">
+          <mat-icon>{{ group.icon }}</mat-icon>
+          @if (!layout.effectiveCollapsed()) {
+            <span>{{ group.label }}</span>
+            <mat-icon class="group-chevron">{{ groupExpanded(group.label) ? 'expand_less' : 'expand_more' }}</mat-icon>
+          }
+        </button>
+        @if (!layout.effectiveCollapsed() && groupExpanded(group.label)) {
+          <div class="group-items">
+            @for (item of group.items; track item.route) {
+              <a class="module-link child-link" [routerLink]="item.route" routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: false }" (click)="routeSelected()" [attr.aria-label]="item.label">
+                <mat-icon class="nav-leading">{{ item.icon }}</mat-icon>
+                <span class="module-label">{{ item.label }}</span>
+              </a>
+            }
+          </div>
+        }
       }
+
+      <button class="group-toggle placeholder" type="button" matTooltip="Reports" matTooltipPosition="right" aria-label="Reports coming soon">
+        <mat-icon>assessment</mat-icon>@if (!layout.effectiveCollapsed()) { <span>Reports</span><small>Coming soon</small> }
+      </button>
+      <button class="group-toggle placeholder" type="button" matTooltip="Settings" matTooltipPosition="right" aria-label="Settings coming soon">
+        <mat-icon>settings</mat-icon>@if (!layout.effectiveCollapsed()) { <span>Settings</span><small>Coming soon</small> }
+      </button>
     </mat-nav-list>
 
-    <div class="sidebar-footer">
-      <span>© Arkon Electricals Private Limited</span>
-      <span>All rights reserved.</span>
-    </div>
+    @if (!layout.effectiveCollapsed()) {
+      <div class="sidebar-footer"><span>© Arkon Electricals Private Limited</span><span>All rights reserved.</span></div>
+    }
   </mat-sidenav>
 
   <mat-sidenav-content class="app-content">
     <mat-toolbar class="app-header">
+      <button mat-icon-button type="button" (click)="layout.toggleSidebar()"
+        [attr.aria-label]="layout.isMobile() ? 'Open navigation' : (layout.sidebarCollapsed() ? 'Expand navigation' : 'Collapse navigation')"
+        [matTooltip]="layout.sidebarCollapsed() ? 'Expand Navigation' : 'Collapse Navigation'">
+        <mat-icon>{{ layout.focusMode() ? 'menu_open' : 'menu' }}</mat-icon>
+      </button>
+
+      <span class="toolbar-title">CoilManager</span>
       <span class="header-spacer"></span>
 
-      <a mat-stroked-button routerLink="/coil-search" aria-label="Open Coil Search"><mat-icon>qr_code_scanner</mat-icon>Coil Search</a>
-
-      <button mat-icon-button type="button" aria-label="Notifications" class="header-icon">
-        <mat-icon>notifications_none</mat-icon>
-        <span class="notification-dot">5</span>
+      <a mat-stroked-button routerLink="/coil-search" aria-label="Open Coil Search" class="search-shortcut"><mat-icon>qr_code_scanner</mat-icon><span>Coil Search</span></a>
+      <button mat-icon-button type="button" (click)="layout.toggleFocusMode()"
+        [attr.aria-label]="layout.focusMode() ? 'Exit Focus Mode' : 'Enter Focus Mode'"
+        [matTooltip]="layout.focusMode() ? 'Exit Focus Mode' : 'Full Width'">
+        <mat-icon>{{ layout.focusMode() ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
       </button>
-      <button mat-icon-button type="button" aria-label="Fullscreen" class="header-icon">
-        <mat-icon>fullscreen</mat-icon>
+      <button mat-icon-button type="button" aria-label="Notifications" class="header-icon" matTooltip="Notifications">
+        <mat-icon>notifications_none</mat-icon><span class="notification-dot">5</span>
       </button>
       <span class="header-divider"></span>
-      <button mat-button type="button" class="profile-button">
-        <span class="profile-avatar">AU</span>
-        Admin
-        <mat-icon>expand_more</mat-icon>
+      <button mat-button type="button" class="profile-button" aria-label="User menu">
+        <span class="profile-avatar">AU</span><span class="profile-name">Admin</span><mat-icon>expand_more</mat-icon>
       </button>
     </mat-toolbar>
 
-    <main class="content-area">
-      <router-outlet />
-    </main>
-
-    <footer class="app-footer">
-      <span>CoilManager ERP</span>
-      <span>API: http://localhost:5170/api</span>
-    </footer>
+    <main class="content-area"><router-outlet /></main>
+    <footer class="app-footer"><span>CoilManager ERP</span><span>API: http://localhost:5170/api</span></footer>
   </mat-sidenav-content>
 </mat-sidenav-container>

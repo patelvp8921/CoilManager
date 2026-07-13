@@ -1,234 +1,46 @@
-:host {
-  display: block;
-  min-height: 100vh;
-}
+:host { display: block; min-height: 100vh; }
+.app-shell { min-height: 100vh; background: #f4f7fb; }
+.app-sidebar { width: 260px; border-right: 1px solid #dfe5ee; background: #fff; color: #172033; transition: width 200ms ease; overflow-x: hidden; }
+.app-sidebar.collapsed { width: 72px; }
+.brand { display: flex; height: 64px; align-items: center; gap: 10px; padding: 0 16px; overflow: hidden; }
+.collapsed .brand { justify-content: center; padding: 0; }
+.brand-mark { width: 40px; height: 40px; flex: 0 0 40px; border-radius: 10px; box-shadow: 0 8px 18px rgba(16,24,40,.12); object-fit: contain; }
+.brand-name { color: #0f3f8f; font-size: 18px; font-weight: 700; white-space: nowrap; }
+.nav-list { padding: 12px 10px 86px; }
+.module-link, .group-toggle { display: flex; width: 100%; height: 44px; align-items: center; gap: 10px; margin-bottom: 5px; padding: 0 11px; border: 0; border-radius: 7px; box-sizing: border-box; background: transparent; color: #344054; font: inherit; text-align: left; text-decoration: none; white-space: nowrap; cursor: pointer; }
+.module-link:hover, .group-toggle:hover { background: #f4f7fb; color: #0f3f8f; }
+.collapsed .module-link, .collapsed .group-toggle { justify-content: center; padding: 0; }
+.module-label, .group-toggle > span { min-width: 0; flex: 1; overflow: hidden; font-size: 13px; font-weight: 500; text-overflow: ellipsis; }
+.nav-leading, .group-toggle > mat-icon:first-child { flex: 0 0 22px; color: #667085; font-size: 22px; }
+.group-toggle { margin-top: 10px; color: #667085; font-size: 12px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
+.group-toggle.active-parent { color: #0f3f8f; background: #f4f8ff; }
+.group-toggle.active-parent > mat-icon:first-child { color: #1976d2; }
+.group-chevron { margin-left: auto; font-size: 19px; }
+.group-items { padding-left: 10px; }
+.child-link { position: relative; }
+.child-link::before { width: 4px; height: 4px; margin-right: 2px; border-radius: 50%; background: #98a2b3; content: ''; }
+.module-link.active { border: 1px solid #cfe3ff; background: #eef6ff; color: #0f3f8f; font-weight: 700; box-shadow: inset 3px 0 #1976d2; }
+.module-link.active mat-icon { color: #1976d2; }
+.placeholder { cursor: default; opacity: .62; }
+.placeholder small { margin-left: auto; font-size: 9px; font-weight: 500; letter-spacing: 0; text-transform: none; }
+.sidebar-footer { position: absolute; right: 0; bottom: 0; left: 0; display: grid; gap: 4px; border-top: 1px solid #dfe5ee; padding: 14px 16px; background: #f8fafc; color: #667085; font-size: 11px; }
+.app-content { display: flex; min-width: 0; min-height: 100vh; flex-direction: column; }
+.app-header { position: sticky; top: 0; z-index: 10; min-height: 64px; border-bottom: 1px solid #d7dde5; background: #fff; color: #172033; box-shadow: 0 1px 0 rgba(16,24,40,.02); }
+.toolbar-title { margin-left: 6px; color: #0f3f8f; font-size: 15px; font-weight: 700; }
+.header-spacer { flex: 1 1 auto; }
+.header-icon { position: relative; color: #4a5b70; }
+.notification-dot { position: absolute; top: 7px; right: 7px; display: grid; min-width: 16px; height: 16px; place-items: center; border-radius: 999px; background: #ef1f26; color: #fff; font-size: 9px; font-weight: 700; }
+.header-divider { width: 1px; height: 32px; margin: 0 10px; background: #d7dde5; }
+.profile-avatar { display: grid; width: 34px; height: 34px; margin-right: 8px; place-items: center; border-radius: 50%; background: #f5c58b; font-size: 12px; font-weight: 700; }
+.content-area { min-width: 0; flex: 1; overflow-x: clip; }
+.app-footer { display: flex; min-height: 44px; align-items: center; justify-content: space-between; border-top: 1px solid #d7dde5; padding: 0 24px; background: #fff; color: #667085; font-size: 12px; }
 
-.app-shell {
-  min-height: 100vh;
-  background: #f4f7fb;
-}
-
-.app-sidebar {
-  width: 292px;
-  border-right: 1px solid #dfe5ee;
-  background: #ffffff;
-  color: #172033;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  height: 72px;
-  padding: 0 14px;
-}
-
-.brand-mark {
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
-  border-radius: 10px;
-  background: #ffffff;
-  box-shadow: 0 8px 18px rgba(16, 24, 40, 0.12);
-  object-fit: contain;
-}
-
-.brand-name {
-  min-width: 0;
-  color: #0f3f8f;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 24px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.profile-avatar {
-  display: grid;
-  flex: 0 0 auto;
-  place-items: center;
-  border-radius: 999px;
-  background: #f5c58b;
-  color: #0b1b2d;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.nav-list {
-  padding: 18px 12px 76px;
-}
-
-.nav-section {
-  display: block;
-  margin: 18px 6px 8px;
-  color: #667085;
-  font-size: 12px;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-}
-
-.module-link {
-  --mdc-list-list-item-label-text-color: #344054;
-  --mdc-list-list-item-leading-icon-color: #667085;
-  --mdc-list-list-item-trailing-icon-color: #667085;
-  --mdc-list-list-item-hover-label-text-color: #0f3f8f;
-  --mdc-list-list-item-hover-leading-icon-color: #1976d2;
-  --mdc-list-list-item-focus-label-text-color: #0f3f8f;
-  --mdc-list-list-item-focus-leading-icon-color: #1976d2;
-
-  display: flex;
-  width: 100%;
-  height: 44px;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 6px;
-  padding: 0 10px;
-  border-radius: 6px;
-  box-sizing: border-box;
-  color: #344054;
-  font-size: 13px;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.module-label {
-  min-width: 0;
-  flex: 1 1 auto;
-  overflow: hidden;
-  color: inherit;
-  font-weight: 500;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.nav-leading {
-  flex: 0 0 22px;
-  color: #667085;
-  font-size: 22px;
-}
-
-.nav-list a .mdc-list-item__content {
-  min-width: 0;
-  overflow: hidden;
-}
-
-.nav-list a .mdc-list-item__primary-text {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.module-link.active {
-  --mdc-list-list-item-label-text-color: #0f3f8f;
-  --mdc-list-list-item-leading-icon-color: #1976d2;
-  --mdc-list-list-item-trailing-icon-color: #1976d2;
-  --mdc-list-list-item-hover-label-text-color: #0f3f8f;
-  --mdc-list-list-item-hover-leading-icon-color: #1976d2;
-  --mdc-list-list-item-focus-label-text-color: #0f3f8f;
-  --mdc-list-list-item-focus-leading-icon-color: #1976d2;
-
-  border: 1px solid #cfe3ff;
-  background: #eef6ff;
-  color: #0f3f8f;
-  box-shadow: none;
-}
-
-.module-link.active mat-icon {
-  color: #1976d2;
-}
-
-.sidebar-footer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  display: grid;
-  width: 100%;
-  gap: 4px;
-  border-top: 1px solid #dfe5ee;
-  padding: 16px 18px 18px;
-  background: #f8fafc;
-  color: #667085;
-  font-size: 12px;
-}
-
-.app-content {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-}
-
-.app-header {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  min-height: 68px;
-  border-bottom: 1px solid #d7dde5;
-  background: #ffffff;
-  color: #172033;
-  box-shadow: 0 1px 0 rgba(16, 24, 40, 0.02);
-}
-
-.header-icon {
-  position: relative;
-  color: #4a5b70;
-}
-
-.notification-dot {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  display: grid;
-  min-width: 17px;
-  height: 17px;
-  place-items: center;
-  border-radius: 999px;
-  background: #ef1f26;
-  color: #ffffff;
-  font-size: 10px;
-  font-weight: 700;
-}
-
-.header-divider {
-  width: 1px;
-  height: 32px;
-  margin: 0 12px;
-  background: #d7dde5;
-}
-
-.header-spacer {
-  flex: 1 1 auto;
-}
-
-.profile-button {
-  color: #0f1b2d;
-}
-
-.profile-avatar {
-  width: 34px;
-  height: 34px;
-  margin-right: 8px;
-}
-
-.content-area {
-  flex: 1;
-  padding: 0;
-}
-
-.app-footer {
-  display: flex;
-  min-height: 44px;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid #d7dde5;
-  padding: 0 24px;
-  background: #ffffff;
-  color: #667085;
-  font-size: 12px;
-}
-
-@media (max-width: 900px) {
-  .app-sidebar {
-    width: 260px;
-  }
+@media (max-width: 767px) {
+  .app-sidebar { width: 260px; }
+  .app-header { min-height: 56px; padding: 0 8px; }
+  .toolbar-title, .profile-name, .search-shortcut span { display: none; }
+  .search-shortcut { min-width: 40px; padding: 0 8px; }
+  .header-divider { margin: 0 4px; }
+  .app-footer { padding: 0 12px; }
+  .app-footer span:last-child { display: none; }
 }
