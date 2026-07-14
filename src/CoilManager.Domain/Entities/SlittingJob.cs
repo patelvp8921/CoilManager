@@ -59,6 +59,11 @@ public sealed class SlittingJob : AuditableEntity
     public DateTimeOffset? CancelledOn { get; private set; }
     public byte[] RowVersion { get; private set; } = [];
     public IReadOnlyCollection<SlittingJobItem> Items => _items;
+    public Guid? WorkOrderId { get; private set; }
+    public WorkOrder? WorkOrder { get; private set; }
+    public string? WorkOrderNumber { get; private set; }
+    public Guid? WorkOrderOperationId { get; private set; }
+    public SlittingJobProductionType ProductionType { get; private set; } = SlittingJobProductionType.Inventory;
 
     [NotMapped]
     public DateTimeOffset CreatedOn => CreatedAtUtc;
@@ -93,6 +98,14 @@ public sealed class SlittingJob : AuditableEntity
             remarks);
 
         ReplaceItems(items);
+    }
+
+    public void LinkToWorkOrder(Guid workOrderId, string workOrderNumber, Guid operationId)
+    {
+        WorkOrderId = workOrderId;
+        WorkOrderNumber = workOrderNumber;
+        WorkOrderOperationId = operationId;
+        ProductionType = SlittingJobProductionType.WorkOrder;
     }
 
     public void UpdatePlanningDetails(

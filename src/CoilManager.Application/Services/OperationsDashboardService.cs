@@ -3,6 +3,7 @@ using CoilManager.Application.Interfaces.Repositories;
 using CoilManager.Application.Interfaces.Services;
 using CoilManager.Domain.Entities;
 using CoilManager.Domain.Enums;
+using CoilManager.Application.DTOs.WorkOrders;
 
 namespace CoilManager.Application.Services;
 
@@ -10,7 +11,8 @@ public sealed class OperationsDashboardService(
     IRawCoilRepository rawCoilRepository,
     ISlittingJobRepository slittingJobRepository,
     ISlitCoilRepository? slitCoilRepository = null,
-    ISlitCoilLabelPrintHistoryRepository? labelHistoryRepository = null) : IOperationsDashboardService
+    ISlitCoilLabelPrintHistoryRepository? labelHistoryRepository = null,
+    IWorkOrderRepository? workOrderRepository = null) : IOperationsDashboardService
 {
     private const string ComingSoon = "Coming soon";
 
@@ -20,6 +22,7 @@ public sealed class OperationsDashboardService(
         IReadOnlyList<SlittingJob> slittingJobs = await slittingJobRepository.GetForDashboardAsync(cancellationToken);
         IReadOnlyList<SlitCoil> slitCoils = slitCoilRepository is null ? [] : await slitCoilRepository.GetAllWithDetailsAsync(cancellationToken);
         IReadOnlyList<SlitCoilLabelPrintHistory> labelHistory = labelHistoryRepository is null ? [] : await labelHistoryRepository.GetAllAsync(cancellationToken);
+        IReadOnlyList<WorkOrder> workOrders = workOrderRepository is null ? [] : await workOrderRepository.GetForDashboardAsync(cancellationToken);
         RawCoil[] coils = motherCoils.ToArray();
         SlittingJob[] jobs = slittingJobs.ToArray();
 
@@ -45,7 +48,8 @@ public sealed class OperationsDashboardService(
             BuildSupplierWiseStock(coils),
             BuildRecentReceivedCoils(coils));
 
-        ProductionSummaryDto production = new(0, 0, 0, 0, ComingSoon);
+        WorkOrderMetricsDto workOrderMetrics = BuildWorkOrderMetrics(workOrders);
+        ProductionSummaryDto production = new(workOrders.Count, 0, workOrders.Sum(x => x.RequiredWeight ?? 0), 0, workOrders.Count > 0 ? "Live" : "Ready");
         SlittingJobMetricsDto slittingMetrics = BuildSlittingJobMetrics(jobs);
         SlittingSummaryDto slitting = new(0, jobs.Length, 0, BuildSlittingStatus(slittingMetrics));
         QualitySummaryDto quality = new(0, holdMotherCoils, rejectedMotherCoils, ComingSoon);
@@ -59,6 +63,7 @@ public sealed class OperationsDashboardService(
             Kpis: BuildKpis(totalMotherCoils, slittingMetrics, slitCoils, labelHistory),
             Inventory: inventory,
             Production: production,
+            WorkOrders: workOrderMetrics,
             Slitting: slitting,
             SlittingJobMetrics: slittingMetrics,
             ProductionQueue: BuildProductionQueue(jobs),
@@ -69,6 +74,19 @@ public sealed class OperationsDashboardService(
             QuickActions: BuildQuickActions(),
             RecentActivities: BuildRecentActivities(inventory.RecentReceivedCoils),
             Notifications: BuildNotifications(holdMotherCoils, rejectedMotherCoils));
+    }
+
+    public static WorkOrderMetricsDto BuildWorkOrderMetrics(IReadOnlyList<WorkOrder> rows)
+    {
+        DateOnly today = DateOnly.FromDateTime(DateTime.UtcNow);
+        return new(rows.Count(x => x.Status == WorkOrderStatus.Draft), rows.Count(x => x.Status == WorkOrderStatus.Released), rows.Count(x => x.Status == WorkOrderStatus.InProduction),
+            rows.Count(x => x.Status == WorkOrderStatus.Completed && x.CompletedOn?.UtcDateTime.Date == DateTime.UtcNow.Date),
+            rows.Count(x => x.RequiredDate < today && x.Status is not (WorkOrderStatus.Completed or WorkOrderStatus.Closed or WorkOrderStatus.Cancelled)),
+            rows.Count(x => x.WorkOrderType == WorkOrderType.CustomerOrder), rows.Count(x => x.WorkOrderType == WorkOrderType.InventoryProduction),
+            rows.Where(x => x.Status is WorkOrderStatus.Released or WorkOrderStatus.InProduction).OrderBy(x => x.RequiredDate).ThenByDescending(x => x.Priority)
+                .Select(x => new WorkOrderQueueItemDto(x.Id, x.WorkOrderNumber, x.ProductType, x.RequiredDate, x.Priority, x.Status,
+                    x.RequiredWeight > 0 ? Math.Min(100, 100 * x.Allocations.Where(a => a.IsActive).Sum(a => a.AllocatedWeight) / x.RequiredWeight.Value) : 0,
+                    x.Operations.Count(o => o.IsRequired) == 0 ? 100 : 100m * x.Operations.Count(o => o.IsRequired && o.Status == WorkOrderOperationStatus.Completed) / x.Operations.Count(o => o.IsRequired))).ToArray());
     }
 
     private static int CountByStatus(IEnumerable<RawCoil> coils, CoilStatus status)
@@ -226,7 +244,7 @@ public sealed class OperationsDashboardService(
             new("Manage Grades", "category", "/admin/grades", true),
             new("Manage Suppliers", "storefront", "/admin/suppliers", true),
             new("Manage Manufacturers", "factory", "/admin/manufacturers", true),
-            new("Create Work Order", "assignment_add", null, false, ComingSoon),
+            new("Create Work Order", "assignment_add", "/work-orders/create", true),
             new("Create Slitting Job", "precision_manufacturing", null, false, ComingSoon),
             new("Print Pending Slit Coil Labels", "print", "/slit-coils/labels/batch", true)
         ];

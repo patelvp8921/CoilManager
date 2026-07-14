@@ -71,6 +71,10 @@ public static class SlittingJobDtoMapper
                     item.EstimatedWeight,
                     item.Status,
                     item.Remarks))
-                .ToArray());
+                .ToArray(),
+            job.ProductionType,
+            job.WorkOrderId,
+            job.WorkOrderNumber,
+            job.WorkOrderOperationId);
     }
 }

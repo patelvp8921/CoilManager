@@ -22,6 +22,7 @@ public sealed class SlittingJobConfiguration : IEntityTypeConfiguration<Slitting
         builder.HasIndex(job => job.PlanningDate);
         builder.HasIndex(job => job.Status);
         builder.HasIndex(job => job.MotherCoilId);
+        builder.HasIndex(job => job.WorkOrderId);
 
         builder.Property(job => job.PlannerId)
             .HasMaxLength(100);
@@ -32,6 +33,9 @@ public sealed class SlittingJobConfiguration : IEntityTypeConfiguration<Slitting
         builder.Property(job => job.Status)
             .HasConversion<string>()
             .HasMaxLength(30);
+        builder.Property(job => job.ProductionType).HasConversion<string>().HasMaxLength(20);
+        builder.Property(job => job.WorkOrderNumber).HasMaxLength(20);
+        builder.HasOne(job => job.WorkOrder).WithMany().HasForeignKey(job => job.WorkOrderId).OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(job => job.KnifeThickness)
             .HasPrecision(18, 3);

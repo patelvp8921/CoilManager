@@ -43,6 +43,8 @@ export interface CreateSlittingJobRequest {
   rightEdgeTrim: number;
   remarks?: string | null;
   items: readonly SlittingJobItemRequest[];
+  workOrderId?: string | null;
+  workOrderOperationId?: string | null;
 }
 
 export interface UpdateSlittingJobRequest extends CreateSlittingJobRequest {

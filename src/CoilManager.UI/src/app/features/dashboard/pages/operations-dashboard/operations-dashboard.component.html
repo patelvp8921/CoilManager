@@ -37,6 +37,11 @@
   @if (dashboard(); as data) {
     <app-kpi-card-grid [kpis]="data.kpis" />
 
+    <mat-card appearance="outlined" class="queue-panel">
+      <header><div><h2>Work Order Metrics</h2><p>Live planning and production status.</p></div><div class="queue-metrics"><span><strong>{{data.workOrders.draft}}</strong> Draft</span><span><strong>{{data.workOrders.released}}</strong> Released</span><span><strong>{{data.workOrders.inProduction}}</strong> In Production</span><span><strong>{{data.workOrders.completedToday}}</strong> Completed Today</span><span><strong>{{data.workOrders.overdue}}</strong> Overdue</span><span><strong>{{data.workOrders.customerWorkOrders}}</strong> Customer</span><span><strong>{{data.workOrders.inventoryProductionWorkOrders}}</strong> Inventory</span></div></header>
+      @if(data.workOrders.queue.length){<div class="queue-list">@for(item of data.workOrders.queue;track item.id){<a class="queue-item" [routerLink]="['/work-orders',item.id]"><strong>{{item.workOrderNumber}}</strong><span>{{['Mother Coil','Slit Coil','Lamination','Core Frame'][item.productType]}}</span><span>{{item.requiredDate?(item.requiredDate|date:'dd/MM/yyyy'):'No required date'}}</span><span>P{{item.priority}}</span><span>{{item.allocationPercentage|number:'1.0-0'}}% allocated</span><span>{{item.operationProgress|number:'1.0-0'}}% operations</span></a>}</div>}@else{<div class="empty-queue"><mat-icon>assignment_turned_in</mat-icon><span>No released or in-production Work Orders.</span></div>}
+    </mat-card>
+
     <div class="dashboard-shell">
       <main class="dashboard-main">
         <section class="section-grid">

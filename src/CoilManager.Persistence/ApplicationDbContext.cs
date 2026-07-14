@@ -21,6 +21,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<User> Users => Set<User>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<UserRole> UserRoles => Set<UserRole>();
+    public DbSet<WorkOrder> WorkOrders => Set<WorkOrder>();
+    public DbSet<WorkOrderOperation> WorkOrderOperations => Set<WorkOrderOperation>();
+    public DbSet<WorkOrderMaterialAllocation> WorkOrderMaterialAllocations => Set<WorkOrderMaterialAllocation>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

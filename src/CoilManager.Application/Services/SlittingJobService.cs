@@ -26,7 +26,8 @@ public sealed class SlittingJobService(
     IValidator<UpdateSlittingJobRequest> updateValidator,
     IValidator<CompleteSlittingRequest> completeValidator,
     IValidator<StartSlittingRequest> startValidator,
-    IOptions<SlittingSettings> slittingOptions) : ISlittingJobService
+    IOptions<SlittingSettings> slittingOptions,
+    IWorkOrderRepository? workOrderRepository = null) : ISlittingJobService
 {
     private const decimal DefaultKnifeThickness = 0.2m;
     private const decimal DefaultLeftEdgeTrim = 5m;
@@ -128,6 +129,20 @@ public sealed class SlittingJobService(
             NormalizeParameter(request.LeftEdgeTrim, DefaultLeftEdgeTrim),
             NormalizeParameter(request.RightEdgeTrim, DefaultRightEdgeTrim),
             request.Remarks);
+
+        if (request.WorkOrderId.HasValue)
+        {
+            if (workOrderRepository is null) return Result<SlittingJobDto>.Failure(Error.Validation("Work Order integration is unavailable."));
+            WorkOrder? workOrder = await workOrderRepository.GetByIdAsync(request.WorkOrderId.Value, cancellationToken);
+            if (workOrder is null) return Result<SlittingJobDto>.Failure(Error.Validation("Work Order was not found."));
+            WorkOrderOperation? operation = workOrder.Operations.SingleOrDefault(x => x.OperationType == WorkOrderOperationType.Slitting);
+            if (operation is null || !operation.IsRequired || operation.Status != WorkOrderOperationStatus.Pending)
+                return Result<SlittingJobDto>.Failure(Error.Validation("Work Order does not have a pending required Slitting operation."));
+            if (request.WorkOrderOperationId.HasValue && request.WorkOrderOperationId != operation.Id)
+                return Result<SlittingJobDto>.Failure(Error.Validation("Work Order Operation does not match the Slitting operation."));
+            job.LinkToWorkOrder(workOrder.Id, workOrder.WorkOrderNumber, operation.Id);
+            operation.LinkDocument(job.Id, job.SlittingJobNo);
+        }
 
         job.ReplaceItems(BuildItems(job.SlittingJobNo, motherCoil, request.Items));
 
@@ -232,6 +247,7 @@ public sealed class SlittingJobService(
         {
             DateTimeOffset releasedOn = DateTimeOffset.UtcNow;
             job.Release(CurrentActor(), releasedOn);
+            await SyncWorkOrderOperationAsync(job, releasedOn, ct);
             motherCoil.SetStatus(CoilStatus.Reserved);
             await inventoryTransactionRepository.AddAsync(new InventoryTransaction(
                 InventoryTransactionType.SlittingJobRelease,
@@ -299,6 +315,7 @@ public sealed class SlittingJobService(
         await unitOfWork.ExecuteInTransactionAsync(async ct =>
         {
             job.Start(CurrentActor(), startedOn, request.MachineId, request.Shift, request.Remarks);
+            await SyncWorkOrderOperationAsync(job, startedOn, ct);
             motherCoil.SetStatus(CoilStatus.InProcess);
             await inventoryTransactionRepository.AddAsync(new InventoryTransaction(
                 InventoryTransactionType.SlittingStarted,
@@ -454,6 +471,7 @@ public sealed class SlittingJobService(
             }
 
             job.Complete(CurrentActor(), completedOn);
+            await SyncWorkOrderOperationAsync(job, completedOn, ct);
             motherCoil.SetStatus(CoilStatus.Consumed);
             await inventoryTransactionRepository.AddAsync(new InventoryTransaction(
                 InventoryTransactionType.SlittingJobComplete,
@@ -679,5 +697,13 @@ public sealed class SlittingJobService(
         return Normalize(currentUserService.UserName)
             ?? Normalize(currentUserService.UserId)
             ?? "System";
+    }
+
+    private async Task SyncWorkOrderOperationAsync(SlittingJob job, DateTimeOffset at, CancellationToken token)
+    {
+        if (!job.WorkOrderId.HasValue || workOrderRepository is null) return;
+        WorkOrder? workOrder = await workOrderRepository.GetByIdAsync(job.WorkOrderId.Value, token);
+        WorkOrderOperation? operation = workOrder?.Operations.SingleOrDefault(x => x.Id == job.WorkOrderOperationId);
+        operation?.SynchronizeSlittingJob(job.Status, at);
     }
 }

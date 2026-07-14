@@ -4,6 +4,7 @@ export interface OperationsDashboard {
   kpis: readonly DashboardKpi[];
   inventory: InventorySummary;
   production: ProductionSummary;
+  workOrders: WorkOrderMetrics;
   slitting: SlittingSummary;
   slittingJobMetrics: SlittingJobMetrics;
   productionQueue: readonly ProductionQueueItem[];
@@ -15,6 +16,9 @@ export interface OperationsDashboard {
   recentActivities: readonly RecentActivity[];
   notifications: readonly DashboardNotification[];
 }
+
+export interface WorkOrderMetrics { draft: number; released: number; inProduction: number; completedToday: number; overdue: number; customerWorkOrders: number; inventoryProductionWorkOrders: number; queue: readonly WorkOrderQueueItem[]; }
+export interface WorkOrderQueueItem { id: string; workOrderNumber: string; productType: number; requiredDate?: string | null; priority: number; status: number; allocationPercentage: number; operationProgress: number; }
 
 export interface DashboardKpi {
   label: string;

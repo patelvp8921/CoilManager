@@ -2,6 +2,8 @@ using CoilManager.Application.Interfaces.Persistence;
 using CoilManager.Application.Interfaces.Repositories;
 using CoilManager.Domain.Common;
 using CoilManager.Persistence.Repositories;
+using System.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoilManager.Persistence;
 
@@ -33,7 +35,7 @@ public sealed class UnitOfWork(ApplicationDbContext dbContext) : IUnitOfWork
     public async Task ExecuteInTransactionAsync(Func<CancellationToken, Task> operation, CancellationToken cancellationToken = default)
     {
         await using Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction transaction =
-            await dbContext.Database.BeginTransactionAsync(cancellationToken);
+            await dbContext.Database.BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken);
 
         await operation(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

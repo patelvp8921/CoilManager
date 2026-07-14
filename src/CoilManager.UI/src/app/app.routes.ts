@@ -52,6 +52,31 @@ export const routes: Routes = [
         title: 'Mother Coils | CoilManager',
       },
       {
+        path: 'work-orders/create',
+        loadComponent: () => import('./features/work-orders/work-order-form.component').then(c => c.WorkOrderFormComponent),
+        title: 'Create Work Order | CoilManager',
+      },
+      {
+        path: 'work-orders/:id/edit',
+        loadComponent: () => import('./features/work-orders/work-order-form.component').then(c => c.WorkOrderFormComponent),
+        title: 'Edit Work Order | CoilManager',
+      },
+      {
+        path: 'work-orders/:id/allocations',
+        loadComponent: () => import('./features/work-orders/work-order-detail.component').then(c => c.WorkOrderDetailComponent),
+        title: 'Work Order Allocations | CoilManager',
+      },
+      {
+        path: 'work-orders/:id',
+        loadComponent: () => import('./features/work-orders/work-order-detail.component').then(c => c.WorkOrderDetailComponent),
+        title: 'Work Order Details | CoilManager',
+      },
+      {
+        path: 'work-orders',
+        loadComponent: () => import('./features/work-orders/work-order-list.component').then(c => c.WorkOrderListComponent),
+        title: 'Work Orders | CoilManager',
+      },
+      {
         path: 'slitting-jobs/create',
         loadComponent: () =>
           import('./features/slitting-jobs/pages/slitting-job-planning/slitting-job-planning.component').then((component) => component.SlittingJobPlanningComponent),

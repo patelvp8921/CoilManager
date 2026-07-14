@@ -22,7 +22,7 @@ interface NavigationGroup { label: string; icon: string; items: readonly Navigat
 export class ShellComponent {
   protected readonly layout = inject(LayoutStateService);
   private readonly router = inject(Router);
-  protected readonly expandedGroups = signal(new Set(['Inventory', 'Production', 'Administration']));
+  protected readonly expandedGroups = signal(new Set(['Inventory', 'Planning', 'Production', 'Administration']));
   protected readonly primaryItems: readonly NavigationItem[] = [
     { label: 'Dashboard', icon: 'dashboard', route: '/dashboard', exact: true },
     { label: 'Coil Search', icon: 'qr_code_scanner', route: '/coil-search' },
@@ -34,6 +34,9 @@ export class ShellComponent {
     ]},
     { label: 'Production', icon: 'precision_manufacturing', items: [
       { label: 'Slitting Jobs', icon: 'precision_manufacturing', route: '/slitting-jobs' },
+    ]},
+    { label: 'Planning', icon: 'event_note', items: [
+      { label: 'Work Orders', icon: 'assignment', route: '/work-orders' },
     ]},
     { label: 'Administration', icon: 'admin_panel_settings', items: [
       { label: 'Manufacturers', icon: 'factory', route: '/admin/manufacturers' },

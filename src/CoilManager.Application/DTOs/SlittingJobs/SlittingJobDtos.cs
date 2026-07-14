@@ -31,7 +31,9 @@ public sealed record CreateSlittingJobRequest(
     decimal LeftEdgeTrim,
     decimal RightEdgeTrim,
     string? Remarks,
-    IReadOnlyList<SlittingJobItemRequest> Items);
+    IReadOnlyList<SlittingJobItemRequest> Items,
+    Guid? WorkOrderId = null,
+    Guid? WorkOrderOperationId = null);
 
 public sealed record UpdateSlittingJobRequest(
     DateOnly PlanningDate,
@@ -96,7 +98,11 @@ public sealed record SlittingJobDto(
     string? CancelledBy,
     DateTimeOffset? CancelledOn,
     string RowVersion,
-    IReadOnlyList<SlittingJobItemDto> Items);
+    IReadOnlyList<SlittingJobItemDto> Items,
+    SlittingJobProductionType ProductionType = SlittingJobProductionType.Inventory,
+    Guid? WorkOrderId = null,
+    string? WorkOrderNumber = null,
+    Guid? WorkOrderOperationId = null);
 
 public sealed record SlittingJobItemDto(
     Guid Id,

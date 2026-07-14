@@ -1,4 +1,5 @@
 namespace CoilManager.Application.DTOs.Dashboard;
+using CoilManager.Application.DTOs.WorkOrders;
 
 public sealed record OperationsDashboardDto(
     string DashboardRole,
@@ -6,6 +7,7 @@ public sealed record OperationsDashboardDto(
     IReadOnlyList<DashboardKpiDto> Kpis,
     InventorySummaryDto Inventory,
     ProductionSummaryDto Production,
+    WorkOrderMetricsDto WorkOrders,
     SlittingSummaryDto Slitting,
     SlittingJobMetricsDto SlittingJobMetrics,
     IReadOnlyList<ProductionQueueItemDto> ProductionQueue,

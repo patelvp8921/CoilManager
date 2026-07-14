@@ -68,6 +68,10 @@ export class SlittingJobPlanningComponent implements OnInit {
   protected readonly nextJobNumber = signal('');
   protected readonly editJobId = signal<string | null>(null);
   private readonly rowVersion = signal('');
+  protected readonly workOrderId = signal<string | null>(null);
+  protected readonly requiredWidthContext = signal<string | null>(null);
+  protected readonly requiredWeightContext = signal<string | null>(null);
+  private workOrderOperationId: string | null = null;
   protected readonly motherCoils = signal<readonly SlittingMotherCoilLookup[]>([]);
   protected readonly selectedMotherCoil = signal<SlittingMotherCoilLookup | null>(null);
   protected readonly isLoading = signal(false);
@@ -184,6 +188,10 @@ export class SlittingJobPlanningComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.workOrderId.set(this.route.snapshot.queryParamMap.get('workOrderId'));
+    this.workOrderOperationId = this.route.snapshot.queryParamMap.get('workOrderOperationId');
+    this.requiredWidthContext.set(this.route.snapshot.queryParamMap.get('requiredWidth'));
+    this.requiredWeightContext.set(this.route.snapshot.queryParamMap.get('requiredWeight'));
     const jobId = this.route.snapshot.paramMap.get('id');
     this.editJobId.set(jobId);
     this.isLoading.set(true);
@@ -332,6 +340,8 @@ export class SlittingJobPlanningComponent implements OnInit {
         width: row.width,
         remarks: row.remarks || null,
       })),
+      workOrderId: this.workOrderId(),
+      workOrderOperationId: this.workOrderOperationId,
     };
   }
 

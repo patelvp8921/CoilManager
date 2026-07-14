@@ -24,6 +24,7 @@ public static class DependencyInjection
         services.AddScoped<ISlitCoilLabelService, SlitCoilLabelService>();
         services.AddScoped<ICoilService, CoilService>();
         services.AddScoped<ICoilNumberingService, CoilNumberingService>();
+        services.AddScoped<IWorkOrderService, WorkOrderService>();
         services.Configure<SlittingSettings>(configuration.GetSection(SlittingSettings.SectionName));
         services.Configure<LabelSettings>(configuration.GetSection(LabelSettings.SectionName));
 

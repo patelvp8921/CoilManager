@@ -13,6 +13,13 @@
 </section>
 
 <section class="planning-page">
+  @if (workOrderId()) {
+    <mat-card appearance="outlined" class="planning-card">
+      <strong>Work Order production</strong>
+      <span>Required width: {{ requiredWidthContext() || '—' }} mm · Required weight: {{ requiredWeightContext() || '—' }} kg</span>
+      <span>Select the actual Mother Coil and confirm the slit plan. The job will not be created automatically.</span>
+    </mat-card>
+  }
   <mat-card appearance="outlined" class="planning-card">
     @if (isLoading() || isSubmitting()) {
       <mat-progress-bar mode="indeterminate" />
