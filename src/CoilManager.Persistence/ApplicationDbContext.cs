@@ -24,6 +24,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<WorkOrder> WorkOrders => Set<WorkOrder>();
     public DbSet<WorkOrderOperation> WorkOrderOperations => Set<WorkOrderOperation>();
     public DbSet<WorkOrderMaterialAllocation> WorkOrderMaterialAllocations => Set<WorkOrderMaterialAllocation>();
+    public DbSet<LaminationJob> LaminationJobs => Set<LaminationJob>();
+    public DbSet<LaminationJobStep> LaminationJobSteps => Set<LaminationJobStep>();
+    public DbSet<LaminationJobPlate> LaminationJobPlates => Set<LaminationJobPlate>();
+    public DbSet<LaminationPlateDimension> LaminationPlateDimensions => Set<LaminationPlateDimension>();
+    public DbSet<LaminationJobMaterialAllocation> LaminationJobMaterialAllocations => Set<LaminationJobMaterialAllocation>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

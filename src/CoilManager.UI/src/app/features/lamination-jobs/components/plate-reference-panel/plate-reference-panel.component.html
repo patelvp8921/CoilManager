@@ -1,0 +1,15 @@
+<mat-card appearance="outlined" class="reference-card">
+  <header class="reference-header">
+    <div class="reference-title">
+      <mat-icon aria-hidden="true">{{ icon }}</mat-icon>
+      <h3>{{ title }}</h3>
+    </div>
+    <button mat-stroked-button type="button" (click)="expand()" [attr.aria-label]="'Expand ' + title">
+      <mat-icon>open_in_full</mat-icon>
+      Expand Image
+    </button>
+  </header>
+  <div class="image-frame">
+    <img [src]="imageUrl" [alt]="plateType + ' plate profile reference illustration'">
+  </div>
+</mat-card>

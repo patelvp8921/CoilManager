@@ -6,5 +6,8 @@ public enum InventoryTransactionType
     SlittingJobCancel = 2,
     SlittingJobComplete = 3,
     SlitCoilGeneration = 4,
-    SlittingStarted = 5
+    SlittingStarted = 5,
+    LaminationAllocationReserved = 6,
+    LaminationAllocationReleased = 7,
+    LaminationConsumption = 8
 }

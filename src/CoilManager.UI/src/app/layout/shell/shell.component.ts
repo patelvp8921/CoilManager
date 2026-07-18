@@ -34,6 +34,7 @@ export class ShellComponent {
     ]},
     { label: 'Production', icon: 'precision_manufacturing', items: [
       { label: 'Slitting Jobs', icon: 'precision_manufacturing', route: '/slitting-jobs' },
+      { label: 'Lamination Jobs', icon: 'layers', route: '/lamination-jobs' },
     ]},
     { label: 'Planning', icon: 'event_note', items: [
       { label: 'Work Orders', icon: 'assignment', route: '/work-orders' },

@@ -77,6 +77,40 @@ export const routes: Routes = [
         title: 'Work Orders | CoilManager',
       },
       {
+        path: 'lamination-jobs/create',
+        loadComponent: () => import('./features/lamination-jobs/lamination-job-form.component').then(c => c.LaminationJobFormComponent),
+        title: 'Lamination / Cut-to-Length Job | CoilManager',
+      },
+      {
+        path: 'lamination-jobs/:id/edit',
+        loadComponent: () => import('./features/lamination-jobs/lamination-job-form.component').then(c => c.LaminationJobFormComponent),
+        title: 'Edit Lamination Job | CoilManager',
+      },
+      {
+        path: 'lamination-jobs/:id/complete',
+        loadComponent: () => import('./features/lamination-jobs/complete-lamination-job.component').then(c => c.CompleteLaminationJobComponent),
+        title: 'Complete Lamination Job | CoilManager',
+      },      {
+        path: 'lamination-jobs/:id/allocations',
+        loadComponent: () => import('./features/lamination-jobs/lamination-allocation.component').then(c => c.LaminationAllocationComponent),
+        title: 'Lamination Material Allocation | CoilManager',
+      },
+      {
+        path: 'lamination-jobs/:id/job-card',
+        loadComponent: () => import('./features/lamination-jobs/lamination-job-card.component').then(c => c.LaminationJobCardComponent),
+        title: 'Lamination Job Card | CoilManager',
+      },
+      {
+        path: 'lamination-jobs/:id',
+        loadComponent: () => import('./features/lamination-jobs/lamination-detail.component').then(c => c.LaminationDetailComponent),
+        title: 'Lamination Job | CoilManager',
+      },
+      {
+        path: 'lamination-jobs',
+        loadComponent: () => import('./features/lamination-jobs/lamination-job-list.component').then(c => c.LaminationJobListComponent),
+        title: 'Lamination Jobs | CoilManager',
+      },
+      {
         path: 'slitting-jobs/create',
         loadComponent: () =>
           import('./features/slitting-jobs/pages/slitting-job-planning/slitting-job-planning.component').then((component) => component.SlittingJobPlanningComponent),

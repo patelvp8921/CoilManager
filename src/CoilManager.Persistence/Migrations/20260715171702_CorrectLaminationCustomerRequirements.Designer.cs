@@ -4,6 +4,7 @@ using CoilManager.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoilManager.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260715171702_CorrectLaminationCustomerRequirements")]
+    partial class CorrectLaminationCustomerRequirements
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -188,16 +191,6 @@ namespace CoilManager.Persistence.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("CompletedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset?>("CompletedOn")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CompletionRemarks")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
                     b.Property<decimal>("CoreLossPerKg")
                         .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
@@ -302,24 +295,10 @@ namespace CoilManager.Persistence.Migrations
                         .HasPrecision(18, 3)
                         .HasColumnType("decimal(18,3)");
 
-                    b.Property<decimal>("TotalConsumedWeight")
-                        .HasPrecision(18, 3)
-                        .HasColumnType("decimal(18,3)");
-
-                    b.Property<int>("TotalGoodPieces")
-                        .HasColumnType("int");
-
                     b.Property<int>("TotalPlannedPieces")
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalPlannedWeight")
-                        .HasPrecision(18, 3)
-                        .HasColumnType("decimal(18,3)");
-
-                    b.Property<int>("TotalRejectedPieces")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TotalScrapWeight")
                         .HasPrecision(18, 3)
                         .HasColumnType("decimal(18,3)");
 

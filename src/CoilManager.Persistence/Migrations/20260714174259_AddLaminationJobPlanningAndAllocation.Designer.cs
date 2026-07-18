@@ -4,6 +4,7 @@ using CoilManager.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoilManager.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260714174259_AddLaminationJobPlanningAndAllocation")]
+    partial class AddLaminationJobPlanningAndAllocation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -188,16 +191,6 @@ namespace CoilManager.Persistence.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("CompletedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset?>("CompletedOn")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CompletionRemarks")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
                     b.Property<decimal>("CoreLossPerKg")
                         .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
@@ -207,14 +200,6 @@ namespace CoilManager.Persistence.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Customer")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<decimal>("CustomerCoreLossPerKg")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("decimal(18,4)");
 
                     b.Property<DateTimeOffset?>("DeletedAtUtc")
                         .HasColumnType("datetimeoffset");
@@ -232,27 +217,31 @@ namespace CoilManager.Persistence.Migrations
                     b.Property<string>("DrawingAttachmentPath")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DrawingNumber")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DrawingRevision")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("GradeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("JobOrDrawingNumber")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<string>("LaminationJobNumber")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<decimal>("NoLoadLossWatts")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("Machine")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NumberOfSteps")
                         .HasColumnType("int");
+
+                    b.Property<string>("OemJobNumber")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateOnly>("PlannedDate")
                         .HasColumnType("date");
@@ -302,13 +291,6 @@ namespace CoilManager.Persistence.Migrations
                         .HasPrecision(18, 3)
                         .HasColumnType("decimal(18,3)");
 
-                    b.Property<decimal>("TotalConsumedWeight")
-                        .HasPrecision(18, 3)
-                        .HasColumnType("decimal(18,3)");
-
-                    b.Property<int>("TotalGoodPieces")
-                        .HasColumnType("int");
-
                     b.Property<int>("TotalPlannedPieces")
                         .HasColumnType("int");
 
@@ -316,16 +298,8 @@ namespace CoilManager.Persistence.Migrations
                         .HasPrecision(18, 3)
                         .HasColumnType("decimal(18,3)");
 
-                    b.Property<int>("TotalRejectedPieces")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TotalScrapWeight")
-                        .HasPrecision(18, 3)
-                        .HasColumnType("decimal(18,3)");
-
-                    b.Property<decimal>("TotalWeight")
-                        .HasPrecision(18, 3)
-                        .HasColumnType("decimal(18,3)");
+                    b.Property<string>("TransformerCompany")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset?>("UpdatedAtUtc")
                         .HasColumnType("datetimeoffset");
@@ -341,12 +315,14 @@ namespace CoilManager.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GradeId");
+                    b.HasIndex("DrawingNumber");
 
-                    b.HasIndex("JobOrDrawingNumber");
+                    b.HasIndex("GradeId");
 
                     b.HasIndex("LaminationJobNumber")
                         .IsUnique();
+
+                    b.HasIndex("OemJobNumber");
 
                     b.HasIndex("PlannedDate");
 
