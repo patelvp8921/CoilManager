@@ -13,6 +13,7 @@ public sealed record LaminationJobQueryRequest(int PageNumber=1,int PageSize=20,
 public record LaminationMaterialRequirementDto(decimal Width,decimal RequiredWeight,decimal AllocatedWeight,decimal ShortageWeight,string Grade,decimal Thickness,IReadOnlyList<int> StepNumbers,IReadOnlyList<LaminationPlateType> PlateTypes);
 public record LaminationJobMaterialAllocationDto(Guid Id,Guid SlitCoilId,string SlitCoilNumber,decimal RequiredWidth,decimal AllocatedWeight,decimal? IssuedWeight,decimal? ConsumedWeight,decimal RemainingWeightAfterAllocation,AllocationStatus Status,string ReservedBy,DateTimeOffset ReservedOn,string? ReleasedBy,DateTimeOffset? ReleasedOn,string? Remarks);
 public record CreateLaminationAllocationRequest(Guid SlitCoilId,decimal RequiredWidth,decimal AllocatedWeight,bool WidthMismatchOverride=false,string? OverrideReason=null,string? Remarks=null);
+public record UpdateLaminationAllocationRequest(decimal AllocatedWeight,string? Remarks=null);
 public record ReleaseLaminationAllocationRequest(string? Remarks=null);
 public record ConfirmLaminationAllocationRequest(bool ShortageOverride=false,string? OverrideReason=null);
 public record ReleaseLaminationJobRequest(bool ShortageOverride=false,string? OverrideReason=null);

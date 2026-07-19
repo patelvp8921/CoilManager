@@ -52,22 +52,20 @@ export class LaminationJobFormComponent implements OnDestroy {
   protected readonly saveAttempted = signal(false);
   protected readonly selectedStep = signal(0);
   protected readonly expandedRow = signal<{ tab: number; step: number } | null>(null);
+  protected readonly expandedSteps = signal<number[]>([0]);
   protected readonly allocatedWeight = signal(0);
   protected readonly loaded = signal(!this.id);
   protected drawing?: File;
 
-  protected readonly references: { topBottom: { image: string; title: string; fields: PlateFieldDefinition[]; note: string }; side: { image: string; title: string; fields: PlateFieldDefinition[]; note: string }; center: { image: string; title: string; fields: PlateFieldDefinition[]; note: string } } = {
+  protected readonly references: { combined: { image: string; title: string; fields: PlateFieldDefinition[]; note: string }; topBottom: { image: string; title: string; fields: PlateFieldDefinition[]; note: string }; side: { image: string; title: string; fields: PlateFieldDefinition[]; note: string }; center: { image: string; title: string; fields: PlateFieldDefinition[]; note: string } } = {
+    combined: { image: 'assets/images/lamination-profiles/complete-core-profile.svg', title: 'Complete Core Plate Assembly', fields: [
+      { label: 'Top-Bottom', description: 'Shared Width, Height and planned Weight for the Top and Bottom yokes' }, { label: 'Side', description: 'Width, Height and planned Weight for both outer limbs' }, { label: 'Center', description: 'Width, Height and planned Weight for the center limb' }], note: 'The diagram shows how Top-Bottom, Side and Center plates combine to form the complete core.' },
     topBottom: { image: 'assets/images/lamination-profiles/top-bottom-plate-profile-l1-l2.png', title: 'Top-Bottom Plate Profile', fields: [
-      { label: 'Width', description: 'Plate width' }, { label: 'Length', description: 'Overall plate length' },
-      { label: 'Stack Quantity', description: 'Quantity for Top and Bottom' }, { label: 'Total Qty', description: 'Stack Quantity × 2' },
-      { label: 'Planned Weight / Type', description: 'Weight for either Top or Bottom' }, { label: 'Total Weight', description: 'Combined Top and Bottom weight' }], note: 'Top and Bottom dimensions are identical. The 45-degree notch is standard and quantity is doubled.' },
+      { label: 'Width', description: 'Plate width' }, { label: 'Height', description: 'Plate height' }, { label: 'Weight', description: 'Planned plate weight' }], note: 'Top and Bottom dimensions are identical. The 45-degree notch is standard and quantity is doubled.' },
     side: { image: 'assets/images/lamination-profiles/side-plate-profile-generated.png', title: 'Side Plate Profile', fields: [
-      { label: 'Width', description: 'Plate width' }, { label: 'Length', description: 'Overall side plate length' },
-      { label: 'Stack Quantity', description: 'Quantity per side' }, { label: 'Total Qty', description: 'Stack Quantity × 2' },
-      { label: 'Planned Weight', description: 'Total planned Side plate weight' }], note: 'Side plate end profile and 45-degree cut are standard. Total quantity is doubled.' },
+      { label: 'Width', description: 'Plate width' }, { label: 'Height', description: 'Plate height' }, { label: 'Weight', description: 'Planned plate weight' }], note: 'Side plate end profile and 45-degree cut are standard. Left and Right quantities each equal Stack Quantity, so the combined Side quantity is doubled.' },
     center: { image: 'assets/images/lamination-profiles/center-plate-profile-generated.png', title: 'Center Plate Profile', fields: [
-      { label: 'Width', description: 'Center plate width' }, { label: 'Length', description: 'Overall center plate length' },
-      { label: 'Stack Quantity', description: 'Required number of Center plates' }, { label: 'Planned Weight', description: 'Total planned Center plate weight' }], note: 'Center plate profile is standard. Enter only width, length, stack quantity, and planned weight.' },
+      { label: 'Width', description: 'Center plate width' }, { label: 'Height', description: 'Plate height' }, { label: 'Weight', description: 'Planned plate weight' }], note: 'Center plate profile is standard. Enter only width, length, stack quantity, and planned weight.' },
   };
 
   private readonly stepArray = new FormArray<StepForm>([], this.uniqueStepsValidator());
@@ -141,10 +139,6 @@ export class LaminationJobFormComponent implements OnDestroy {
     const copy = structuredClone(this.steps.at(index).getRawValue()); copy.stepNumber = this.steps.length + 1; copy.sequence = this.steps.length + 1;
     this.steps.push(this.createStep(copy)); this.renumber(); this.form.markAsDirty();
   }
-  protected copyPrevious(index: number): void {
-    if (!index) return; const stepNumber = this.steps.at(index).value.stepNumber; const sequence = this.steps.at(index).value.sequence;
-    this.steps.setControl(index, this.createStep({ ...structuredClone(this.steps.at(index - 1).getRawValue()), stepNumber, sequence })); this.form.markAsDirty();
-  }
   protected removeStep(index: number): void {
     if (this.steps.length === 1 || !window.confirm(`Delete Step ${this.steps.at(index).value.stepNumber} from all plate tabs?`)) return;
     this.steps.removeAt(index); this.renumber(); this.form.markAsDirty();
@@ -190,13 +184,20 @@ export class LaminationJobFormComponent implements OnDestroy {
 
   protected selectStep(index: number): void { this.selectedStep.set(index); }
   protected selectedValid(): boolean { return this.selectedStep() >= 0 && this.selectedStep() < this.steps.length; }
-  protected canAddStep(): boolean { return this.form.value.designType !== 'Simple' && this.steps.length < +(this.form.value.numberOfSteps ?? 0); }
+  protected canAddStep(): boolean { return this.form.value.designType !== 'Simple' && this.steps.length < 12; }
   protected duplicateSelected(): void { if (this.selectedValid()) { this.duplicateStep(this.selectedStep()); this.selectedStep.set(this.steps.length - 1); } }
-  protected copyPreviousSelected(): void { if (this.selectedStep() > 0) this.copyPrevious(this.selectedStep()); }
   protected deleteSelected(): void { if (this.selectedValid()) { this.removeStep(this.selectedStep()); this.selectedStep.set(Math.max(0, Math.min(this.selectedStep(), this.steps.length - 1))); } }
   protected toggleDimensions(tab: number, step: number): void { const open=this.expandedRow(); this.expandedRow.set(open?.tab===tab&&open.step===step?null:{tab,step}); }
   protected dimensionsExpanded(tab: number, step: number): boolean { const open=this.expandedRow(); return open?.tab===tab&&open.step===step; }
   protected collapseDimensions(): void { this.expandedRow.set(null); }
+  protected isStepExpanded(index: number): boolean { return this.expandedSteps().includes(index); }
+  protected toggleStep(index: number): void { const rows=this.expandedSteps(); this.expandedSteps.set(rows.includes(index)?rows.filter(x=>x!==index):[...rows,index]); this.selectedStep.set(index); }
+  protected expandAll(): void { this.expandedSteps.set(this.steps.controls.map((_,index)=>index)); }
+  protected collapseAll(): void { this.expandedSteps.set([]); }
+  protected dimensionValue(step: number,type: PlateType,code: string): number|null { const value=this.dimension(step,type,code)?.value; return value===null||value===''||value===undefined?null:+value; }
+  protected centerQuantity(index: number): number { return +this.steps.at(index).value.stackQuantity||0; }
+  protected sidePieces(): number { return this.steps.controls.reduce((sum,_,i)=>sum+this.sideTotalQuantity(i),0); }
+  protected centerPieces(): number { return this.steps.controls.reduce((sum,_,i)=>sum+this.centerQuantity(i),0); }
 
   private relevantPlates(index: number, tab: number): PlateForm[] { const types: PlateType[][]=[['Top','Bottom'],['Side'],['Center']]; return types[tab].map(type=>this.plate(index,type)); }
   private hasEnteredInvalid(control: AbstractControl): boolean {
@@ -222,7 +223,7 @@ export class LaminationJobFormComponent implements OnDestroy {
   }
   protected syncStackQuantity(index: number): void {
     this.syncTopBottom(index); const stack=+(this.steps.at(index).value.stackQuantity??0);
-    this.plate(index,'Side').get('quantity')?.setValue(stack*2,{emitEvent:false});
+    this.plate(index,'Side').get('quantity')?.setValue(stack * 2,{emitEvent:false});
     this.plate(index,'Center').get('quantity')?.setValue(stack,{emitEvent:false});
   }
   private recalculatePlateWeights(): void {
@@ -363,10 +364,10 @@ export class LaminationJobFormComponent implements OnDestroy {
       return;
     }
 
-    const tab=this.firstErrorTab(); this.activeTab.set(tab);
+    const tab=this.firstErrorTab();
     const row=this.steps.controls.findIndex((_,index)=>this.plateRowStatus(index,tab)!=='Complete');
-    this.selectedStep.set(Math.max(0,row)); this.snackBar.open(this.footerMessage(),'Close',{duration:4000});
-    setTimeout(()=>{ const target=document.querySelector<HTMLElement>(`[data-step-index="${Math.max(0,row)}"] .ng-invalid input, [data-step-index="${Math.max(0,row)}"] input.ng-invalid`); target?.focus(); target?.scrollIntoView({behavior:'smooth',block:'center'}); });
+    const invalidRow=Math.max(0,row); this.selectedStep.set(invalidRow); this.expandedSteps.set([...new Set([...this.expandedSteps(),invalidRow])]); this.snackBar.open(this.footerMessage(),'Close',{duration:4000});
+    setTimeout(()=>{ const target=document.querySelector<HTMLElement>(`[data-step-index="${invalidRow}"] .ng-invalid input, [data-step-index="${invalidRow}"] input.ng-invalid`); target?.focus(); target?.scrollIntoView({behavior:'smooth',block:'center'}); });
   }
   private firstErrorTab(): number {
     for (let i = 0; i < this.steps.length; i++) { if (this.plate(i, 'Top').invalid || this.plate(i, 'Bottom').invalid) return 0; }

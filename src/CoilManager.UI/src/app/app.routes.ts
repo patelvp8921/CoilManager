@@ -91,7 +91,7 @@ export const routes: Routes = [
         loadComponent: () => import('./features/lamination-jobs/complete-lamination-job.component').then(c => c.CompleteLaminationJobComponent),
         title: 'Complete Lamination Job | CoilManager',
       },      {
-        path: 'lamination-jobs/:id/allocations',
+        path: 'lamination-jobs/:id/material-allocation',
         loadComponent: () => import('./features/lamination-jobs/lamination-allocation.component').then(c => c.LaminationAllocationComponent),
         title: 'Lamination Material Allocation | CoilManager',
       },

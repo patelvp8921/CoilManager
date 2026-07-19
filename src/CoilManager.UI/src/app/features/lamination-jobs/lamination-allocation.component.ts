@@ -1,2 +1,201 @@
-import {CommonModule}from'@angular/common';import{Component,inject,signal}from'@angular/core';import{ActivatedRoute,Router,RouterLink}from'@angular/router';import{FormsModule}from'@angular/forms';import{MatButtonModule}from'@angular/material/button';import{MatTableModule}from'@angular/material/table';import{MatFormFieldModule}from'@angular/material/form-field';import{MatInputModule}from'@angular/material/input';import{LaminationJobService}from'./lamination-job.service';import{AvailableCoil,Requirement}from'./lamination-job.model';
-@Component({selector:'app-lamination-allocation',imports:[CommonModule,FormsModule,RouterLink,MatButtonModule,MatTableModule,MatFormFieldModule,MatInputModule],template:`<header><div><h1>Material Allocation</h1><p>Reserve one or more Slit Coils against each unique required width.</p></div><a mat-button [routerLink]="['/lamination-jobs',id]">Back to Job</a></header><section class="notice" *ngIf="accessMessage()">{{accessMessage()}}</section><section class="notice" *ngIf="!accessMessage()">Manual allocation only <button mat-stroked-button disabled>Auto Suggest — Coming Later</button></section><section class="requirement" *ngFor="let r of requirements()"><div class="summary"><h2>{{r.width}} mm</h2><span>Required <b>{{r.requiredWeight|number:'1.2-2'}} kg</b></span><span>Allocated <b>{{r.allocatedWeight|number:'1.2-2'}} kg</b></span><span [class.short]="r.shortageWeight>0">Shortage <b>{{r.shortageWeight|number:'1.2-2'}} kg</b></span><button mat-stroked-button (click)="search(r)">Search Slit Coil Inventory</button></div><div class="coils" *ngIf="activeWidth()===r.width"><article *ngFor="let c of coils()"><div><b>{{c.coilNumber}}</b><small>{{c.grade}} · {{c.thickness}} mm · {{c.width}} mm</small></div><span>Current {{c.currentWeight|number}} kg<br>Reserved {{c.reservedWeight|number}} kg<br><b>Available {{c.availableWeight|number}} kg</b></span><mat-form-field><mat-label>Allocate kg</mat-label><input matInput type="number" [(ngModel)]="weights[c.id]" [max]="c.availableWeight"></mat-form-field><button mat-flat-button color="primary" (click)="allocate(r,c)">Add Allocation</button></article></div></section><footer><button mat-flat-button color="primary" (click)="confirm()" [disabled]="!!accessMessage() || requirements().length===0 || requirements().some(hasShortage)">Confirm Allocation</button></footer>`,styles:[`header,.summary,article,footer,.notice{display:flex;align-items:center;justify-content:space-between;gap:18px}.notice,.requirement{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px;margin:16px 0}.summary span b,article small{display:block}.short{color:#b91c1c}.coils{margin-top:16px;border-top:1px solid #e2e8f0}article{padding:12px 0;border-bottom:1px solid #e2e8f0}footer{justify-content:flex-end}`]})export class LaminationAllocationComponent{private api=inject(LaminationJobService);private route=inject(ActivatedRoute);private router=inject(Router);id=this.route.snapshot.paramMap.get('id')!;requirements=signal<Requirement[]>([]);accessMessage=signal<string|null>(null);coils=signal<AvailableCoil[]>([]);activeWidth=signal<number|null>(null);weights:Record<string,number>={};hasShortage=(r:Requirement)=>r.shortageWeight>0;constructor(){this.api.get(this.id).subscribe(x=>{const s:any=x.data.status;const v=typeof s==='number'?s:['Draft','Allocated','Released','InProgress','Completed','Cancelled'].indexOf(s);if(v===2)this.reload();else if(v===0)this.accessMessage.set('Release the Lamination Job before allocating material.');else if(v===1)this.accessMessage.set('Material allocation is confirmed and read-only.');else this.accessMessage.set('Material allocation is not available for this job status.');})}reload(){this.api.requirements(this.id).subscribe(x=>this.requirements.set(x.data))}search(r:Requirement){this.activeWidth.set(r.width);this.api.available(this.id,r.width).subscribe(x=>this.coils.set(x.data))}allocate(r:Requirement,c:AvailableCoil){this.api.allocate(this.id,{slitCoilId:c.id,requiredWidth:r.width,allocatedWeight:this.weights[c.id]}).subscribe(()=>this.reload())}confirm(){this.api.confirm(this.id).subscribe(()=>this.router.navigate(['/lamination-jobs',this.id]))}}
+import { CommonModule } from '@angular/common';
+import { Component, computed, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { forkJoin } from 'rxjs';
+import { AvailableCoil, LaminationJob, Requirement } from './lamination-job.model';
+import { LaminationJobService } from './lamination-job.service';
+
+interface Allocation {
+  id: string; slitCoilId: string; slitCoilNumber: string; requiredWidth: number;
+  allocatedWeight: number; remainingWeightAfterAllocation: number; status: string | number;
+  reservedBy: string; reservedOn: string; remarks?: string;
+}
+
+@Component({
+  selector: 'app-lamination-allocation',
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterLink, MatButtonModule, MatCardModule, MatChipsModule,
+    MatFormFieldModule, MatIconModule, MatInputModule, MatProgressBarModule, MatSnackBarModule, MatTooltipModule],
+  templateUrl: './lamination-allocation.component.html',
+  styleUrl: './lamination-allocation.component.scss',
+})
+export class LaminationAllocationComponent {
+  private readonly api = inject(LaminationJobService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly snack = inject(MatSnackBar);
+  readonly id = this.route.snapshot.paramMap.get('id')!;
+
+  readonly job = signal<LaminationJob | null>(null);
+  readonly requirements = signal<Requirement[]>([]);
+  readonly allocations = signal<Allocation[]>([]);
+  readonly coils = signal<AvailableCoil[]>([]);
+  readonly selectedWidth = signal<number | null>(null);
+  readonly loadingPage = signal(true);
+  readonly loadingInventory = signal(false);
+  readonly actionBusy = signal(false);
+  readonly expandedWidths = signal<number[]>([]);
+  readonly allocationWeights: Record<string, number> = {};
+  searchText = '';
+  motherCoilNumber = '';
+  warehouse = '';
+  minimumAvailableWeight: number | null = null;
+  onlyMatching = true;
+
+  readonly statusValue = computed(() => this.toStatus(this.job()?.status));
+  readonly canEdit = computed(() => this.statusValue() === 2);
+  readonly readOnly = computed(() => this.statusValue() !== 2);
+  readonly requiredWeight = computed(() => this.requirements().reduce((sum, r) => sum + (+r.requiredWeight || 0), 0));
+  readonly allocatedWeight = computed(() => this.requirements().reduce((sum, r) => sum + (+r.allocatedWeight || 0), 0));
+  readonly shortageWeight = computed(() => this.requirements().reduce((sum, r) => sum + (+r.shortageWeight || 0), 0));
+  readonly allocationPercentage = computed(() => this.requiredWeight() ? Math.min(100, this.allocatedWeight() / this.requiredWeight() * 100) : 0);
+  readonly activeAllocations = computed(() => this.allocations().filter(a => this.isActive(a.status)));
+  readonly completeRequirements = computed(() => this.requirements().filter(r => r.shortageWeight <= 0).length);
+  readonly exactMatches = computed(() => this.activeAllocations().filter(a => Math.abs((this.coilFor(a)?.width ?? a.requiredWidth) - a.requiredWidth) < 0.0001).length);
+  readonly toleranceMatches = computed(() => Math.max(0, this.activeAllocations().length - this.exactMatches()));
+  readonly selectedRequirement = computed(() => this.requirements().find(r => r.width === this.selectedWidth()) ?? null);
+  readonly validationMessage = computed(() => {
+    if (!this.requirements().length) return 'No material requirements could be generated from the released Step Schedule.';
+    const incomplete = this.requirements().filter(r => r.shortageWeight > 0);
+    if (!incomplete.length) return 'All material requirements are fully allocated.';
+    return `${incomplete.length} requirement${incomplete.length === 1 ? '' : 's'} has a total shortage of ${this.shortageWeight().toFixed(2)} kg.`;
+  });
+
+  constructor() { this.loadPage(); }
+
+  loadPage(): void {
+    this.loadingPage.set(true);
+    forkJoin({ job: this.api.get(this.id), requirements: this.api.requirements(this.id), allocations: this.api.allocations(this.id) }).subscribe({
+      next: ({ job, requirements, allocations }) => {
+        this.job.set(job.data); this.requirements.set(requirements.data); this.allocations.set(allocations.data as Allocation[]);
+        const current = this.selectedWidth();
+        const selected = requirements.data.find(r => r.width === current) ?? requirements.data.find(r => r.shortageWeight > 0) ?? requirements.data[0];
+        this.selectedWidth.set(selected?.width ?? null); this.loadingPage.set(false);
+        if (selected) this.refreshInventory();
+      },
+      error: error => { this.loadingPage.set(false); this.showError(error, 'Unable to load Material Allocation.'); }
+    });
+  }
+
+  selectRequirement(requirement: Requirement): void {
+    this.selectedWidth.set(requirement.width); this.resetToRequirement();
+  }
+
+  resetToRequirement(): void {
+    this.searchText = ''; this.motherCoilNumber = ''; this.warehouse = ''; this.minimumAvailableWeight = 0; this.onlyMatching = true;
+    this.refreshInventory();
+  }
+
+  clearFilters(): void {
+    this.searchText = ''; this.motherCoilNumber = ''; this.warehouse = ''; this.minimumAvailableWeight = null; this.onlyMatching = false;
+    this.refreshInventory();
+  }
+
+  refreshInventory(): void {
+    const requirement = this.selectedRequirement();
+    if (!requirement) { this.coils.set([]); return; }
+    this.loadingInventory.set(true);
+    this.api.available(this.id, {
+      search: this.searchText || this.motherCoilNumber,
+      width: this.onlyMatching ? requirement.width : undefined,
+      thickness: this.onlyMatching ? this.job()?.thickness : undefined,
+      availableWeight: this.minimumAvailableWeight ?? 0,
+      warehouse: this.warehouse || undefined,
+    }).subscribe({
+      next: response => {
+        this.coils.set(response.data);
+        response.data.forEach(c => this.allocationWeights[c.id] = Math.min(c.availableWeight, requirement.shortageWeight));
+        this.loadingInventory.set(false);
+      },
+      error: error => { this.loadingInventory.set(false); this.showError(error, 'Unable to refresh Slit Coil inventory.'); }
+    });
+  }
+
+  allocate(coil: AvailableCoil): void {
+    const requirement = this.selectedRequirement(); const weight = +this.allocationWeights[coil.id];
+    if (!this.canEdit() || !requirement || weight <= 0) return;
+    if (weight > coil.availableWeight) { this.snack.open(`Allocation cannot exceed available weight of ${coil.availableWeight.toFixed(2)} kg.`, 'Close', { duration: 5000 }); return; }
+    if (weight > requirement.shortageWeight) { this.snack.open(`The remaining requirement is only ${requirement.shortageWeight.toFixed(2)} kg.`, 'Close', { duration: 5000 }); return; }
+    this.actionBusy.set(true);
+    this.api.allocate(this.id, { slitCoilId: coil.id, requiredWidth: requirement.width, allocatedWeight: weight }).subscribe({
+      next: () => { this.actionBusy.set(false); this.snack.open('Slit Coil weight reserved.', 'Close', { duration: 2500 }); this.reloadAllocationData(); },
+      error: error => { this.actionBusy.set(false); this.showError(error, 'Unable to reserve Slit Coil weight.'); }
+    });
+  }
+
+  edit(allocation: Allocation): void {
+    if (!this.canEdit()) return;
+    const entered = prompt(`Update allocated weight for ${allocation.slitCoilNumber} (kg)`, allocation.allocatedWeight.toString());
+    if (entered === null) return; const weight = +entered;
+    if (!Number.isFinite(weight) || weight <= 0) { this.snack.open('Allocated weight must be greater than zero.', 'Close', { duration: 4000 }); return; }
+    this.actionBusy.set(true);
+    this.api.updateAllocation(this.id, allocation.id, { allocatedWeight: weight }).subscribe({
+      next: () => { this.actionBusy.set(false); this.snack.open('Allocation updated.', 'Close', { duration: 2500 }); this.reloadAllocationData(); },
+      error: error => { this.actionBusy.set(false); this.showError(error, 'Unable to update allocation.'); }
+    });
+  }
+  remove(allocation: Allocation): void {
+    if (!this.canEdit() || !confirm(`Release ${allocation.allocatedWeight.toFixed(2)} kg from ${allocation.slitCoilNumber} for the ${allocation.requiredWidth} mm requirement?`)) return;
+    this.actionBusy.set(true);
+    this.api.releaseAllocation(this.id, allocation.id).subscribe({
+      next: () => { this.actionBusy.set(false); this.snack.open('Allocation released.', 'Close', { duration: 2500 }); this.reloadAllocationData(); },
+      error: error => { this.actionBusy.set(false); this.showError(error, 'Unable to release allocation.'); }
+    });
+  }
+
+  saveAllocations(): void {
+    this.actionBusy.set(true);
+    forkJoin({ requirements: this.api.requirements(this.id), allocations: this.api.allocations(this.id) }).subscribe({
+      next: () => {
+        this.actionBusy.set(false);
+        this.snack.open('Allocations saved successfully.', 'Close', { duration: 2500 });
+        this.router.navigate(['/lamination-jobs']);
+      },
+      error: error => { this.actionBusy.set(false); this.showError(error, 'Unable to save allocations.'); }
+    });
+  }
+
+  confirmAllocation(): void {
+    if (!this.canEdit() || this.shortageWeight() > 0 || !this.activeAllocations().length) return;
+    this.actionBusy.set(true);
+    this.api.confirm(this.id).subscribe({
+      next: () => { this.actionBusy.set(false); this.snack.open('Material allocation confirmed successfully.', 'Close', { duration: 3500 }); this.loadPage(); },
+      error: error => { this.actionBusy.set(false); this.showError(error, 'Unable to confirm allocation.'); }
+    });
+  }
+
+  toggleBreakdown(width: number): void {
+    const open = this.expandedWidths(); this.expandedWidths.set(open.includes(width) ? open.filter(x => x !== width) : [...open, width]);
+  }
+  isExpanded(width: number): boolean { return this.expandedWidths().includes(width); }
+  requirementStatus(r: Requirement): string { return r.allocatedWeight <= 0 ? 'Not Allocated' : r.shortageWeight > 0 ? 'Partial' : 'Complete'; }
+  requirementClass(r: Requirement): string { return r.allocatedWeight <= 0 ? 'missing' : r.shortageWeight > 0 ? 'partial' : 'complete'; }
+  allocationStatus(value: string | number): string { return typeof value === 'number' ? ['Reserved', 'Partially Consumed', 'Consumed', 'Released'][value] ?? 'Unknown' : `${value}`.replace('PartiallyConsumed', 'Partially Consumed'); }
+  coilFor(a: Allocation): AvailableCoil | undefined { return this.coils().find(c => c.id === a.slitCoilId); }
+  matchStatus(coil: AvailableCoil, width = this.selectedWidth() ?? coil.width): string { const difference = Math.abs(coil.width - width); return difference < 0.0001 ? 'Exact Match' : difference <= 0.1 ? 'Within Tolerance' : 'Not Eligible'; }
+  isEligible(coil: AvailableCoil): boolean { const job = this.job(); const requirement = this.selectedRequirement(); return !!job && !!requirement && coil.grade === job.grade && coil.thickness === job.thickness && Math.abs(coil.width - requirement.width) <= 0.1 && coil.availableWeight > 0; }
+  designName(value: unknown): string { return value === 1 || value === 'StepLap' ? 'Step Lap' : 'Simple'; }
+  statusName(): string { return ['Draft', 'Allocated', 'Released', 'Legacy In Progress', 'Completed', 'Cancelled'][this.statusValue()] ?? 'Unknown'; }
+  private toStatus(value: unknown): number { return typeof value === 'number' ? value : ['Draft', 'Allocated', 'Released', 'InProgress', 'Completed', 'Cancelled'].indexOf(`${value}`); }
+  private isActive(value: string | number): boolean { return value === 0 || value === 'Reserved'; }
+  private reloadAllocationData(): void {
+    forkJoin({ requirements: this.api.requirements(this.id), allocations: this.api.allocations(this.id) }).subscribe({
+      next: ({ requirements, allocations }) => { this.requirements.set(requirements.data); this.allocations.set(allocations.data as Allocation[]); this.refreshInventory(); },
+      error: error => this.showError(error, 'Unable to refresh allocation totals.')
+    });
+  }
+  private showError(error: any, fallback: string): void {
+    const body = error?.error; const details = body?.errors ? Object.values(body.errors).flat().join(' | ') : null;
+    this.snack.open(details || body?.message || body?.title || fallback, 'Close', { duration: 6000 });
+  }
+}
