@@ -18,10 +18,12 @@ export class LaminationJobService {
  updateAllocation(id:string,a:string,body:unknown){return this.http.put<Api<any>>(`${this.url}/${id}/allocations/${a}`,body)}
  releaseAllocation(id:string,a:string){return this.http.post(`${this.url}/${id}/allocations/${a}/release`,{})}
  confirm(id:string){return this.http.post<Api<LaminationJob>>(`${this.url}/${id}/confirm-allocation`,{})}
+ skipAllocation(id:string){return this.http.post<Api<LaminationJob>>(`${this.url}/${id}/skip-allocation`,{})}
  release(id:string){return this.http.post<Api<LaminationJob>>(`${this.url}/${id}/release`,{})}
  cancel(id:string){return this.http.post<Api<LaminationJob>>(`${this.url}/${id}/cancel`,{})}
  delete(id:string){return this.http.delete(`${this.url}/${id}`)}
  complete(id:string,body:unknown){return this.http.post<Api<LaminationJob>>(`${this.url}/${id}/complete`,body)}
  completion(id:string){return this.http.get<Api<any>>(`${this.url}/${id}/completion`)}
  upload(id:string,file:File){const f=new FormData();f.append('file',file);return this.http.post(`${this.url}/${id}/drawing`,f)}
+ downloadDrawing(id:string){return this.http.get(`${this.url}/${id}/drawing`,{responseType:'blob'})}
 }

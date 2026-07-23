@@ -8,6 +8,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LayoutStateService } from '../services/layout-state.service';
+import { environment } from '../../../environments/environment';
 
 interface NavigationItem { label: string; icon: string; route: string; exact?: boolean; }
 interface NavigationGroup { label: string; icon: string; items: readonly NavigationItem[]; }
@@ -44,6 +45,7 @@ export class ShellComponent {
       { label: 'Suppliers', icon: 'storefront', route: '/admin/suppliers' },
       { label: 'Grades', icon: 'category', route: '/admin/grades' },
       { label: 'Analytics', icon: 'analytics', route: '/admin/analytics' },
+      ...(environment.production ? [] : [{ label: 'Development Tools', icon: 'science', route: '/admin/development-tools' }]),
     ]},
   ];
 

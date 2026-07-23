@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { ShellComponent } from './layout/shell/shell.component';
+import { environment } from '../environments/environment';
 
 export const routes: Routes = [
   {
@@ -206,6 +207,11 @@ export const routes: Routes = [
         redirectTo: '/mother-coils',
         pathMatch: 'full',
       },
+      ...(environment.production ? [] : [{
+        path: 'admin/development-tools',
+        loadComponent: () => import('./features/development-tools/development-tools.component').then(c => c.DevelopmentToolsComponent),
+        title: 'Development Tools | CoilManager',
+      }]),
       {
         path: 'admin/analytics',
         loadComponent: () =>

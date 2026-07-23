@@ -114,3 +114,15 @@ Replace the default JWT signing key before deploying outside local development.
 - Database script folder structure and placeholder scripts are in place.
 - Architecture, API, database, coding, branching, and sprint docs are in place.
 - Unit and integration test projects include architecture and placeholder coverage.
+
+## Development Demo Data
+
+Development builds expose **Administration > Development Tools** and the following API:
+
+```text
+POST /api/development/demo-data/generate
+```
+
+The generator uses deterministic seed `2026` and creates 50 Mother Coils, 30 Slitting Jobs, 280 Slit Coils, 30 Lamination Jobs, linked allocations, and inventory transactions. Running without `clearExistingData` is idempotent when the demo dataset already exists. Enabling `clearExistingData` removes production workflow data before regeneration while preserving users, roles, settings, and master data.
+
+The endpoint returns `403 Forbidden` outside the Development environment. Never enable this tool in production.

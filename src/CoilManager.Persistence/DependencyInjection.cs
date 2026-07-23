@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using CoilManager.Persistence.Repositories;
 using CoilManager.Persistence.Services;
+using CoilManager.Persistence.DemoData;
 
 namespace CoilManager.Persistence;
 
@@ -37,6 +38,7 @@ public static class DependencyInjection
         services.AddScoped<LaminationJobService>();
         services.AddScoped<ILaminationJobService>(p => p.GetRequiredService<LaminationJobService>());
         services.AddScoped<IMaterialAllocationService>(p => p.GetRequiredService<LaminationJobService>());
+        services.AddScoped<IDemoDataSeeder, DemoDataSeeder>();
 
         return services;
     }

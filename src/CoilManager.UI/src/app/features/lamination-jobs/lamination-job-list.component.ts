@@ -30,7 +30,7 @@ export class LaminationJobListComponent implements OnInit {
   @ViewChild(MatPaginator) private paginator?: MatPaginator;
 
   protected readonly statusOptions = [
-    { value: 0, label: 'Draft' }, { value: 2, label: 'Released' }, { value: 1, label: 'Allocated' },
+    { value: 0, label: 'Draft' }, { value: 2, label: 'Released' }, { value: 1, label: 'In Progress' },
     { value: 4, label: 'Completed' }, { value: 5, label: 'Cancelled' },
   ];
   protected readonly displayedColumns = ['number','date','reference','rating','design','grade','weight','status','actions'];
@@ -49,7 +49,7 @@ export class LaminationJobListComponent implements OnInit {
   protected applyFilters(): void { this.pageIndex.set(0); this.paginator?.firstPage(); this.loadJobs(); }
   protected resetFilters(): void { this.searchControl.reset(''); this.statusControl.reset(null); this.pageIndex.set(0); this.paginator?.firstPage(); this.loadJobs(); }
   protected onPageChange(event: PageEvent): void { this.pageIndex.set(event.pageIndex); this.pageSize.set(event.pageSize); this.loadJobs(); }
-  protected statusName(value: unknown): string { return typeof value==='number' ? ['Draft','Allocated','Released','Legacy In Progress','Completed','Cancelled'][value] ?? 'Unknown' : `${value}`.replace('InProgress','In Progress'); }
+  protected statusName(value: unknown): string { return typeof value==='number' ? ['Draft','In Progress','Released','Legacy In Progress','Completed','Cancelled'][value] ?? 'Unknown' : `${value}`.replace('InProgress','In Progress'); }
   protected statusClass(value: unknown): string { return this.statusName(value).toLowerCase().replace(' ','-'); }
   protected designName(value: unknown): string { return value===1||value==='StepLap' ? 'Step Lap' : 'Simple'; }
   protected isStatus(job:LaminationJob,status:number):boolean { return (typeof job.status==='number' ? job.status : ['Draft','Allocated','Released','InProgress','Completed','Cancelled'].indexOf(job.status))===status; }

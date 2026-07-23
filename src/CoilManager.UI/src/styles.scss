@@ -51,7 +51,8 @@ a {
 
   body.job-card-print-mode app-root,
   body.job-card-print-mode app-shell,
-  body.job-card-print-mode app-job-card-page {
+  body.job-card-print-mode app-job-card-page,
+  body.job-card-print-mode app-lamination-job-card {
     display: block !important;
   }
 }

@@ -18,7 +18,7 @@ import { LaminationJobService } from './lamination-job.service';
 interface Allocation {
   id: string; slitCoilId: string; slitCoilNumber: string; requiredWidth: number;
   allocatedWeight: number; remainingWeightAfterAllocation: number; status: string | number;
-  reservedBy: string; reservedOn: string; remarks?: string;
+  reservedBy: string; reservedOn: string; remarks?: string; coreLossPerKg: number;
 }
 
 @Component({
@@ -58,6 +58,7 @@ export class LaminationAllocationComponent {
   readonly requiredWeight = computed(() => this.requirements().reduce((sum, r) => sum + (+r.requiredWeight || 0), 0));
   readonly allocatedWeight = computed(() => this.requirements().reduce((sum, r) => sum + (+r.allocatedWeight || 0), 0));
   readonly shortageWeight = computed(() => this.requirements().reduce((sum, r) => sum + (+r.shortageWeight || 0), 0));
+  readonly allocatedNoLoadLoss = computed(() => this.activeAllocations().reduce((sum, a) => sum + (+a.allocatedWeight || 0) * (+a.coreLossPerKg || 0) * 1.15, 0));
   readonly allocationPercentage = computed(() => this.requiredWeight() ? Math.min(100, this.allocatedWeight() / this.requiredWeight() * 100) : 0);
   readonly activeAllocations = computed(() => this.allocations().filter(a => this.isActive(a.status)));
   readonly completeRequirements = computed(() => this.requirements().filter(r => r.shortageWeight <= 0).length);
@@ -126,8 +127,11 @@ export class LaminationAllocationComponent {
     if (!this.canEdit() || !requirement || weight <= 0) return;
     if (weight > coil.availableWeight) { this.snack.open(`Allocation cannot exceed available weight of ${coil.availableWeight.toFixed(2)} kg.`, 'Close', { duration: 5000 }); return; }
     if (weight > requirement.shortageWeight) { this.snack.open(`The remaining requirement is only ${requirement.shortageWeight.toFixed(2)} kg.`, 'Close', { duration: 5000 }); return; }
+    const partialMatch = !this.isExactMatch(coil);
+    const overrideReason = partialMatch ? prompt(`Core loss differs: job ${this.job()!.coreLossPerKg} W/kg, coil ${coil.coreLossPerKg} W/kg. Enter a reason to allocate this Partial Match:`) : null;
+    if (partialMatch && !overrideReason?.trim()) return;
     this.actionBusy.set(true);
-    this.api.allocate(this.id, { slitCoilId: coil.id, requiredWidth: requirement.width, allocatedWeight: weight }).subscribe({
+    this.api.allocate(this.id, { slitCoilId: coil.id, requiredWidth: requirement.width, allocatedWeight: weight, widthMismatchOverride: partialMatch, overrideReason: overrideReason?.trim() }).subscribe({
       next: () => { this.actionBusy.set(false); this.snack.open('Slit Coil weight reserved.', 'Close', { duration: 2500 }); this.reloadAllocationData(); },
       error: error => { this.actionBusy.set(false); this.showError(error, 'Unable to reserve Slit Coil weight.'); }
     });
@@ -153,6 +157,14 @@ export class LaminationAllocationComponent {
     });
   }
 
+  skipAllocation(): void {
+    if (!this.canEdit() || !confirm('Skip material allocation and print a Job Card with blank rows for the operator to complete? No inventory will be reserved.')) return;
+    this.actionBusy.set(true);
+    this.api.skipAllocation(this.id).subscribe({
+      next: () => { this.actionBusy.set(false); this.snack.open('Material allocation skipped.', 'Close', { duration: 2500 }); this.router.navigate(['/lamination-jobs']); },
+      error: error => { this.actionBusy.set(false); this.showError(error, 'Unable to skip material allocation.'); }
+    });
+  }
   saveAllocations(): void {
     this.actionBusy.set(true);
     forkJoin({ requirements: this.api.requirements(this.id), allocations: this.api.allocations(this.id) }).subscribe({
@@ -182,10 +194,19 @@ export class LaminationAllocationComponent {
   requirementClass(r: Requirement): string { return r.allocatedWeight <= 0 ? 'missing' : r.shortageWeight > 0 ? 'partial' : 'complete'; }
   allocationStatus(value: string | number): string { return typeof value === 'number' ? ['Reserved', 'Partially Consumed', 'Consumed', 'Released'][value] ?? 'Unknown' : `${value}`.replace('PartiallyConsumed', 'Partially Consumed'); }
   coilFor(a: Allocation): AvailableCoil | undefined { return this.coils().find(c => c.id === a.slitCoilId); }
-  matchStatus(coil: AvailableCoil, width = this.selectedWidth() ?? coil.width): string { const difference = Math.abs(coil.width - width); return difference < 0.0001 ? 'Exact Match' : difference <= 0.1 ? 'Within Tolerance' : 'Not Eligible'; }
-  isEligible(coil: AvailableCoil): boolean { const job = this.job(); const requirement = this.selectedRequirement(); return !!job && !!requirement && coil.grade === job.grade && coil.thickness === job.thickness && Math.abs(coil.width - requirement.width) <= 0.1 && coil.availableWeight > 0; }
-  designName(value: unknown): string { return value === 1 || value === 'StepLap' ? 'Step Lap' : 'Simple'; }
-  statusName(): string { return ['Draft', 'Allocated', 'Released', 'Legacy In Progress', 'Completed', 'Cancelled'][this.statusValue()] ?? 'Unknown'; }
+  isExactMatch(coil: AvailableCoil): boolean {
+    const job = this.job(); const requirement = this.selectedRequirement();
+    return !!job && !!requirement && coil.thickness === job.thickness && Math.abs(coil.width - requirement.width) <= 0.1 && Math.abs(coil.coreLossPerKg - job.coreLossPerKg) < 0.0001 && coil.availableWeight > 0;
+  }
+  matchStatus(coil: AvailableCoil): string {
+    const job = this.job(); const requirement = this.selectedRequirement();
+    if (!job || !requirement || Math.abs(coil.width - requirement.width) > 0.1) return 'Width Mismatch';
+    if (coil.thickness !== job.thickness) return 'Thickness Mismatch';
+    if (coil.availableWeight <= 0) return 'No Available Weight';
+    return this.isExactMatch(coil) ? 'Exact Match' : 'Partial Match';
+  }
+  isEligible(coil: AvailableCoil): boolean { const job = this.job(); const requirement = this.selectedRequirement(); return !!job && !!requirement && coil.thickness === job.thickness && Math.abs(coil.width - requirement.width) <= 0.1 && coil.availableWeight > 0; }  designName(value: unknown): string { return value === 1 || value === 'StepLap' ? 'Step Lap' : 'Simple'; }
+  statusName(): string { return ['Draft', 'In Progress', 'Released', 'Legacy In Progress', 'Completed', 'Cancelled'][this.statusValue()] ?? 'Unknown'; }
   private toStatus(value: unknown): number { return typeof value === 'number' ? value : ['Draft', 'Allocated', 'Released', 'InProgress', 'Completed', 'Cancelled'].indexOf(`${value}`); }
   private isActive(value: string | number): boolean { return value === 0 || value === 'Reserved'; }
   private reloadAllocationData(): void {

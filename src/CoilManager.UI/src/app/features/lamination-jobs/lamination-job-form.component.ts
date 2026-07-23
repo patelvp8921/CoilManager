@@ -54,8 +54,10 @@ export class LaminationJobFormComponent implements OnDestroy {
   protected readonly expandedRow = signal<{ tab: number; step: number } | null>(null);
   protected readonly expandedSteps = signal<number[]>([0]);
   protected readonly allocatedWeight = signal(0);
+  private readonly weightRevision = signal(0);
   protected readonly loaded = signal(!this.id);
   protected drawing?: File;
+  protected readonly drawingAttachmentName = signal<string | null>(null);
 
   protected readonly references: { combined: { image: string; title: string; fields: PlateFieldDefinition[]; note: string }; topBottom: { image: string; title: string; fields: PlateFieldDefinition[]; note: string }; side: { image: string; title: string; fields: PlateFieldDefinition[]; note: string }; center: { image: string; title: string; fields: PlateFieldDefinition[]; note: string } } = {
     combined: { image: 'assets/images/lamination-profiles/complete-core-profile.svg', title: 'Complete Core Plate Assembly', fields: [
@@ -84,6 +86,9 @@ export class LaminationJobFormComponent implements OnDestroy {
   protected filteredGrades(): any[] { const category=this.form.value.customerCategory; const loss=+(this.form.value.customerCoreLossPerKg??0); return this.grades().filter(g=>(!category||g.category===category)&&(!loss||+g.coreLossPerKg<=loss)); }
   protected noLoadLoss(): number { return +(this.form.value.totalWeight??0) * +(this.form.value.customerCoreLossPerKg??0) * 1.15; }
   protected materialCriteriaChanged(): void { const selected=this.grades().find(g=>g.id===this.form.value.gradeId); if(selected&&!this.filteredGrades().some(g=>g.id===selected.id))this.form.controls.gradeId.setValue(''); }
+  protected drawingSelected(event: Event): void { this.drawing = (event.target as HTMLInputElement).files?.[0]; if (this.drawing) this.form.markAsDirty(); }
+  protected downloadDrawing(): void { if (!this.id || !this.drawingAttachmentName()) return; this.api.downloadDrawing(this.id).subscribe(blob => this.saveBlob(blob, this.drawingAttachmentName()!)); }
+  private saveBlob(blob: Blob, name: string): void { const url=URL.createObjectURL(blob); const link=document.createElement('a'); link.href=url; link.download=name; link.click(); URL.revokeObjectURL(url); }
 
   constructor() {
     this.lookups.getGrades().subscribe((response: any) => { this.grades.set(response.data ?? response); this.recalculatePlateWeights(); });
@@ -226,10 +231,9 @@ export class LaminationJobFormComponent implements OnDestroy {
     this.plate(index,'Side').get('quantity')?.setValue(stack * 2,{emitEvent:false});
     this.plate(index,'Center').get('quantity')?.setValue(stack,{emitEvent:false});
   }
-  private recalculatePlateWeights(): void {
+  protected recalculatePlateWeights(): void {
     const grade = this.grades().find(item => item.id === this.form.controls.gradeId.value);
     const thickness = +(grade?.thicknessMm ?? grade?.thickness ?? 0);
-    if (!thickness) return;
 
     this.steps.controls.forEach((step, index) => {
       const stackQuantity = +(step.get('stackQuantity')?.value ?? 0);
@@ -245,7 +249,7 @@ export class LaminationJobFormComponent implements OnDestroy {
         const width = +(plate.get('width')?.value ?? 0);
         const length = +(plate.get('length')?.value ?? 0);
         const quantity = quantities[type];
-        const weight = width > 0 && length > 0 && quantity > 0
+        const weight = thickness > 0 && width > 0 && length > 0 && quantity > 0
           ? Math.round(width * length * thickness * quantity * this.crgoDensityKgPerCubicMeter / this.cubicMillimetersPerCubicMeter * 1000) / 1000
           : 0;
         plate.patchValue({ quantity, plannedWeight: weight }, { emitEvent: false });
@@ -254,6 +258,15 @@ export class LaminationJobFormComponent implements OnDestroy {
       const stepWeight = TYPES.reduce((sum, type) => sum + (+this.plate(index, type).get('plannedWeight')?.value || 0), 0);
       step.get('plannedWeight')?.setValue(Math.round(stepWeight * 1000) / 1000, { emitEvent: false });
     });
+    this.weightRevision.update(value => value + 1);
+  }
+  protected displayedPlateWeight(index: number, type: PlateType): number {
+    this.weightRevision();
+    return +(this.plate(index, type).get('plannedWeight')?.value ?? 0);
+  }
+  protected displayedStepWeight(index: number): number {
+    this.weightRevision();
+    return +(this.steps.at(index).get('plannedWeight')?.value ?? 0);
   }
   protected sideTotalQuantity(index: number): number { return (+this.steps.at(index).value.stackQuantity||0)*2; }
   protected topBottomQuantity(index: number): number { return (+this.steps.at(index).value.stackQuantity||0)*2; }
@@ -318,7 +331,7 @@ export class LaminationJobFormComponent implements OnDestroy {
         this.router.navigate(['/lamination-jobs', response.data.id, 'allocations']);
       };
       if (this.drawing) {
-        this.api.upload(response.data.id, this.drawing).subscribe({ next: () => { this.drawing = undefined; complete(); }, error: error => { this.saving.set(false); this.snackBar.open(this.apiErrorMessage(error, 'Job saved, but the drawing could not be uploaded.'), 'Close', { duration: 6000 }); } });
+        this.api.upload(response.data.id, this.drawing).subscribe({ next: () => { this.drawingAttachmentName.set(this.drawing!.name); this.drawing = undefined; this.snackBar.open('Source drawing uploaded successfully.', 'Close', { duration: 3000 }); complete(); }, error: error => { this.saving.set(false); this.snackBar.open(this.apiErrorMessage(error, 'Job saved, but the drawing could not be uploaded.'), 'Close', { duration: 6000 }); } });
       } else complete();
     }, error: error => { this.saving.set(false); this.snackBar.open(this.apiErrorMessage(error, 'Save Draft failed.'), 'Close', { duration: 6000 }); } });
   }
@@ -375,7 +388,7 @@ export class LaminationJobFormComponent implements OnDestroy {
     for (let i = 0; i < this.steps.length; i++) if (this.plate(i, 'Center').invalid) return 2; return this.activeTab();
   }
   private loadJob(job: LaminationJob): void {
-    this.number.set(job.laminationJobNumber); this.allocatedWeight.set(job.totalAllocatedWeight ?? 0); this.steps.clear();
+    this.number.set(job.laminationJobNumber); this.allocatedWeight.set(job.totalAllocatedWeight ?? 0); this.drawingAttachmentName.set(job.drawingAttachmentName ?? null); this.steps.clear();
     job.steps.forEach(step => this.steps.push(this.createStep({ ...step, plates: step.plates.map(plate => ({ ...plate, plateType: this.plateTypeFormValue(plate.plateType) })) })));
     this.steps.controls.forEach((_,index)=>this.syncStackQuantity(index));
     this.form.patchValue({ ...job, designType: this.designTypeFormValue(job.designType), stepLapOrientation: this.orientationFormValue(job.stepLapOrientation), customerCategory: job.category, plannedDate: this.fromApiDate(job.plannedDate), requiredDate: this.fromApiDate(job.requiredDate) } as any); this.form.markAsPristine(); this.loaded.set(true);
