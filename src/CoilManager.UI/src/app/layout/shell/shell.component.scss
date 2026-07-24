@@ -1,6 +1,6 @@
 :host { display: block; min-height: 100vh; }
 .app-shell { width: 100%; min-height: 100vh; overflow: hidden; background: #f4f7fb; }
-.app-sidebar { width: 280px; min-width: 280px; max-width: 280px; flex: 0 0 280px; border-right: 1px solid #dfe5ee; background: #fff; color: #172033; transition: width 200ms ease; overflow-x: hidden; }
+.app-sidebar { width: 325px; min-width: 325px; max-width: 325px; flex: 0 0 325px; border-right: 1px solid #dfe5ee; background: #fff; color: #172033; transition: width 200ms ease; overflow-x: hidden; }
 .app-sidebar.collapsed { width: 72px; min-width: 72px; max-width: 72px; flex-basis: 72px; }
 .brand { display: flex; height: 64px; align-items: center; gap: 10px; padding: 0 16px; overflow: hidden; }
 .collapsed .brand { justify-content: center; padding: 0; }
@@ -38,7 +38,7 @@
 .app-footer { display: flex; min-height: 44px; align-items: center; justify-content: space-between; border-top: 1px solid #d7dde5; padding: 0 24px; background: #fff; color: #667085; font-size: 12px; }
 
 @media (max-width: 767px) {
-  .app-sidebar { width: 280px; min-width: 280px; max-width: 280px; flex: 0 0 280px; }
+  .app-sidebar { width: 325px; min-width: 325px; max-width: 325px; flex: 0 0 325px; }
   .app-header { min-height: 56px; padding: 0 8px; }
   .toolbar-title, .profile-name, .search-shortcut span { display: none; }
   .search-shortcut { min-width: 40px; padding: 0 8px; }

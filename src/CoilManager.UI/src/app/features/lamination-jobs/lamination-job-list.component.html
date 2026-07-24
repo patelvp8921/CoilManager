@@ -15,6 +15,7 @@
     <div class="table-wrap"><table mat-table [dataSource]="jobs()">
       <ng-container matColumnDef="number"><th mat-header-cell *matHeaderCellDef>Job No</th><td mat-cell *matCellDef="let row"><strong>{{row.laminationJobNumber}}</strong></td></ng-container>
       <ng-container matColumnDef="date"><th mat-header-cell *matHeaderCellDef>Planned Date</th><td mat-cell *matCellDef="let row">{{row.plannedDate|date:'dd/MM/yyyy'}}</td></ng-container>
+      <ng-container matColumnDef="requiredDate"><th mat-header-cell *matHeaderCellDef>Required Date</th><td mat-cell *matCellDef="let row">{{(row.requiredDate|date:'dd/MM/yyyy')||'-'}}</td></ng-container>
       <ng-container matColumnDef="reference"><th mat-header-cell *matHeaderCellDef>Job / Drawing No</th><td mat-cell *matCellDef="let row">{{row.jobOrDrawingNumber||'-'}}</td></ng-container>
       <ng-container matColumnDef="rating"><th mat-header-cell *matHeaderCellDef>Rating</th><td mat-cell *matCellDef="let row">{{row.rating}}</td></ng-container>
       <ng-container matColumnDef="design"><th mat-header-cell *matHeaderCellDef>Design</th><td mat-cell *matCellDef="let row">{{designName(row.designType)}} · {{row.numberOfSteps}} step(s)</td></ng-container>

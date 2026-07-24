@@ -33,7 +33,7 @@ export class LaminationJobListComponent implements OnInit {
     { value: 0, label: 'Draft' }, { value: 2, label: 'Released' }, { value: 1, label: 'In Progress' },
     { value: 4, label: 'Completed' }, { value: 5, label: 'Cancelled' },
   ];
-  protected readonly displayedColumns = ['number','date','reference','rating','design','grade','weight','status','actions'];
+  protected readonly displayedColumns = ['number','date','requiredDate','reference','rating','design','grade','weight','status','actions'];
   protected readonly searchControl = new FormControl('', { nonNullable: true });
   protected readonly statusControl = new FormControl<number | null>(null);
   protected readonly jobs = signal<readonly LaminationJob[]>([]);
