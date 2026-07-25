@@ -86,6 +86,11 @@ export const routes: Routes = [
         path: 'lamination-jobs/:id/edit',
         loadComponent: () => import('./features/lamination-jobs/lamination-job-form.component').then(c => c.LaminationJobFormComponent),
         title: 'Edit Lamination Job | CoilManager',
+      },      {
+        path: 'lamination-jobs/:id/view',
+        loadComponent: () => import('./features/lamination-jobs/lamination-job-form.component').then(c => c.LaminationJobFormComponent),
+        title: 'View Lamination Job | CoilManager',
+        data: { readOnly: true },
       },
       {
         path: 'lamination-jobs/:id/complete',

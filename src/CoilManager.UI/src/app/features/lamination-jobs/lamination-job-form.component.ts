@@ -43,6 +43,7 @@ export class LaminationJobFormComponent implements OnDestroy {
   private readonly crgoDensityKgPerCubicMeter = 7650;
   private readonly cubicMillimetersPerCubicMeter = 1_000_000_000;
   private readonly id = this.route.snapshot.paramMap.get('id');
+  protected readonly isReadOnly = this.route.snapshot.data['readOnly'] === true;
 
   protected readonly number = signal('Loading…');
   protected readonly grades = signal<any[]>([]);
@@ -81,11 +82,12 @@ export class LaminationJobFormComponent implements OnDestroy {
     shift: [''], plannerName: [''], remarks: [''], rowVersion: [''], steps: this.stepArray,
   });
   protected get steps(): FormArray<StepForm> { return this.stepArray; }
-  readonly isEdit = !!this.id;
-  protected get isDirty(): boolean { return this.form.dirty; }
-  protected filteredGrades(): any[] { const category=this.form.value.customerCategory; const loss=+(this.form.value.customerCoreLossPerKg??0); return this.grades().filter(g=>(!category||g.category===category)&&(!loss||+g.coreLossPerKg<=loss)); }
-  protected noLoadLoss(): number { return +(this.form.value.totalWeight??0) * +(this.form.value.customerCoreLossPerKg??0) * 1.15; }
-  protected materialCriteriaChanged(): void { const selected=this.grades().find(g=>g.id===this.form.value.gradeId); if(selected&&!this.filteredGrades().some(g=>g.id===selected.id))this.form.controls.gradeId.setValue(''); }
+  readonly isEdit = !!this.id && !this.isReadOnly;
+  protected get isDirty(): boolean { return !this.isReadOnly && this.form.dirty; }
+  protected formValue(): any { return this.form.getRawValue(); }
+  protected filteredGrades(): any[] { return this.grades(); }
+  protected noLoadLoss(): number { return +(this.form.getRawValue().totalWeight??0) * +(this.form.getRawValue().customerCoreLossPerKg??0) * 1.15; }
+  protected materialCriteriaChanged(): void {}
   protected drawingSelected(event: Event): void { this.drawing = (event.target as HTMLInputElement).files?.[0]; if (this.drawing) this.form.markAsDirty(); }
   protected downloadDrawing(): void { if (!this.id || !this.drawingAttachmentName()) return; this.api.downloadDrawing(this.id).subscribe(blob => this.saveBlob(blob, this.drawingAttachmentName()!)); }
   private saveBlob(blob: Blob, name: string): void { const url=URL.createObjectURL(blob); const link=document.createElement('a'); link.href=url; link.download=name; link.click(); URL.revokeObjectURL(url); }
@@ -145,7 +147,7 @@ export class LaminationJobFormComponent implements OnDestroy {
     this.steps.push(this.createStep(copy)); this.renumber(); this.form.markAsDirty();
   }
   protected removeStep(index: number): void {
-    if (this.steps.length === 1 || !window.confirm(`Delete Step ${this.steps.at(index).value.stepNumber} from all plate tabs?`)) return;
+    if (this.steps.length === 1 || !window.confirm(`Delete Step ${this.steps.at(index).getRawValue().stepNumber} from all plate tabs?`)) return;
     this.steps.removeAt(index); this.renumber(); this.form.markAsDirty();
   }
   protected moveStep(index: number, delta: number): void {
@@ -161,35 +163,36 @@ export class LaminationJobFormComponent implements OnDestroy {
     this.plates(stepIndex).setControl(TYPES.indexOf('Bottom'), this.createPlate('Bottom', top)); this.form.markAsDirty();
   }
   protected copyTopAll(): void { this.steps.controls.forEach((_, i) => this.copyTop(i)); }
-  protected syncTopBottomWidth(stepIndex: number): void { this.plate(stepIndex, 'Bottom').get('width')?.setValue(this.plate(stepIndex, 'Top').value.width); }
+  protected syncTopBottomWidth(stepIndex: number): void { this.plate(stepIndex, 'Bottom').get('width')?.setValue(this.plate(stepIndex, 'Top').getRawValue().width); }
 
   protected designChanged(): void {
-    if (this.form.value.designType === 'Simple') { while (this.steps.length > 1) this.steps.removeAt(this.steps.length - 1); this.form.patchValue({ numberOfSteps: 1, stepLapOrientation: 'NotApplicable' }); }
+    if (this.form.getRawValue().designType === 'Simple') { while (this.steps.length > 1) this.steps.removeAt(this.steps.length - 1); this.form.patchValue({ numberOfSteps: 1, stepLapOrientation: 'NotApplicable' }); }
     else { if (this.steps.length === 1) this.steps.push(this.createStep()); this.form.patchValue({ numberOfSteps: this.steps.length, stepLapOrientation: 'HorizontalAndVertical' }); }
     this.renumber();
   }
   protected generateSteps(): void {
-    if (this.form.value.designType === 'Simple') { this.form.controls.numberOfSteps.setValue(1); return; }
+    if (this.form.getRawValue().designType === 'Simple') { this.form.controls.numberOfSteps.setValue(1); return; }
     const requested = Math.max(2, Math.floor(+(this.form.controls.numberOfSteps.value ?? 2)));
     while (this.steps.length < requested) this.steps.push(this.createStep());
     while (this.steps.length > requested) this.steps.removeAt(this.steps.length - 1);
     this.renumber(); this.form.markAsDirty();
   }
-  protected stepValid(index: number): boolean { return this.steps.at(index).valid && this.plates(index).controls.every(p => p.valid); }
+  protected stepValid(index: number): boolean { return this.isReadOnly || (this.steps.at(index).valid && this.plates(index).controls.every(p => p.valid)); }
   protected stepStatus(index: number): 'Complete' | 'Incomplete' | 'Error' {
+    if(this.isReadOnly)return 'Complete';
     const step = this.steps.at(index); return step.valid ? 'Complete' : (step.dirty || this.saveAttempted()) ? 'Error' : 'Incomplete';
   }
   protected completedSteps(): number { return this.steps.controls.filter((_, i) => this.stepValid(i)).length; }
-  protected plateTotal(type: PlateType, field: 'quantity' | 'plannedWeight'): number { return this.steps.controls.reduce((sum, _, i) => sum + (+this.plate(i, type).value[field] || 0), 0); }
+  protected plateTotal(type: PlateType, field: 'quantity' | 'plannedWeight'): number { return this.steps.controls.reduce((sum, _, i) => sum + (+this.plate(i, type).getRawValue()[field] || 0), 0); }
   protected totalPieces(): number { return TYPES.reduce((sum, type) => sum + this.plateTotal(type, 'quantity'), 0); }
   protected totalWeight(): number { return TYPES.reduce((sum, type) => sum + this.plateTotal(type, 'plannedWeight'), 0); }
-  protected totalStackQuantity(): number { return this.steps.controls.reduce((sum, step) => sum + (+step.value.stackQuantity || 0), 0); }
-  protected uniqueWidths(): number { return new Set(this.steps.controls.flatMap((_, i) => TYPES.map(t => +this.plate(i, t).value.width).filter(Boolean))).size; }
+  protected totalStackQuantity(): number { return this.steps.controls.reduce((sum, step) => sum + (+step.getRawValue().stackQuantity || 0), 0); }
+  protected uniqueWidths(): number { return new Set(this.steps.controls.flatMap((_, i) => TYPES.map(t => +this.plate(i, t).getRawValue().width).filter(Boolean))).size; }
   protected warningCount(): number { return this.steps.controls.filter((_, i) => !this.stepValid(i)).length + (this.steps.hasError('duplicateStepNumbers') ? 1 : 0); }
 
   protected selectStep(index: number): void { this.selectedStep.set(index); }
   protected selectedValid(): boolean { return this.selectedStep() >= 0 && this.selectedStep() < this.steps.length; }
-  protected canAddStep(): boolean { return this.form.value.designType !== 'Simple' && this.steps.length < 12; }
+  protected canAddStep(): boolean { return this.form.getRawValue().designType !== 'Simple' && this.steps.length < 12; }
   protected duplicateSelected(): void { if (this.selectedValid()) { this.duplicateStep(this.selectedStep()); this.selectedStep.set(this.steps.length - 1); } }
   protected deleteSelected(): void { if (this.selectedValid()) { this.removeStep(this.selectedStep()); this.selectedStep.set(Math.max(0, Math.min(this.selectedStep(), this.steps.length - 1))); } }
   protected toggleDimensions(tab: number, step: number): void { const open=this.expandedRow(); this.expandedRow.set(open?.tab===tab&&open.step===step?null:{tab,step}); }
@@ -200,7 +203,7 @@ export class LaminationJobFormComponent implements OnDestroy {
   protected expandAll(): void { this.expandedSteps.set(this.steps.controls.map((_,index)=>index)); }
   protected collapseAll(): void { this.expandedSteps.set([]); }
   protected dimensionValue(step: number,type: PlateType,code: string): number|null { const value=this.dimension(step,type,code)?.value; return value===null||value===''||value===undefined?null:+value; }
-  protected centerQuantity(index: number): number { return +this.steps.at(index).value.stackQuantity||0; }
+  protected centerQuantity(index: number): number { return +this.steps.at(index).getRawValue().stackQuantity||0; }
   protected sidePieces(): number { return this.steps.controls.reduce((sum,_,i)=>sum+this.sideTotalQuantity(i),0); }
   protected centerPieces(): number { return this.steps.controls.reduce((sum,_,i)=>sum+this.centerQuantity(i),0); }
 
@@ -210,24 +213,25 @@ export class LaminationJobFormComponent implements OnDestroy {
     return control.invalid && control.value !== null && control.value !== '';
   }
   protected plateRowStatus(index: number, tab: number): 'Complete'|'Incomplete'|'Error' {
+    if(this.isReadOnly)return 'Complete';
     const step=this.steps.at(index); const controls=[step.get('stackQuantity')!,...this.relevantPlates(index,tab)];
     if (controls.every(control=>control.valid)) return 'Complete';
     return controls.some(control=>this.hasEnteredInvalid(control)) ? 'Error' : 'Incomplete';
   }
   protected tabStatus(tab: number): 'Complete'|'Incomplete'|'Error' {
-    if (this.steps.length !== +(this.form.value.numberOfSteps ?? 0)) return 'Error';
+    if (this.steps.length !== +(this.form.getRawValue().numberOfSteps ?? 0)) return 'Error';
     const states=this.steps.controls.map((_,index)=>this.plateRowStatus(index,tab));
     return states.every(state=>state==='Complete') ? 'Complete' : states.some(state=>state==='Error') ? 'Error' : 'Incomplete';
   }
   protected statusIcon(status: string): string { return status==='Complete'?'check_circle':status==='Error'?'error':'warning'; }
 
   protected syncTopBottom(index: number): void {
-    const top=this.plate(index,'Top'); const bottom=this.plate(index,'Bottom'); const quantity=+(this.steps.at(index).value.stackQuantity??0);
+    const top=this.plate(index,'Top'); const bottom=this.plate(index,'Bottom'); const quantity=+(this.steps.at(index).getRawValue().stackQuantity??0);
     top.get('quantity')?.setValue(quantity,{emitEvent:false});
     bottom.patchValue({width:top.value.width,length:top.value.length,plannedWeight:top.value.plannedWeight,quantity},{emitEvent:false});
   }
   protected syncStackQuantity(index: number): void {
-    this.syncTopBottom(index); const stack=+(this.steps.at(index).value.stackQuantity??0);
+    this.syncTopBottom(index); const stack=+(this.steps.at(index).getRawValue().stackQuantity??0);
     this.plate(index,'Side').get('quantity')?.setValue(stack * 2,{emitEvent:false});
     this.plate(index,'Center').get('quantity')?.setValue(stack,{emitEvent:false});
   }
@@ -268,10 +272,10 @@ export class LaminationJobFormComponent implements OnDestroy {
     this.weightRevision();
     return +(this.steps.at(index).get('plannedWeight')?.value ?? 0);
   }
-  protected sideTotalQuantity(index: number): number { return (+this.steps.at(index).value.stackQuantity||0)*2; }
-  protected topBottomQuantity(index: number): number { return (+this.steps.at(index).value.stackQuantity||0)*2; }
-  protected topBottomWeight(index: number): number { return (+this.plate(index,'Top').value.plannedWeight||0)*2; }
-  protected topBottomWeightPerType(): number { return this.steps.controls.reduce((sum,_,i)=>sum+(+this.plate(i,'Top').value.plannedWeight||0),0); }
+  protected sideTotalQuantity(index: number): number { return (+this.steps.at(index).getRawValue().stackQuantity||0)*2; }
+  protected topBottomQuantity(index: number): number { return (+this.steps.at(index).getRawValue().stackQuantity||0)*2; }
+  protected topBottomWeight(index: number): number { return (+this.plate(index,'Top').getRawValue().plannedWeight||0)*2; }
+  protected topBottomWeightPerType(): number { return this.steps.controls.reduce((sum,_,i)=>sum+(+this.plate(i,'Top').getRawValue().plannedWeight||0),0); }
   protected topBottomPieces(): number { return this.steps.controls.reduce((sum,_,i)=>sum+this.topBottomQuantity(i),0); }
   protected allocationPercentage(): number { const required=this.totalWeight(); return required?Math.min(100,(this.allocatedWeight()/required)*100):0; }
   protected allocationStatus(): 'Pending'|'Partial'|'Complete' { const p=this.allocationPercentage(); return p>=100?'Complete':p>0?'Partial':'Pending'; }
@@ -289,8 +293,9 @@ export class LaminationJobFormComponent implements OnDestroy {
 
   protected saveAndRelease(): void { this.save(false, true); }
   protected save(allocateAfterSave = false, releaseAfterSave = false): void {
+    if(this.isReadOnly)return;
     this.saveAttempted.set(true); this.form.markAllAsTouched();
-    if (this.form.invalid || this.steps.length !== +(this.form.value.numberOfSteps ?? 0)) { this.handleInvalidSave(); return; }
+    if (this.form.invalid || this.steps.length !== +(this.form.getRawValue().numberOfSteps ?? 0)) { this.handleInvalidSave(); return; }
     this.saving.set(true);
     this.steps.controls.forEach((_,index)=>this.syncStackQuantity(index));
     const raw = this.form.getRawValue();
@@ -391,7 +396,7 @@ export class LaminationJobFormComponent implements OnDestroy {
     this.number.set(job.laminationJobNumber); this.allocatedWeight.set(job.totalAllocatedWeight ?? 0); this.drawingAttachmentName.set(job.drawingAttachmentName ?? null); this.steps.clear();
     job.steps.forEach(step => this.steps.push(this.createStep({ ...step, plates: step.plates.map(plate => ({ ...plate, plateType: this.plateTypeFormValue(plate.plateType) })) })));
     this.steps.controls.forEach((_,index)=>this.syncStackQuantity(index));
-    this.form.patchValue({ ...job, designType: this.designTypeFormValue(job.designType), stepLapOrientation: this.orientationFormValue(job.stepLapOrientation), customerCategory: job.category, plannedDate: this.fromApiDate(job.plannedDate), requiredDate: this.fromApiDate(job.requiredDate) } as any); this.form.markAsPristine(); this.loaded.set(true);
+    this.form.patchValue({ ...job, designType: this.designTypeFormValue(job.designType), stepLapOrientation: this.orientationFormValue(job.stepLapOrientation), customerCategory: job.category, plannedDate: this.fromApiDate(job.plannedDate), requiredDate: this.fromApiDate(job.requiredDate) } as any); this.form.markAsPristine(); if(this.isReadOnly)this.form.disable({emitEvent:false}); this.loaded.set(true);
   }
   private fromApiDate(value?: string): Date | null { if (!value) return null; const [year,month,day]=value.slice(0,10).split('-').map(Number); return new Date(year,month-1,day); }
   private toApiDate(value: Date | string | null | undefined): string | null { if (!value) return null; if (typeof value==='string') return value.slice(0,10); const year=value.getFullYear(); const month=`${value.getMonth()+1}`.padStart(2,'0'); const day=`${value.getDate()}`.padStart(2,'0'); return `${year}-${month}-${day}`; }
