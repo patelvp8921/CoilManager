@@ -1,5 +1,6 @@
 namespace CoilManager.Application.DTOs.Dashboard;
 using CoilManager.Application.DTOs.WorkOrders;
+using CoilManager.Application.DTOs.LaminationJobs;
 
 public sealed record OperationsDashboardDto(
     string DashboardRole,
@@ -11,6 +12,7 @@ public sealed record OperationsDashboardDto(
     SlittingSummaryDto Slitting,
     SlittingJobMetricsDto SlittingJobMetrics,
     IReadOnlyList<ProductionQueueItemDto> ProductionQueue,
+    IReadOnlyList<LaminationQueueItemDto> LaminationProductionQueue,
     QualitySummaryDto Quality,
     ProcurementSummaryDto Procurement,
     DispatchSummaryDto Dispatch,
@@ -24,16 +26,30 @@ public sealed record DashboardKpiDto(
     string Value,
     string Icon,
     string Tone,
-    string? Hint = null);
+    string? Hint = null,
+    IReadOnlyList<DashboardKpiDetailDto>? Details = null);
+
+public sealed record DashboardKpiDetailDto(
+    string Label,
+    string Count,
+    string? Weight = null);
 
 public sealed record InventorySummaryDto(
     int TotalMotherCoils,
     int AvailableMotherCoils,
+    int ConsumedMotherCoils,
     int ReservedMotherCoils,
     int HoldMotherCoils,
     int RejectedMotherCoils,
     decimal TotalWeight,
     decimal AvailableWeight,
+    int TotalSlitCoils,
+    int AvailableSlitCoils,
+    int ConsumedSlitCoils,
+    int InProcessSlitCoils,
+    decimal TotalSlitWeight,
+    decimal AvailableSlitWeight,
+    IReadOnlyList<InventoryBreakdownDto> SlitGradeWiseStock,
     IReadOnlyList<InventoryBreakdownDto> GradeWiseStock,
     IReadOnlyList<InventoryBreakdownDto> SupplierWiseStock,
     IReadOnlyList<RecentMotherCoilDto> RecentReceivedCoils);

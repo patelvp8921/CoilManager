@@ -16,6 +16,7 @@ import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
+import { DashboardService } from '../../../dashboard/services/dashboard.service';
 import { DeleteConfirmDialogComponent } from '../../components/delete-confirm-dialog/delete-confirm-dialog.component';
 import { COIL_STATUS_OPTIONS, CoilStatus, RawCoil, statusLabel } from '../../models/raw-coil.model';
 import { RawCoilQuery } from '../../models/raw-coil-query.model';
@@ -70,12 +71,14 @@ export class RawCoilListPageComponent implements OnInit {
   protected readonly statusControl = new FormControl<CoilStatus | null>(null);
 
   protected readonly rawCoils = signal<readonly RawCoil[]>([]);
+  protected readonly totalWeight = signal(0);
   protected readonly totalCount = signal(0);
   protected readonly pageSize = signal(25);
   protected readonly pageIndex = signal(0);
   protected readonly isLoading = signal(false);
 
   private readonly rawCoilService = inject(RawCoilService);
+  private readonly dashboardService = inject(DashboardService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
 
@@ -142,6 +145,7 @@ export class RawCoilListPageComponent implements OnInit {
   }
 
   protected loadRawCoils(sort: Sort | null = this.sort ?? null): void {
+    this.loadInventoryTotal();
     const query: RawCoilQuery = {
       page: this.pageIndex() + 1,
       pageSize: this.pageSize(),
@@ -164,6 +168,13 @@ export class RawCoilListPageComponent implements OnInit {
         },
         error: (error: HttpErrorResponse) => this.showError(error),
       });
+  }
+
+  private loadInventoryTotal(): void {
+    this.dashboardService.getOperationsDashboard().subscribe({
+      next: (dashboard) => this.totalWeight.set(dashboard.inventory.totalWeight),
+      error: (error: HttpErrorResponse) => this.showError(error),
+    });
   }
 
   private showError(error: HttpErrorResponse): void {

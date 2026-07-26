@@ -1,6 +1,6 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,13 +8,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
-import { DispatchSummaryComponent } from '../../components/dispatch-summary/dispatch-summary.component';
 import { InventorySummaryComponent } from '../../components/inventory-summary/inventory-summary.component';
 import { KpiCardGridComponent } from '../../components/kpi-card-grid/kpi-card-grid.component';
-import { ProcurementSummaryComponent } from '../../components/procurement-summary/procurement-summary.component';
 import { ProductionSummaryComponent } from '../../components/production-summary/production-summary.component';
-import { QualitySummaryComponent } from '../../components/quality-summary/quality-summary.component';
-import { SlittingSummaryComponent } from '../../components/slitting-summary/slitting-summary.component';
+import { OperationalAlertsComponent } from '../../components/operational-alerts/operational-alerts.component';
 import { OperationsDashboard } from '../../models/operations-dashboard.model';
 import { DashboardService } from '../../services/dashboard.service';
 
@@ -29,18 +26,17 @@ import { DashboardService } from '../../services/dashboard.service';
     RouterLink,
     DatePipe,
     DecimalPipe,
-    DispatchSummaryComponent,
     InventorySummaryComponent,
     KpiCardGridComponent,
-    ProcurementSummaryComponent,
     ProductionSummaryComponent,
-    QualitySummaryComponent,
-    SlittingSummaryComponent,
+    OperationalAlertsComponent,
   ],
   templateUrl: './operations-dashboard.component.html',
   styleUrl: './operations-dashboard.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperationsDashboardComponent implements OnInit {
+  protected readonly laminationStatusLabels = ['Draft', 'Allocated', 'Released', 'In Progress', 'Completed', 'Cancelled'] as const;
   protected readonly dashboard = signal<OperationsDashboard | null>(null);
   protected readonly isLoading = signal(false);
   protected readonly error = signal('');

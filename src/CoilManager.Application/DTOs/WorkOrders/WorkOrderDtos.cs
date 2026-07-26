@@ -58,7 +58,7 @@ public sealed record AvailableCoilDto(Guid Id, CoilType CoilType, string CoilNum
 
 public sealed record WorkOrderSlittingJobDto(Guid Id, string SlittingJobNumber, SlittingJobStatus Status);
 
-public sealed record WorkOrderMetricsDto(int Draft, int Released, int InProduction, int CompletedToday,
+public sealed record WorkOrderMetricsDto(int Draft, int Released, int InProduction, int CompletedToday, int Completed,
     int Overdue, int CustomerWorkOrders, int InventoryProductionWorkOrders, IReadOnlyList<WorkOrderQueueItemDto> Queue);
 public sealed record WorkOrderQueueItemDto(Guid Id, string WorkOrderNumber, WorkOrderProductType ProductType,
     DateOnly? RequiredDate, int Priority, WorkOrderStatus Status, decimal AllocationPercentage, decimal OperationProgress);

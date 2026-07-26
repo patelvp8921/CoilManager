@@ -8,7 +8,8 @@
       @if (dashboard(); as headerData) {
         <div class="header-metrics">
           <span><strong>{{ headerData.inventory.totalMotherCoils }}</strong> Mother Coils</span>
-          <span><strong>{{ headerData.inventory.totalWeight | number:'1.0-0' }}</strong> kg stock</span>
+          <span>Mother Coils - <strong>{{ headerData.inventory.totalWeight | number:'1.0-0' }} kg</strong></span>
+          <span>Slit Coils - <strong>{{ headerData.slitting.slitWeight | number:'1.0-0' }} kg</strong></span>
           <span>Updated {{ headerData.generatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
         </div>
       }
@@ -39,35 +40,21 @@
 
     <mat-card appearance="outlined" class="queue-panel">
       <header><div><h2>Work Order Metrics</h2><p>Live planning and production status.</p></div><div class="queue-metrics"><span><strong>{{data.workOrders.draft}}</strong> Draft</span><span><strong>{{data.workOrders.released}}</strong> Released</span><span><strong>{{data.workOrders.inProduction}}</strong> In Production</span><span><strong>{{data.workOrders.completedToday}}</strong> Completed Today</span><span><strong>{{data.workOrders.overdue}}</strong> Overdue</span><span><strong>{{data.workOrders.customerWorkOrders}}</strong> Customer</span><span><strong>{{data.workOrders.inventoryProductionWorkOrders}}</strong> Inventory</span></div></header>
-      @if(data.workOrders.queue.length){<div class="queue-list">@for(item of data.workOrders.queue;track item.id){<a class="queue-item" [routerLink]="['/work-orders',item.id]"><strong>{{item.workOrderNumber}}</strong><span>{{['Mother Coil','Slit Coil','Lamination','Core Frame'][item.productType]}}</span><span>{{item.requiredDate?(item.requiredDate|date:'dd/MM/yyyy'):'No required date'}}</span><span>P{{item.priority}}</span><span>{{item.allocationPercentage|number:'1.0-0'}}% allocated</span><span>{{item.operationProgress|number:'1.0-0'}}% operations</span></a>}</div>}@else{<div class="empty-queue"><mat-icon>assignment_turned_in</mat-icon><span>No released or in-production Work Orders.</span></div>}
+      @if(data.workOrders.queue.length){<div class="queue-list work-order-queue">@for(item of data.workOrders.queue;track item.id){<a class="queue-item" [routerLink]="['/work-orders',item.id]"><strong>{{item.workOrderNumber}}</strong><span>{{['Mother Coil','Slit Coil','Lamination','Core Frame'][item.productType]}}</span><span>{{item.requiredDate?(item.requiredDate|date:'dd/MM/yyyy'):'No required date'}}</span><span>P{{item.priority}}</span><span>{{item.allocationPercentage|number:'1.0-0'}}% allocated</span><span>{{item.operationProgress|number:'1.0-0'}}% operations</span></a>}</div>}@else{<div class="empty-queue"><mat-icon>assignment_turned_in</mat-icon><span>No released or in-production Work Orders.</span></div>}
     </mat-card>
 
-    <div class="dashboard-shell">
-      <main class="dashboard-main">
-        <section class="section-grid">
-          <app-inventory-summary [inventory]="data.inventory" />
-          <app-production-summary [production]="data.production" />
-          <app-slitting-summary [slitting]="data.slitting" />
-          <app-quality-summary [quality]="data.quality" />
-          <app-procurement-summary [procurement]="data.procurement" />
-          <app-dispatch-summary [dispatch]="data.dispatch" />
-        </section>
+    <mat-card appearance="outlined" class="queue-panel production-queue-panel">
+      <header>
+        <div>
+          <h2>Production Queue</h2>
+          <p>Live released and active Slitting and Lamination jobs.</p>
+        </div>
+      </header>
 
-        <mat-card appearance="outlined" class="queue-panel">
-          <header>
-            <div>
-              <h2>Production Queue</h2>
-              <p>Released jobs waiting to start and running slitting jobs.</p>
-            </div>
-            <div class="queue-metrics">
-              <span><strong>{{ data.slittingJobMetrics.releasedJobs }}</strong> Waiting</span>
-              <span><strong>{{ data.slittingJobMetrics.inProgressJobs }}</strong> Running</span>
-              <span><strong>{{ data.slittingJobMetrics.averageWaitingMinutes | number:'1.0-1' }}</strong> min avg wait</span>
-              <span><strong>{{ data.slittingJobMetrics.averageProcessingMinutes | number:'1.0-1' }}</strong> min avg run</span>
-            </div>
-          </header>
-
-          @if (data.productionQueue.length) {
+      @if (data.productionQueue.length || data.laminationProductionQueue.length) {
+        @if (data.productionQueue.length) {
+          <section class="process-queue" aria-labelledby="slitting-queue-title">
+            <h3 id="slitting-queue-title"><mat-icon>precision_manufacturing</mat-icon> Slitting Jobs</h3>
             <div class="queue-list">
               @for (item of data.productionQueue; track item.slittingJobId) {
                 <a class="queue-item" [routerLink]="item.route">
@@ -81,13 +68,52 @@
                 </a>
               }
             </div>
-          } @else {
-            <div class="empty-queue">
-              <mat-icon>playlist_add_check</mat-icon>
-              <span>No released or running slitting jobs.</span>
+          </section>
+        }
+
+        @if (data.laminationProductionQueue.length) {
+          <section class="process-queue" aria-labelledby="lamination-queue-title">
+            <h3 id="lamination-queue-title"><mat-icon>layers</mat-icon> Lamination Jobs</h3>
+            <div class="queue-list">
+              @for (item of data.laminationProductionQueue; track item.id) {
+                <a class="queue-item lamination-queue-item" [routerLink]="item.status === 2 ? ['/lamination-jobs', item.id, 'material-allocation'] : ['/lamination-jobs', item.id, 'complete']">
+                  <span class="queue-status" [class.running]="item.status === 1 || item.status === 3">{{ laminationStatusLabels[item.status] }}</span>
+                  <strong>{{ item.jobNumber }}</strong>
+                  <span>{{ item.drawingNumber || 'No drawing number' }}</span>
+                  <span>Planned {{ item.plannedDate | date:'dd/MM/yyyy' }}</span>
+                  <span>{{ item.machine || 'Machine not assigned' }}</span>
+                  <span>{{ item.allocationPercentage | number:'1.0-0' }}% allocated</span>
+                  <span>{{ item.shift || '-' }}</span>
+                </a>
+              }
             </div>
-          }
-        </mat-card>
+          </section>
+        }
+      } @else {
+        <div class="empty-queue">
+          <mat-icon>playlist_add_check</mat-icon>
+          <span>No released or active Slitting or Lamination jobs.</span>
+        </div>
+      }
+    </mat-card>
+
+    <div class="dashboard-shell">
+      <main class="dashboard-main">
+        <header class="content-heading"><div><span>Live overview</span><h2>Manufacturing health</h2><p>Current inventory, production, quality, procurement, and dispatch indicators.</p></div></header>
+        <section class="section-grid">
+          <app-inventory-summary [inventory]="data.inventory" />
+          <app-production-summary [workOrders]="data.workOrders" [slittingJobs]="data.slittingJobMetrics" [kpis]="data.kpis" [dispatch]="data.dispatch" />
+        </section>
+
+
+        <section class="live-section" aria-labelledby="operational-alerts-title">
+          <header class="content-heading">
+            <div><span>Live updates</span><h2 id="operational-alerts-title">Operational attention</h2><p>Actionable items requiring immediate attention.</p></div>
+          </header>
+          <div class="live-details-grid">
+            <app-operational-alerts />
+          </div>
+        </section>
       </main>
     </div>
   }

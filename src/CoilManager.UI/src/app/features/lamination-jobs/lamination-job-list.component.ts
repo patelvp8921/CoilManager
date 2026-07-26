@@ -2,7 +2,7 @@ import { DatePipe, DecimalPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -30,8 +30,8 @@ export class LaminationJobListComponent implements OnInit {
   @ViewChild(MatPaginator) private paginator?: MatPaginator;
 
   protected readonly statusOptions = [
-    { value: 0, label: 'Draft' }, { value: 2, label: 'Released' }, { value: 1, label: 'In Progress' },
-    { value: 4, label: 'Completed' }, { value: 5, label: 'Cancelled' },
+    { value: 0, label: 'Draft' }, { value: 2, label: 'Released' }, { value: 1, label: 'Allocated' },
+    { value: 3, label: 'In Progress' }, { value: 4, label: 'Completed' }, { value: 5, label: 'Cancelled' },
   ];
   protected readonly displayedColumns = ['number','date','requiredDate','reference','rating','design','grade','weight','status','actions'];
   protected readonly searchControl = new FormControl('', { nonNullable: true });
@@ -43,11 +43,18 @@ export class LaminationJobListComponent implements OnInit {
   protected readonly isLoading = signal(false);
 
   private readonly api = inject(LaminationJobService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
 
-  ngOnInit(): void { this.loadJobs(); }
-  protected applyFilters(): void { this.pageIndex.set(0); this.paginator?.firstPage(); this.loadJobs(); }
-  protected resetFilters(): void { this.searchControl.reset(''); this.statusControl.reset(null); this.pageIndex.set(0); this.paginator?.firstPage(); this.loadJobs(); }
+  ngOnInit(): void {
+    const rawStatus = this.route.snapshot.queryParamMap.get('status');
+    const status = rawStatus === null ? null : Number(rawStatus);
+    if (status !== null && [0, 1, 2, 3, 4, 5].includes(status)) this.statusControl.setValue(status);
+    this.loadJobs();
+  }
+  protected applyFilters(): void { this.syncStatusQuery(); this.pageIndex.set(0); this.paginator?.firstPage(); this.loadJobs(); }
+  protected resetFilters(): void { this.searchControl.reset(''); this.statusControl.reset(null); this.syncStatusQuery(); this.pageIndex.set(0); this.paginator?.firstPage(); this.loadJobs(); }
   protected onPageChange(event: PageEvent): void { this.pageIndex.set(event.pageIndex); this.pageSize.set(event.pageSize); this.loadJobs(); }
   protected statusName(value: unknown): string { return typeof value==='number' ? ['Draft','In Progress','Released','Legacy In Progress','Completed','Cancelled'][value] ?? 'Unknown' : `${value}`.replace('InProgress','In Progress'); }
   protected statusClass(value: unknown): string { return this.statusName(value).toLowerCase().replace(' ','-'); }
@@ -66,5 +73,6 @@ export class LaminationJobListComponent implements OnInit {
       error:error=>this.showError(error),
     });
   }
+  private syncStatusQuery():void { void this.router.navigate([], { relativeTo:this.route, queryParams:{status:this.statusControl.value}, queryParamsHandling:'merge', replaceUrl:true }); }
   private showError(error:HttpErrorResponse):void { this.snackBar.open(error.error?.errors?.join('\n')||error.error?.message||error.message||'Request failed.','Close',{duration:6000}); }
 }

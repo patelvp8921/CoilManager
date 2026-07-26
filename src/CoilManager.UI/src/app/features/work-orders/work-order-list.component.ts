@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { productLabels, statusLabels, typeLabels, WorkOrderListItem } from './work-order.model';
 import { WorkOrderService } from './work-order.service';
 
@@ -44,8 +44,19 @@ export class WorkOrderListComponent implements OnInit {
   protected readonly product = new FormControl<number | null>(null);
   protected readonly status = new FormControl<number | null>(null);
   private readonly service = inject(WorkOrderService);
+  private readonly route = inject(ActivatedRoute);
 
-  ngOnInit(): void { this.load(); }
+  ngOnInit(): void {
+    this.status.setValue(this.statusFromQuery());
+    this.load();
+  }
+
+  private statusFromQuery(): number | null {
+    const rawStatus = this.route.snapshot.queryParamMap.get('status');
+    if (rawStatus === null) return null;
+    const value = Number(rawStatus);
+    return Number.isInteger(value) && value >= 0 && value < this.statusLabels.length ? value : null;
+  }
 
   protected load(): void {
     this.service.list({

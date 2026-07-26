@@ -1,0 +1,36 @@
+<mat-card appearance="outlined" class="alerts-card">
+  <mat-card-header>
+    <div class="widget-heading">
+      <mat-icon>notification_important</mat-icon>
+      <div>
+        <mat-card-title>Operational Alerts</mat-card-title>
+        <mat-card-subtitle>Items requiring immediate attention</mat-card-subtitle>
+      </div>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (visibleAlerts().length) {
+      <div class="alert-list" role="list">
+        @for (alert of visibleAlerts(); track alert.id) {
+          <button type="button" class="alert-row" [class]="alert.severity" role="listitem"
+            [attr.aria-label]="alert.ariaLabel"
+            matRipple (click)="openAlert(alert)">
+            <mat-icon class="severity-icon">{{ severityIcon(alert.severity) }}</mat-icon>
+            <div class="alert-copy">
+              <strong>{{ alert.title }}</strong>
+              <p>{{ alert.description }}</p>
+              <small>{{ alert.relativeTime }}</small>
+            </div>
+            <mat-icon class="chevron">chevron_right</mat-icon>
+          </button>
+        }
+      </div>
+    } @else {
+      <section class="empty-state" aria-live="polite">
+        <mat-icon>check_circle</mat-icon>
+        <div><strong>No Operational Alerts</strong><p>All manufacturing processes are operating normally.</p></div>
+      </section>
+    }
+  </mat-card-content>
+</mat-card>

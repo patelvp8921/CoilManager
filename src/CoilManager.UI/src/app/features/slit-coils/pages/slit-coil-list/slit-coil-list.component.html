@@ -6,6 +6,11 @@
 </section>
 
 <section class="slit-coil-page">
+  <div class="weight-summary" aria-live="polite">
+    <span class="weight-summary__label">Total Inventory Weight</span>
+    <strong class="weight-summary__value">{{ totalWeight() | number:'1.3-3' }} kg</strong>
+  </div>
+
   <mat-card appearance="outlined" class="filter-panel">
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
       <mat-label>Search</mat-label>
@@ -43,7 +48,7 @@
       <table mat-table matSort [dataSource]="slitCoils()" (matSortChange)="onSortChange($event)">
         <ng-container matColumnDef="coilNumber">
           <th mat-header-cell *matHeaderCellDef mat-sort-header="coilNumber">Slit Coil Number</th>
-          <td mat-cell *matCellDef="let row"><a [routerLink]="['/slit-coils', row.id]">{{ row.coilNumber }}</a></td>
+          <td mat-cell *matCellDef="let row"><a class="coil-link" [routerLink]="['/slit-coils', row.id]">{{ row.coilNumber }}</a></td>
         </ng-container>
         <ng-container matColumnDef="category"><th mat-header-cell *matHeaderCellDef>Category</th><td mat-cell *matCellDef="let row">{{ row.category || '-' }}</td></ng-container>
         <ng-container matColumnDef="motherCoilNumber">
@@ -73,7 +78,18 @@
         </ng-container>
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef mat-sort-header="status">Status</th>
-          <td mat-cell *matCellDef="let row">{{ labelForStatus(row.status) }}</td>
+          <td mat-cell *matCellDef="let row">
+            <span
+              class="status-pill"
+              [class.on-hold]="row.status === CoilStatus.Reserved || row.status === CoilStatus.OnHold"
+              [class.scrapped]="row.status === CoilStatus.Rejected"
+              [class.in-process]="row.status === CoilStatus.InProcess"
+              [class.consumed]="row.status === CoilStatus.Consumed"
+              [class.dispatched]="row.status === CoilStatus.Dispatched"
+            >
+              {{ labelForStatus(row.status) }}
+            </span>
+          </td>
         </ng-container>
         <ng-container matColumnDef="warehouseLocation">
           <th mat-header-cell *matHeaderCellDef>Warehouse</th>
@@ -100,6 +116,7 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
     </div>
+
 
     <mat-paginator
       [length]="totalCount()"

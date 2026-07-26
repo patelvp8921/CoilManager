@@ -8,6 +8,7 @@ export interface OperationsDashboard {
   slitting: SlittingSummary;
   slittingJobMetrics: SlittingJobMetrics;
   productionQueue: readonly ProductionQueueItem[];
+  laminationProductionQueue: readonly LaminationProductionQueueItem[];
   quality: QualitySummary;
   procurement: ProcurementSummary;
   dispatch: DispatchSummary;
@@ -17,7 +18,7 @@ export interface OperationsDashboard {
   notifications: readonly DashboardNotification[];
 }
 
-export interface WorkOrderMetrics { draft: number; released: number; inProduction: number; completedToday: number; overdue: number; customerWorkOrders: number; inventoryProductionWorkOrders: number; queue: readonly WorkOrderQueueItem[]; }
+export interface WorkOrderMetrics { draft: number; released: number; inProduction: number; completedToday: number; completed: number; overdue: number; customerWorkOrders: number; inventoryProductionWorkOrders: number; queue: readonly WorkOrderQueueItem[]; }
 export interface WorkOrderQueueItem { id: string; workOrderNumber: string; productType: number; requiredDate?: string | null; priority: number; status: number; allocationPercentage: number; operationProgress: number; }
 
 export interface DashboardKpi {
@@ -26,16 +27,31 @@ export interface DashboardKpi {
   icon: string;
   tone: string;
   hint?: string | null;
+  details?: readonly DashboardKpiDetail[] | null;
+}
+
+export interface DashboardKpiDetail {
+  label: string;
+  count: string;
+  weight?: string | null;
 }
 
 export interface InventorySummary {
   totalMotherCoils: number;
   availableMotherCoils: number;
+  consumedMotherCoils?: number;
   reservedMotherCoils: number;
   holdMotherCoils: number;
   rejectedMotherCoils: number;
   totalWeight: number;
   availableWeight: number;
+  totalSlitCoils: number;
+  availableSlitCoils: number;
+  consumedSlitCoils: number;
+  inProcessSlitCoils: number;
+  totalSlitWeight: number;
+  availableSlitWeight: number;
+  slitGradeWiseStock: readonly InventoryBreakdown[];
   gradeWiseStock: readonly InventoryBreakdown[];
   supplierWiseStock: readonly InventoryBreakdown[];
   recentReceivedCoils: readonly RecentMotherCoil[];
@@ -95,6 +111,17 @@ export interface ProductionQueueItem {
   route: string;
 }
 
+export interface LaminationProductionQueueItem {
+  id: string;
+  jobNumber: string;
+  drawingNumber?: string | null;
+  rating: string;
+  status: number;
+  allocationPercentage: number;
+  plannedDate: string;
+  machine?: string | null;
+  shift?: string | null;
+}
 export interface QualitySummary {
   pendingQa: number;
   holdCoils: number;

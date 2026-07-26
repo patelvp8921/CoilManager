@@ -1,14 +1,29 @@
-<mat-card appearance="outlined" class="panel-card">
+<mat-card appearance="outlined" class="panel-card activity-launcher">
   <mat-card-header>
     <mat-card-title><mat-icon>history</mat-icon>Recent Activities</mat-card-title>
+    <button type="button" class="activity-trigger" aria-label="View all recent activities" (click)="activityDialog.showModal()">
+      <mat-icon>open_in_new</mat-icon>
+    </button>
   </mat-card-header>
-  <mat-card-content>
+</mat-card>
+
+<dialog #activityDialog class="activity-dialog" aria-labelledby="activity-dialog-title">
+  <header>
+    <div>
+      <span>Activity history</span>
+      <h2 id="activity-dialog-title">Recent Activities</h2>
+    </div>
+    <button type="button" class="close-button" aria-label="Close recent activities" (click)="activityDialog.close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+  <section class="activity-list">
     @for (activity of activities; track activity.title + activity.timestamp) {
       <article>
         <span class="activity-icon"><mat-icon>{{ activity.icon }}</mat-icon></span>
         <div>
           @if (activity.route) {
-            <a [routerLink]="activity.route">{{ activity.title }}</a>
+            <a [routerLink]="activity.route" (click)="activityDialog.close()">{{ activity.title }}</a>
           } @else {
             <strong>{{ activity.title }}</strong>
           }
@@ -16,6 +31,8 @@
           <small>{{ activity.timestamp | date:'dd/MM/yyyy HH:mm' }}</small>
         </div>
       </article>
+    } @empty {
+      <p class="empty-state">No recent activities to display.</p>
     }
-  </mat-card-content>
-</mat-card>
+  </section>
+</dialog>

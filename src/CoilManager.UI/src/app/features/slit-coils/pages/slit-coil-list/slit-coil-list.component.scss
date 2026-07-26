@@ -48,6 +48,52 @@ table {
 }
 
 
+.coil-link {
+  color: #005eef;
+  text-decoration: none;
+}
+
+.status-pill {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  border: 1px solid #c9f0d8;
+  border-radius: 5px;
+  padding: 0 10px;
+  background: #ebfbf1;
+  color: #0a9d47;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-pill.on-hold { border-color: #ffdfac; background: #fff7e8; color: #d97706; }
+.status-pill.scrapped { border-color: #ffc9c9; background: #fff0f0; color: #dc2626; }
+.status-pill.in-process,
+.status-pill.dispatched { border-color: #bfdbfe; background: #eff6ff; color: #1d4ed8; }
+.status-pill.consumed { border-color: #d1d5db; background: #f3f4f6; color: #4b5563; }
+
+.weight-summary {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: fit-content;
+  margin-left: auto;
+  gap: 12px;
+  border: 1px solid #cfe0f7;
+  border-radius: 8px;
+  padding: 10px 14px;
+  background: #f0f6ff;
+}
+
+.weight-summary__label { color: #475467; font-size: 13px; font-weight: 600; }
+.weight-summary__value {
+  border-radius: 6px;
+  padding: 7px 12px;
+  background: #005eef;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+}
 @media (max-width: 1280px) {
   .filter-panel {
     grid-template-columns: repeat(3, minmax(180px, 1fr));

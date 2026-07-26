@@ -15,6 +15,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
+import { DashboardService } from '../../../dashboard/services/dashboard.service';
 import { CoilStatus, statusLabel } from '../../../raw-coil/models/raw-coil.model';
 import { SlitCoil, SlitCoilQuery } from '../../models/slit-coil.model';
 import { SlitCoilService } from '../../services/slit-coil.service';
@@ -61,6 +62,7 @@ export class SlitCoilListComponent implements OnInit {
     'createdOn',
     'actions',
   ];
+  protected readonly CoilStatus = CoilStatus;
   protected readonly statusOptions = [
     CoilStatus.Available,
     CoilStatus.Reserved,
@@ -76,12 +78,14 @@ export class SlitCoilListComponent implements OnInit {
   protected readonly widthFromControl = new FormControl<number | null>(null);
   protected readonly widthToControl = new FormControl<number | null>(null);
   protected readonly slitCoils = signal<readonly SlitCoil[]>([]);
+  protected readonly totalWeight = signal(0);
   protected readonly totalCount = signal(0);
   protected readonly pageSize = signal(25);
   protected readonly pageIndex = signal(0);
   protected readonly isLoading = signal(false);
 
   private readonly slitCoilService = inject(SlitCoilService);
+  private readonly dashboardService = inject(DashboardService);
   private readonly snackBar = inject(MatSnackBar);
 
   ngOnInit(): void {
@@ -119,7 +123,18 @@ export class SlitCoilListComponent implements OnInit {
     this.loadSlitCoils(sort);
   }
 
+  private loadInventoryTotal(): void {
+    this.dashboardService.getOperationsDashboard().subscribe({
+      next: (dashboard) => this.totalWeight.set(dashboard.inventory.totalSlitWeight),
+      error: (error: HttpErrorResponse) => {
+        const body = error.error as { message?: string; errors?: string[] } | null;
+        this.snackBar.open(body?.errors?.join('\\n') || body?.message || error.message, 'Close', { duration: 6000 });
+      },
+    });
+  }
+
   protected loadSlitCoils(sort: Sort | null = this.sort ?? null): void {
+    this.loadInventoryTotal();
     const query: SlitCoilQuery = {
       page: this.pageIndex() + 1,
       pageSize: this.pageSize(),

@@ -15,7 +15,9 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () =>
-          import('./features/dashboard/pages/operations-dashboard/operations-dashboard.component').then((component) => component.OperationsDashboardComponent),
+          import('./features/dashboard/pages/operations-dashboard/operations-dashboard.component').then(
+            (component) => component.OperationsDashboardComponent,
+          ),
         title: 'Dashboard | CoilManager',
       },
       {

@@ -19,7 +19,7 @@ public record ConfirmLaminationAllocationRequest(bool ShortageOverride=false,str
 public record ReleaseLaminationJobRequest(bool ShortageOverride=false,string? OverrideReason=null);
 public record AvailableSlitCoilDto(Guid Id,string CoilNumber,string? MotherCoilNumber,string Grade,decimal Thickness,string Category,decimal CoreLossPerKg,decimal Width,decimal CurrentWeight,decimal ReservedWeight,decimal AvailableWeight,string Status,string? WarehouseLocation,string? SlittingJobNumber,DateTimeOffset CreatedOn);
 public sealed record AvailableSlitCoilQueryRequest(string? Search=null,decimal? Width=null,string? Grade=null,decimal? Thickness=null,decimal? AvailableWeight=null,string? Warehouse=null,string? Status=null);
-public record LaminationMetricsDto(int Draft,int ReleasedAwaitingAllocation,int AllocatedReadyForCompletion,int CompletedToday,int MaterialShortage,int Cancelled,IReadOnlyList<LaminationQueueItemDto> Queue);
+public record LaminationMetricsDto(int Total,int Draft,int ReleasedAwaitingAllocation,int AllocatedReadyForCompletion,int InProgress,int Completed,int CompletedToday,int MaterialShortage,int Cancelled,IReadOnlyList<LaminationQueueItemDto> Queue);
 public record LaminationQueueItemDto(Guid Id,string JobNumber,string? DrawingNumber,string Rating,LaminationJobStatus Status,decimal AllocationPercentage,DateOnly PlannedDate,string? Machine,string? Shift);
 
 public record LaminationAllocationConsumptionRequest(Guid AllocationId,decimal ActualConsumedWeight,string? Remarks=null);

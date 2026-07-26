@@ -14,7 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import {
   SLITTING_JOB_STATUS_OPTIONS,
@@ -77,14 +77,20 @@ export class SlittingJobListPageComponent implements OnInit {
   protected readonly isLoading = signal(false);
 
   private readonly slittingJobService = inject(SlittingJobService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
 
   ngOnInit(): void {
+    const rawStatus = this.route.snapshot.queryParamMap.get('status');
+    const status = rawStatus === null ? null : Number(rawStatus);
+    if (this.statusOptions.some(option => option.value === status)) this.statusControl.setValue(status);
     this.loadSlittingJobs();
   }
 
   protected applyFilters(): void {
+    this.syncStatusQuery();
     this.pageIndex.set(0);
     this.paginator?.firstPage();
     this.loadSlittingJobs();
@@ -93,6 +99,7 @@ export class SlittingJobListPageComponent implements OnInit {
   protected resetFilters(): void {
     this.searchControl.reset('');
     this.statusControl.reset(null);
+    this.syncStatusQuery();
     this.pageIndex.set(0);
     this.sort?.sort({ id: '', start: 'asc', disableClear: false });
     this.paginator?.firstPage();
@@ -111,6 +118,14 @@ export class SlittingJobListPageComponent implements OnInit {
     this.loadSlittingJobs(sort);
   }
 
+  private syncStatusQuery(): void {
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { status: this.statusControl.value },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  }
   protected labelForStatus(status: SlittingJobStatus): string {
     return slittingJobStatusLabel(status);
   }

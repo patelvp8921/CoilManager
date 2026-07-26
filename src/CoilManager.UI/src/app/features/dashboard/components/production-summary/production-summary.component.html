@@ -1,12 +1,32 @@
-<mat-card appearance="outlined" class="summary-card">
+<mat-card appearance="outlined" class="summary-card production-summary-card">
   <mat-card-header>
-    <mat-card-title><mat-icon>factory</mat-icon>Production Summary</mat-card-title>
-    <mat-chip>{{ production.status }}</mat-chip>
+    <div class="widget-heading">
+      <mat-icon>factory</mat-icon>
+      <div>
+        <mat-card-title>Production Summary</mat-card-title>
+        <mat-card-subtitle>Current manufacturing execution status</mat-card-subtitle>
+      </div>
+    </div>
   </mat-card-header>
-  <mat-card-content class="metric-list">
-    <div><span>Work Orders</span><strong>{{ production.workOrders }}</strong></div>
-    <div><span>Finished Coils</span><strong>{{ production.finishedCoils }}</strong></div>
-    <div><span>Planned Weight</span><strong>{{ production.plannedWeight | number:'1.3-3' }}</strong></div>
-    <div><span>Produced Weight</span><strong>{{ production.producedWeight | number:'1.3-3' }}</strong></div>
+
+  <mat-card-content class="production-sections">
+    @for (area of displaySections(); track area.id) {
+      <section class="production-area" [attr.aria-labelledby]="'production-area-' + area.id">
+        <header>
+          <mat-icon>{{ area.icon }}</mat-icon>
+          <h3 [id]="'production-area-' + area.id">{{ area.title }}</h3>
+        </header>
+        <div class="status-grid">
+          @for (status of area.statuses; track status.label) {
+            <button type="button" class="status-metric" [class]="status.tone" [disabled]="!status.route"
+              [attr.aria-label]="area.title + ', ' + status.label + ': ' + status.value"
+              (click)="selectStatus(area, status)">
+              <span>{{ status.label }}</span>
+              <strong>{{ status.value }}</strong>
+            </button>
+          }
+        </div>
+      </section>
+    }
   </mat-card-content>
 </mat-card>

@@ -120,6 +120,7 @@ public sealed class WorkOrderService(IWorkOrderRepository repository, IUnitOfWor
         var rows = await repository.GetForDashboardAsync(cancellationToken); DateOnly today = DateOnly.FromDateTime(DateTime.UtcNow);
         return new(rows.Count(x => x.Status == WorkOrderStatus.Draft), rows.Count(x => x.Status == WorkOrderStatus.Released),
             rows.Count(x => x.Status == WorkOrderStatus.InProduction), rows.Count(x => x.Status == WorkOrderStatus.Completed && x.CompletedOn?.UtcDateTime.Date == DateTime.UtcNow.Date),
+            rows.Count(x => x.Status == WorkOrderStatus.Completed),
             rows.Count(x => x.RequiredDate < today && x.Status is not (WorkOrderStatus.Completed or WorkOrderStatus.Closed or WorkOrderStatus.Cancelled)),
             rows.Count(x => x.WorkOrderType == WorkOrderType.CustomerOrder), rows.Count(x => x.WorkOrderType == WorkOrderType.InventoryProduction),
             rows.Where(x => x.Status is WorkOrderStatus.Released or WorkOrderStatus.InProduction).OrderBy(x => x.RequiredDate).ThenByDescending(x => x.Priority)

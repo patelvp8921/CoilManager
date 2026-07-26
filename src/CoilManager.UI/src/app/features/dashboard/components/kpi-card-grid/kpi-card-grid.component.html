@@ -1,14 +1,50 @@
-<section class="kpi-grid">
+<div class="kpi-grid">
   @for (kpi of kpis; track kpi.label) {
     <mat-card appearance="outlined" class="kpi-card" [class]="kpi.tone">
       <mat-card-content>
-        <span class="kpi-icon"><mat-icon>{{ kpi.icon }}</mat-icon></span>
-        <span class="kpi-label">{{ kpi.label }}</span>
-        <strong>{{ kpi.value }}</strong>
-        @if (kpi.hint) {
-          <small>{{ kpi.hint }}</small>
+        <div class="kpi-heading">
+          <span class="kpi-icon"><mat-icon>{{ kpi.icon }}</mat-icon></span>
+          <span class="kpi-label">{{ displayLabel(kpi.label) }}</span>
+          <strong class="kpi-value">{{ kpi.value }}</strong>
+          @if (kpi.details?.length) {
+            <button type="button" class="kpi-info-trigger"
+              [attr.aria-label]="'Show ' + displayLabel(kpi.label) + ' details'"
+              [attr.aria-describedby]="'kpi-details-' + $index">
+              <mat-icon>info</mat-icon>
+            </button>
+          }
+        </div>
+
+        @if (kpi.details?.length) {
+          <div class="kpi-popover" [id]="'kpi-details-' + $index" role="tooltip">
+            <strong class="kpi-popover-title">{{ displayLabel(kpi.label) }} details</strong>
+            <div class="kpi-details" [class.count-only]="kpi.details[0].weight == null"
+                role="table" [attr.aria-label]="displayLabel(kpi.label) + ' summary'">
+                @if (kpi.details[0].weight != null) {
+                  <div class="kpi-detail-header" role="row">
+                    <span aria-hidden="true"></span>
+                    <span role="columnheader">Count</span>
+                    <span role="columnheader">Weight</span>
+                  </div>
+                }
+                @for (detail of kpi.details; track detail.label) {
+                  <div class="kpi-detail-row" role="row">
+                    <span role="rowheader">{{ detail.label }}</span>
+                    <span role="cell">{{ detail.count }}</span>
+                    @if (detail.weight != null) {
+                      <span role="cell">{{ detail.weight }}</span>
+                    }
+                  </div>
+                }
+              </div>
+          </div>
+        }
+        @if (footerText(kpi); as footer) {
+          <div class="kpi-secondary">{{ footer }}</div>
         }
       </mat-card-content>
     </mat-card>
   }
-</section>
+</div>
+
+

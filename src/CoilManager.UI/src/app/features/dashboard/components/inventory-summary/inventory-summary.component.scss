@@ -119,6 +119,27 @@ p {
   margin-top: 18px;
 }
 
+
+.inventory-overview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+}
+
+.inventory-group {
+  min-width: 0;
+  padding-right: 24px;
+}
+
+.inventory-group + .inventory-group {
+  padding-right: 0;
+  padding-left: 24px;
+  border-left: 2px solid #d8e1eb;
+}
+
+.inventory-group > h3 {
+  margin-bottom: 10px;
+}
 h3 {
   margin: 0 0 10px;
   color: #101828;
@@ -146,12 +167,105 @@ h3 {
 }
 
 @media (max-width: 760px) {
+  .inventory-overview,
   .status-grid,
   .breakdowns {
     grid-template-columns: 1fr;
   }
 
+
+  .inventory-group + .inventory-group {
+    padding-top: 18px;
+    padding-right: 0;
+    padding-left: 0;
+    border-top: 1px solid #e4e7ec;
+    border-left: 0;
+  }
   .breakdown-row {
     grid-template-columns: 1fr;
   }
+}
+.group-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.group-heading h3 { margin: 0; }
+
+.grade-button {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #b9d3f2;
+  border-radius: 7px;
+  padding: 0 10px;
+  background: #f5f9ff;
+  color: #0b63ce;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.grade-button:hover,
+.grade-button:focus-visible { background: #eaf2fc; }
+.grade-button:focus-visible { outline: 3px solid rgba(11, 99, 206, 0.2); outline-offset: 2px; }
+.grade-button mat-icon { width: 17px; height: 17px; font-size: 17px; }
+
+.grade-dialog {
+  width: min(720px, calc(100vw - 32px));
+  max-height: min(760px, calc(100vh - 48px));
+  margin: auto;
+  overflow: hidden;
+  border: 0;
+  border-radius: 12px;
+  padding: 0;
+  background: #ffffff;
+  color: #101828;
+  box-shadow: 0 24px 64px rgba(16, 24, 40, 0.28);
+}
+
+.grade-dialog::backdrop { background: rgba(16, 24, 40, 0.58); backdrop-filter: blur(2px); }
+.grade-dialog[open] { display: grid; grid-template-rows: auto minmax(0, auto) minmax(0, 1fr); }
+
+.grade-dialog > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid #e4e7ec;
+  padding: 18px 20px;
+  background: linear-gradient(135deg, #eef6ff, #f4fbfa);
+}
+
+.grade-dialog > header span { color: #0b63ce; font-size: 11px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
+.grade-dialog h2 { margin: 3px 0 0; font-size: 21px; line-height: 28px; }
+.close-button { display: grid; width: 36px; height: 36px; flex: 0 0 auto; place-items: center; border: 0; border-radius: 50%; background: #ffffff; color: #475467; cursor: pointer; }
+.close-button:hover, .close-button:focus-visible { background: #eaf2fc; color: #0b63ce; }
+
+.low-stock-section,
+.grade-stock-section { padding: 18px 20px; }
+.low-stock-section { border-bottom: 1px solid #f2c7c2; background: #fff8f7; }
+.grade-stock-section { min-height: 0; overflow: auto; }
+.dialog-section-heading { display: flex; align-items: start; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
+.dialog-section-heading h3 { display: flex; align-items: center; gap: 7px; margin: 0; color: #b42318; }
+.dialog-section-heading h3 mat-icon { width: 20px; height: 20px; font-size: 20px; }
+.dialog-section-heading p { margin: 3px 0 0; font-size: 12px; }
+.alert-count { display: grid; min-width: 30px; height: 30px; place-items: center; border-radius: 999px; background: #fee4e2; color: #b42318; font-weight: 800; }
+.grade-stock-section > h3 { margin-bottom: 12px; }
+.grade-list { display: grid; gap: 8px; max-height: 380px; overflow-y: auto; padding-right: 4px; }
+.grade-dialog .breakdown-row { margin: 0; }
+.low-stock-row { border-color: #fecdca; background: #ffffff; }
+.low-stock-row strong { color: #b42318; }
+.empty-state { margin: 0; border: 1px dashed #d0d5dd; border-radius: 8px; padding: 14px; background: #ffffff; }
+
+@media (max-width: 760px) {
+  .group-heading { align-items: flex-start; flex-direction: column; }
+  .grade-dialog { width: calc(100vw - 20px); max-height: calc(100vh - 20px); }
+  .grade-dialog .breakdown-row { grid-template-columns: 1fr auto; }
+  .grade-dialog .breakdown-row small { grid-column: 1 / -1; }
 }
