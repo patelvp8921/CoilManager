@@ -1,17 +1,33 @@
 import { Routes } from '@angular/router';
 import { ShellComponent } from './layout/shell/shell.component';
 import { environment } from '../environments/environment';
+import { anonymousGuard, authGuard, permissionGuard } from './core/auth/auth.guards';
 
 export const routes: Routes = [
+  { path: 'auth/login', canActivate: [anonymousGuard], loadComponent: () => import('./features/auth/auth-pages.component').then(c => c.LoginComponent), title: 'Sign in | CoilManager' },
+  { path: 'auth/verify-otp', canActivate: [anonymousGuard], loadComponent: () => import('./features/auth/auth-pages.component').then(c => c.OtpComponent), title: 'Verify identity | CoilManager' },
+  { path: 'auth/forgot-password', canActivate: [anonymousGuard], loadComponent: () => import('./features/auth/auth-pages.component').then(c => c.ForgotPasswordComponent), title: 'Forgot password | CoilManager' },
+  { path: 'auth/reset-password', canActivate: [anonymousGuard], loadComponent: () => import('./features/auth/auth-pages.component').then(c => c.ResetPasswordComponent), title: 'Reset password | CoilManager' },
+  { path: 'unauthorized', loadComponent: () => import('./features/auth/auth-pages.component').then(c => c.AccessStateComponent), title: 'Access denied | CoilManager' },
   {
     path: '',
     component: ShellComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: '',
         pathMatch: 'full',
         redirectTo: 'dashboard',
       },
+      { path: 'admin/users/:id/edit', canActivate: [permissionGuard], data: { permission: 'Administration.Users.Manage' }, loadComponent: () => import('./features/admin/security/user-edit-page.component').then(c => c.UserEditPageComponent), title: 'Edit user | CoilManager' },
+      { path: 'admin/users/:id', canActivate: [permissionGuard], data: { permission: 'Administration.Users.View' }, loadComponent: () => import('./features/admin/security/security-detail.component').then(c => c.UserDetailComponent), title: 'User details | CoilManager' },
+      { path: 'admin/users', canActivate: [permissionGuard], data: { permission: 'Administration.Users.View', tab: 0 }, loadComponent: () => import('./features/admin/security/security-admin.component').then(c => c.SecurityAdminComponent), title: 'Users | CoilManager' },
+      { path: 'admin/roles/:id', canActivate: [permissionGuard], data: { permission: 'Administration.Roles.Manage' }, loadComponent: () => import('./features/admin/security/role-management-page.component').then(c => c.RoleManagementPageComponent), title: 'Role details | CoilManager' },
+      { path: 'admin/roles', canActivate: [permissionGuard], data: { permission: 'Administration.Roles.View', tab: 1 }, loadComponent: () => import('./features/admin/security/security-admin.component').then(c => c.SecurityAdminComponent), title: 'Roles | CoilManager' },
+      { path: 'admin/permissions', canActivate: [permissionGuard], data: { permission: 'Administration.Roles.View', tab: 2 }, loadComponent: () => import('./features/admin/security/security-admin.component').then(c => c.SecurityAdminComponent), title: 'Permissions | CoilManager' },
+      { path: 'admin/sessions', canActivate: [permissionGuard], data: { permission: 'Administration.Users.View', tab: 3 }, loadComponent: () => import('./features/admin/security/security-admin.component').then(c => c.SecurityAdminComponent), title: 'Sessions | CoilManager' },
+      { path: 'admin/audit', canActivate: [permissionGuard], data: { permission: 'Administration.Audit.View', tab: 4 }, loadComponent: () => import('./features/admin/security/security-admin.component').then(c => c.SecurityAdminComponent), title: 'Audit log | CoilManager' },
+      { path: 'admin/company', canActivate: [permissionGuard], data: { permission: 'Administration.Company.Manage', tab: 5 }, loadComponent: () => import('./features/admin/security/security-admin.component').then(c => c.SecurityAdminComponent), title: 'Company profile | CoilManager' },
       {
         path: 'dashboard',
         loadComponent: () =>

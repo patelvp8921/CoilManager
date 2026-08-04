@@ -16,6 +16,7 @@ public static class DependencyInjection
 
         services.AddAutoMapper(_ => { }, typeof(AssemblyReference).Assembly);
         services.AddValidatorsFromAssembly(typeof(AssemblyReference).Assembly);
+        services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(AssemblyReference).Assembly));
         services.AddScoped<IRawCoilService, RawCoilService>();
         services.AddScoped<ILookupService, LookupService>();
         services.AddScoped<IOperationsDashboardService, OperationsDashboardService>();

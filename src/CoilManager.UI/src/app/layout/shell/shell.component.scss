@@ -33,7 +33,7 @@
 .header-icon { position: relative; color: #4a5b70; }
 .notification-dot { position: absolute; top: 7px; right: 7px; display: grid; min-width: 16px; height: 16px; place-items: center; border-radius: 999px; background: #ef1f26; color: #fff; font-size: 9px; font-weight: 700; }
 .header-divider { width: 1px; height: 32px; margin: 0 10px; background: #d7dde5; }
-.profile-avatar { display: grid; width: 34px; height: 34px; margin-right: 8px; place-items: center; border-radius: 50%; background: #f5c58b; font-size: 12px; font-weight: 700; }
+.profile-avatar { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: #f5c58b; color: #663c00; font-size: 12px; font-weight: 800; letter-spacing: 0.04em; }
 .content-area { min-width: 0; flex: 1; overflow-x: clip; }
 .app-footer { display: flex; min-height: 44px; align-items: center; justify-content: space-between; border-top: 1px solid #d7dde5; padding: 0 24px; background: #fff; color: #667085; font-size: 12px; }
 

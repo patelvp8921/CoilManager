@@ -1,0 +1,11 @@
+import { inject, Injectable } from '@angular/core'; import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment'; import { ApiResponse, AuditLog, Role, Session, UserSummary } from '../../../core/auth/auth.models';
+export interface Page<T>{items:T[];totalCount:number;page:number;pageSize:number} export interface UserDetail extends UserSummary{phoneNumber?:string;jobTitle?:string;mustChangePassword:boolean;permissions:string[];createdBy?:string;modifiedAtUtc?:string;modifiedBy?:string}
+@Injectable({providedIn:'root'}) export class SecurityAdminService{private http=inject(HttpClient);private base=`${environment.apiBaseUrl}/admin`;
+ users(search=''){return this.http.get<ApiResponse<Page<UserSummary>>>(`${this.base}/users`,{params:{search}})} user(id:string){return this.http.get<ApiResponse<UserDetail>>(`${this.base}/users/${id}`)} roles(){return this.http.get<ApiResponse<Role[]>>(`${this.base}/roles`)} permissions(){return this.http.get<ApiResponse<string[]>>(`${this.base}/permissions`)} sessions(){return this.http.get<ApiResponse<Session[]>>(`${this.base}/sessions`)} revoke(id:string){return this.http.delete<void>(`${this.base}/sessions/${id}`)} audit(search=''){return this.http.get<ApiResponse<Page<AuditLog>>>(`${this.base}/audit`,{params:{search}})} company(){return this.http.get<ApiResponse<any>>(`${this.base}/company`)} updateCompany(value:any){return this.http.put<void>(`${this.base}/company`,value)} setRolePermissions(id:string,permissions:string[]){return this.http.put<void>(`${this.base}/roles/${id}/permissions`,{permissions})}
+ createUser(value:{email:string;displayName:string;phoneNumber:string|null;jobTitle:string|null;temporaryPassword:string;mustChangePassword:boolean;roles:string[]}){return this.http.post(`${this.base}/users`,value)}
+ updateUser(id:string,value:{displayName:string;phoneNumber:string|null;jobTitle:string|null;roles:string[]}){return this.http.put<void>(`${this.base}/users/${id}`,value)}
+ createRole(value:{name:string;description:string|null}){return this.http.post<ApiResponse<string>>(`${this.base}/roles`,value)}
+ updateRole(id:string,value:{name:string;description:string|null}){return this.http.put<void>(`${this.base}/roles/${id}`,value)}
+ deleteRole(id:string){return this.http.delete<void>(`${this.base}/roles/${id}`)}
+}

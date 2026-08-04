@@ -9,6 +9,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LayoutStateService } from '../services/layout-state.service';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../../core/auth/auth.service';
 
 interface NavigationItem { label: string; icon: string; route: string; exact?: boolean; }
 interface NavigationGroup { label: string; icon: string; items: readonly NavigationItem[]; }
@@ -23,6 +24,7 @@ interface NavigationGroup { label: string; icon: string; items: readonly Navigat
 export class ShellComponent {
   protected readonly layout = inject(LayoutStateService);
   private readonly router = inject(Router);
+  protected readonly auth = inject(AuthService);
   protected readonly expandedGroups = signal(new Set(['Inventory', 'Planning', 'Production', 'Administration']));
   protected readonly primaryItems: readonly NavigationItem[] = [
     { label: 'Dashboard', icon: 'dashboard', route: '/dashboard', exact: true },
@@ -41,6 +43,7 @@ export class ShellComponent {
       { label: 'Work Orders', icon: 'assignment', route: '/work-orders' },
     ]},
     { label: 'Administration', icon: 'admin_panel_settings', items: [
+      { label: 'Security & Access', icon: 'shield', route: '/admin/users' },
       { label: 'Manufacturers', icon: 'factory', route: '/admin/manufacturers' },
       { label: 'Suppliers', icon: 'storefront', route: '/admin/suppliers' },
       { label: 'Grades', icon: 'category', route: '/admin/grades' },
@@ -61,6 +64,14 @@ export class ShellComponent {
     return group.items.some(item => this.router.url === item.route || this.router.url.startsWith(`${item.route}/`));
   }
   protected routeSelected(): void { this.layout.closeMobile(); }
+  protected logout(): void { this.auth.logout(); }
+
+  protected userInitials(): string {
+    const parts = (this.auth.user()?.displayName ?? 'User').trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 0) return 'U';
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+  }
 
   @HostListener('document:keydown.escape')
   protected escape(): void {

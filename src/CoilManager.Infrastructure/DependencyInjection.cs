@@ -3,6 +3,8 @@ using CoilManager.Application.Interfaces.Services;
 using CoilManager.Infrastructure.Audit;
 using CoilManager.Infrastructure.Auth;
 using CoilManager.Infrastructure.Services;
+using CoilManager.Application.Security;
+using CoilManager.Infrastructure.Email;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,6 +21,8 @@ public static class DependencyInjection
         services.AddScoped<IAuditLogger, AuditLogger>();
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddSingleton<ISecurityTokenService, SecurityTokenService>();
+        services.AddScoped<IEmailSender, LoggingEmailSender>();
 
         return services;
     }

@@ -5,6 +5,8 @@ using CoilManager.Infrastructure;
 using CoilManager.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using CoilManager.API.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CoilManager.API.Extensions;
 
@@ -34,6 +36,7 @@ public static class ServiceCollectionExtensions
 
                 policy
                     .WithOrigins(allowedOrigins)
+                    .AllowCredentials()
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
@@ -58,7 +61,7 @@ public static class ServiceCollectionExtensions
                     ValidIssuer = jwtSettings.Issuer,
                     ValidAudience = jwtSettings.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
-                    ClockSkew = TimeSpan.FromMinutes(2)
+                    ClockSkew = TimeSpan.FromSeconds(30)
                 };
             });
 
@@ -74,6 +77,8 @@ public static class ServiceCollectionExtensions
             options.AddPolicy("DispatchUser", policy => policy.RequireRole("Admin", "Dispatch"));
             options.AddPolicy("ManagementUser", policy => policy.RequireRole("Admin", "Management"));
         });
+        services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+        services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
         return services;
     }

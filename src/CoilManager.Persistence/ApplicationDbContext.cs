@@ -3,11 +3,13 @@ using CoilManager.Application.Abstractions.Persistence;
 using CoilManager.Domain.Common;
 using CoilManager.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using CoilManager.Persistence.Identity;
 
 namespace CoilManager.Persistence;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-    : DbContext(options), IApplicationDbContext
+    : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>(options), IApplicationDbContext
 {
     public DbSet<RawCoil> RawCoils => Set<RawCoil>();
     public DbSet<Supplier> Suppliers => Set<Supplier>();
@@ -18,9 +20,15 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<SlitCoil> SlitCoils => Set<SlitCoil>();
     public DbSet<InventoryTransaction> InventoryTransactions => Set<InventoryTransaction>();
     public DbSet<SlitCoilLabelPrintHistory> SlitCoilLabelPrintHistories => Set<SlitCoilLabelPrintHistory>();
-    public DbSet<User> Users => Set<User>();
-    public DbSet<Role> Roles => Set<Role>();
-    public DbSet<UserRole> UserRoles => Set<UserRole>();
+    public DbSet<User> LegacyUsers => Set<User>();
+    public DbSet<Role> LegacyRoles => Set<Role>();
+    public DbSet<UserRole> LegacyUserRoles => Set<UserRole>();
+    public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
+    public DbSet<LoginOtp> LoginOtps => Set<LoginOtp>();
+    public DbSet<UserSession> UserSessions => Set<UserSession>();
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+    public DbSet<CompanyProfile> CompanyProfiles => Set<CompanyProfile>();
     public DbSet<WorkOrder> WorkOrders => Set<WorkOrder>();
     public DbSet<WorkOrderOperation> WorkOrderOperations => Set<WorkOrderOperation>();
     public DbSet<WorkOrderMaterialAllocation> WorkOrderMaterialAllocations => Set<WorkOrderMaterialAllocation>();
@@ -32,10 +40,32 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AssemblyReference).Assembly);
-        ApplySoftDeleteQueryFilters(modelBuilder);
-
         base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AssemblyReference).Assembly);
+        ConfigureSecurity(modelBuilder);
+        ApplySoftDeleteQueryFilters(modelBuilder);
+    }
+
+    private static void ConfigureSecurity(ModelBuilder builder)
+    {
+        builder.Entity<ApplicationUser>().ToTable("IdentityUsers", "auth");
+        builder.Entity<ApplicationRole>().ToTable("IdentityRoles", "auth");
+        builder.Entity<Microsoft.AspNetCore.Identity.IdentityUserRole<Guid>>().ToTable("IdentityUserRoles", "auth");
+        builder.Entity<Microsoft.AspNetCore.Identity.IdentityUserClaim<Guid>>().ToTable("IdentityUserClaims", "auth");
+        builder.Entity<Microsoft.AspNetCore.Identity.IdentityUserLogin<Guid>>().ToTable("IdentityUserLogins", "auth");
+        builder.Entity<Microsoft.AspNetCore.Identity.IdentityRoleClaim<Guid>>().ToTable("IdentityRoleClaims", "auth");
+        builder.Entity<Microsoft.AspNetCore.Identity.IdentityUserToken<Guid>>().ToTable("IdentityUserTokens", "auth");
+        builder.Entity<Permission>().ToTable("Permissions", "auth").HasIndex(x => x.Name).IsUnique();
+        builder.Entity<RolePermission>().ToTable("RolePermissions", "auth").HasKey(x => new { x.RoleId, x.PermissionId });
+        builder.Entity<LoginOtp>().ToTable("LoginOtps", "auth").HasIndex(x => new { x.UserId, x.CreatedAtUtc });
+        builder.Entity<UserSession>().ToTable("UserSessions", "auth").HasIndex(x => x.RefreshTokenHash).IsUnique();
+        builder.Entity<AuditLog>().ToTable("AuditLogs", "audit").HasIndex(x => x.TimestampUtc);
+        builder.Entity<CompanyProfile>().ToTable("CompanyProfile", "config");
+        builder.Entity<ApplicationUser>().Property(x => x.DisplayName).HasMaxLength(160).IsRequired();
+        builder.Entity<Permission>().Property(x => x.Name).HasMaxLength(160).IsRequired();
+        builder.Entity<LoginOtp>().Property(x => x.CodeHash).HasMaxLength(128).IsRequired();
+        builder.Entity<UserSession>().Property(x => x.RefreshTokenHash).HasMaxLength(128).IsRequired();
+        builder.Entity<AuditLog>().Property(x => x.Details).HasMaxLength(4000);
     }
 
     public override int SaveChanges()

@@ -9,5 +9,7 @@ public sealed class JwtSettings
     public string SecretKey { get; init; } = string.Empty;
     public string SigningKey { get; init; } = string.Empty;
     public string EffectiveSecretKey => !string.IsNullOrWhiteSpace(SecretKey) ? SecretKey : SigningKey;
-    public int ExpiryMinutes { get; init; } = 60;
+    public int ExpiryMinutes { get; init; } = 15;
+    public int AccessTokenMinutes { get; init; } = 15;
+    public int RefreshTokenDays { get; init; } = 30;
 }

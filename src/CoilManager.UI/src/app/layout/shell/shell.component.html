@@ -80,8 +80,8 @@
         <mat-icon>notifications_none</mat-icon><span class="notification-dot">5</span>
       </button>
       <span class="header-divider"></span>
-      <button mat-button type="button" class="profile-button" aria-label="User menu">
-        <span class="profile-avatar">AU</span><span class="profile-name">Admin</span><mat-icon>expand_more</mat-icon>
+      <button mat-button type="button" class="profile-button" aria-label="Sign out" (click)="logout()" matTooltip="Sign out">
+        <span class="profile-avatar" [attr.aria-label]="auth.user()?.displayName ?? 'User'">{{ userInitials() }}</span><mat-icon>logout</mat-icon>
       </button>
     </mat-toolbar>
 

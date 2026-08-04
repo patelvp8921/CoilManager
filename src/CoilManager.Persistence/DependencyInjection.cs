@@ -8,6 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using CoilManager.Persistence.Repositories;
 using CoilManager.Persistence.Services;
 using CoilManager.Persistence.DemoData;
+using CoilManager.Persistence.Identity;
+using CoilManager.Application.Security;
+using Microsoft.AspNetCore.Identity;
 
 namespace CoilManager.Persistence;
 
@@ -39,6 +42,24 @@ public static class DependencyInjection
         services.AddScoped<ILaminationJobService>(p => p.GetRequiredService<LaminationJobService>());
         services.AddScoped<IMaterialAllocationService>(p => p.GetRequiredService<LaminationJobService>());
         services.AddScoped<IDemoDataSeeder, DemoDataSeeder>();
+        services.AddDataProtection();
+        services.AddIdentityCore<ApplicationUser>(options =>
+        {
+            options.User.RequireUniqueEmail = true;
+            options.Password.RequiredLength = 12;
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Lockout.MaxFailedAccessAttempts = configuration.GetValue("Security:MaximumFailedLoginAttempts", 5);
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(configuration.GetValue("Security:LockoutMinutes", 15));
+            options.SignIn.RequireConfirmedEmail = true;
+        })
+        .AddRoles<ApplicationRole>()
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
+        services.AddScoped<ISecurityPlatformService, SecurityPlatformService>();
+        services.AddScoped<IEmailSender, SmtpEmailSender>();
 
         return services;
     }

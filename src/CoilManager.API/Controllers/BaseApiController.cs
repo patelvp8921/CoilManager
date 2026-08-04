@@ -11,6 +11,10 @@ public abstract class BaseApiController : ControllerBase
     {
         return Ok(ApiResponse<T>.Ok(data, message));
     }
+    protected ActionResult SuccessResult<T>(T? data, string message = "Request completed successfully.")
+    {
+        return Ok(ApiResponse<T>.Ok(data, message));
+    }
 
     protected ActionResult<ApiPagedResponse<T>> Paged<T>(
         IReadOnlyList<T> data,

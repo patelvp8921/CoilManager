@@ -21,5 +21,6 @@ public static class DatabaseMigrationExtensions
 
         await dbContext.Database.MigrateAsync();
         await DatabaseSeeder.SeedAsync(dbContext);
+        await SecurityBootstrapper.ProvisionFirstAdministratorAsync(scope.ServiceProvider);
     }
 }
