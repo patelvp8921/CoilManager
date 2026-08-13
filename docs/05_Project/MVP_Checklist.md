@@ -27,6 +27,19 @@
 - [x] Angular list, create, detail, allocation and Job Card placeholder routes
 - [ ] Auto allocation, cutting execution, scrap and final Job Card (deferred)
 
+# Sprint S1.1 — Customer and Sales Order Foundation
+
+- [x] Customer Master, automatic immutable code, filters, activation, concurrency
+- [x] Sales Order annual numbering, Draft editing, confirmation, hold/release, cancellation
+- [x] Product-aware Mother Coil, Slit Coil, and Lamination demand lines
+- [x] Grade Master-derived thickness, category, and core loss revalidated server-side
+- [x] Quantity summaries separated into kg, pieces, and sets
+- [x] Sales navigation, list/filter/action pages, single-page editor, detail tabs and deep links
+- [x] Permission constants and route metadata without role-name checks
+- [x] Confirmation has no inventory reservation, Work Order, or production-job side effects
+- [ ] Work Order fulfilment integration (Sprint S2)
+- [ ] Inventory reservation, production execution, dispatch allocation, invoicing and tax engine
+
 ## Revised MVP Lamination Workflow
 
 The supported workflow is **Draft → Released → Material Allocated → Completed**. Draft schedules may be edited, deleted, released, or cancelled. Release approves and freezes the cutting schedule without reserving or deducting Slit Coil inventory. Only Released jobs may create manual Slit Coil reservations, and confirmation is blocked until every width requirement has zero shortage. Completion is allowed only from Allocated and deducts actual consumed weight, releases unused reservation, and retains the original Slit Coil number. Completed and Cancelled jobs are final and read-only. Start Cutting and In Progress are not available for new Lamination Job workflow actions. The completed Lamination Job is the final production-lot record; no Lamination Batch or individual plate inventory records are created.

@@ -49,12 +49,26 @@ public sealed class WorkOrderMaterialAllocation : BaseEntity
     public string CreatedBy { get; private set; } = string.Empty;
     public bool IsActive => Status is AllocationStatus.Reserved or AllocationStatus.Issued or AllocationStatus.PartiallyConsumed;
 
+    public void Adjust(decimal quantity, decimal remainingAfterAllocation, string? remarks)
+    {
+        if (!IsActive || Status != AllocationStatus.Reserved) throw new InvalidOperationException("Only a reserved allocation can be edited.");
+        if (quantity <= 0) throw new ArgumentOutOfRangeException(nameof(quantity));
+        AllocatedWeight = quantity; RemainingWeightAfterAllocation = remainingAfterAllocation;
+        if (!string.IsNullOrWhiteSpace(remarks)) Remarks = remarks.Trim();
+    }
     public void Release(DateTimeOffset at, string actor)
     {
         if (!IsActive) throw new InvalidOperationException("Only an active allocation can be released.");
         Status = AllocationStatus.Released;
         ReleasedOn = at;
         ReleasedBy = actor;
+    }
+    public void RecordDispatch(decimal quantity)
+    {
+        decimal dispatched = ConsumedWeight ?? 0;
+        if (quantity <= 0 || dispatched + quantity > AllocatedWeight) throw new InvalidOperationException("Dispatch exceeds the allocated quantity.");
+        ConsumedWeight = dispatched + quantity;
+        Status = ConsumedWeight >= AllocatedWeight ? AllocationStatus.Consumed : AllocationStatus.PartiallyConsumed;
     }
 
     private static string? Normalize(string? value) => string.IsNullOrWhiteSpace(value) ? null : value.Trim();

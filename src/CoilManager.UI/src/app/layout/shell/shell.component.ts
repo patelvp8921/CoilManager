@@ -31,6 +31,10 @@ export class ShellComponent {
     { label: 'Coil Search', icon: 'qr_code_scanner', route: '/coil-search' },
   ];
   protected readonly groups: readonly NavigationGroup[] = [
+    { label: 'Sales', icon: 'request_quote', items: [
+      { label: 'Customers', icon: 'groups', route: '/customers' },
+      { label: 'Sales Orders', icon: 'request_quote', route: '/sales-orders' },
+    ]},
     { label: 'Inventory', icon: 'inventory_2', items: [
       { label: 'Mother Coils', icon: 'inventory_2', route: '/mother-coils' },
       { label: 'Slit Coils', icon: 'view_list', route: '/slit-coils' },

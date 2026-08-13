@@ -87,6 +87,7 @@ public sealed class OperationsDashboardService(
             SlittingJobMetrics: slittingMetrics,
             ProductionQueue: BuildProductionQueue(jobs),
             LaminationProductionQueue: laminationMetrics?.Queue ?? [],
+            OperationalAlerts: BuildOperationalAlerts(workOrders, jobs, laminationMetrics?.Queue ?? []),
             Quality: quality,
             Procurement: procurement,
             Dispatch: dispatch,
@@ -191,14 +192,14 @@ public sealed class OperationsDashboardService(
     {
         DateTimeOffset now = DateTimeOffset.UtcNow;
         return jobs
-            .Where(job => job.Status is SlittingJobStatus.InProgress or SlittingJobStatus.Released)
-            .OrderBy(job => job.Status == SlittingJobStatus.InProgress ? 0 : 1)
+            .Where(job => job.Status is SlittingJobStatus.Draft or SlittingJobStatus.InProgress or SlittingJobStatus.Released)
+            .OrderBy(job => job.Status == SlittingJobStatus.InProgress ? 0 : job.Status == SlittingJobStatus.Released ? 1 : 2)
             .ThenBy(job => job.ReleasedOn ?? DateTimeOffset.MaxValue)
             .Select(job => new ProductionQueueItemDto(
                 job.Id,
                 job.SlittingJobNo,
                 job.MotherCoil?.RawCoilNumber ?? "-",
-                job.Status == SlittingJobStatus.Released ? "Waiting to Start" : "Running",
+                job.Status == SlittingJobStatus.Draft ? "Planned" : job.Status == SlittingJobStatus.Released ? "Waiting to Start" : "Running",
                 job.ReleasedOn,
                 job.StartedOn,
                 CalculateWaitingMinutes(job, now),
@@ -210,6 +211,52 @@ public sealed class OperationsDashboardService(
             .ToArray();
     }
 
+    private static IReadOnlyList<OperationalAlertDto> BuildOperationalAlerts(
+        IReadOnlyList<WorkOrder> workOrders,
+        IReadOnlyList<SlittingJob> slittingJobs,
+        IReadOnlyList<LaminationQueueItemDto> laminationJobs)
+    {
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        DateOnly today = DateOnly.FromDateTime(now.UtcDateTime);
+        List<OperationalAlertDto> alerts = [];
+
+        foreach (WorkOrder workOrder in workOrders.Where(x =>
+                     x.Status is WorkOrderStatus.Released or WorkOrderStatus.InFulfilment or WorkOrderStatus.PartiallyReady &&
+                     x.PlannedInventoryQuantity > x.ReservedInventoryQuantity))
+        {
+            decimal shortage = workOrder.PlannedInventoryQuantity - workOrder.ReservedInventoryQuantity;
+            alerts.Add(new($"material-shortage-{workOrder.Id}", "critical", "material-shortage", "Material Shortage",
+                $"{workOrder.WorkOrderNumber} requires {shortage:N3} {workOrder.QuantityUnit} additional material.",
+                "Live", $"View material shortage for {workOrder.WorkOrderNumber}", $"/work-orders/{workOrder.Id}"));
+        }
+
+        foreach (LaminationQueueItemDto job in laminationJobs.Where(x => x.Status != LaminationJobStatus.Draft && x.AllocationPercentage < 100))
+        {
+            alerts.Add(new($"material-shortage-lamination-{job.Id}", "critical", "material-shortage", "Lamination Material Shortage",
+                $"{job.JobNumber} is only {job.AllocationPercentage:N0}% allocated.", "Live",
+                $"View material shortage for {job.JobNumber}", $"/lamination-jobs/{job.Id}/material-allocation"));
+        }
+
+        foreach (SlittingJob job in slittingJobs.Where(x => x.Status is SlittingJobStatus.Released or SlittingJobStatus.InProgress))
+        {
+            DateTimeOffset? since = job.Status == SlittingJobStatus.InProgress ? job.StartedOn : job.ReleasedOn;
+            if (!since.HasValue || now - since.Value < TimeSpan.FromHours(24)) continue;
+            decimal hours = Math.Floor((decimal)(now - since.Value).TotalHours);
+            alerts.Add(new($"stuck-slitting-{job.Id}", "warning", "production-delayed", "Stuck Slitting Job",
+                $"{job.SlittingJobNo} has been {(job.Status == SlittingJobStatus.InProgress ? "running" : "waiting to start")} for {hours:N0} hours.",
+                $"{hours:N0} hours", $"View stuck Slitting Job {job.SlittingJobNo}", $"/slitting-jobs/{job.Id}/edit"));
+        }
+
+        foreach (LaminationQueueItemDto job in laminationJobs.Where(x => x.PlannedDate < today))
+        {
+            int days = today.DayNumber - job.PlannedDate.DayNumber;
+            alerts.Add(new($"stuck-lamination-{job.Id}", "warning", "production-delayed", "Stuck Lamination Job",
+                $"{job.JobNumber} is {days:N0} day(s) past its planned date.", $"{days:N0} day(s)",
+                $"View stuck Lamination Job {job.JobNumber}", $"/lamination-jobs/{job.Id}"));
+        }
+
+        return alerts;
+    }
     private static decimal AverageMinutes(IEnumerable<TimeSpan> durations)
     {
         TimeSpan[] values = durations.ToArray();

@@ -24,8 +24,12 @@ public static class DatabaseSeeder
             "Inventory.SlitCoils.View", "Inventory.SlitCoils.Create", "Inventory.SlitCoils.Edit", "Inventory.SlitCoils.Delete",
             "Production.Slitting.View", "Production.Slitting.Create", "Production.Slitting.Edit", "Production.Slitting.Delete",
             "Production.Lamination.View", "Production.Lamination.Create", "Production.Lamination.Edit", "Production.Lamination.Delete",
-            "Dispatch.View", "Dispatch.Create", "Dispatch.Edit", "Dispatch.Delete", "Reports.View", "Reports.Export",
-            "Sales.View", "Sales.Create", "Sales.Edit", "Sales.Delete", "Administration.Users.View", "Administration.Users.Manage",
+            "Dispatch.View", "Dispatch.Create", "Dispatch.Edit", "Dispatch.Confirm", "Dispatch.Cancel", "Dispatch.PrintPackingSlip", "Dispatch.Delete", "Reports.View", "Reports.Export",
+            "Sales.View", "Sales.Create", "Sales.Edit", "Sales.Delete",
+            "Customers.View", "Customers.Create", "Customers.Edit", "Customers.Activate",
+            "SalesOrders.View", "SalesOrders.Create", "SalesOrders.Edit", "SalesOrders.Confirm", "SalesOrders.Hold", "SalesOrders.Cancel",
+            "WorkOrders.View", "WorkOrders.Create", "WorkOrders.Edit", "WorkOrders.Release", "WorkOrders.Cancel", "WorkOrders.ManageAllocation", "WorkOrders.CreateProductionJob",
+            "Administration.Users.View", "Administration.Users.Manage",
             "Administration.Roles.View", "Administration.Roles.Manage", "Administration.Audit.View", "Administration.Company.Manage"
         ];
         HashSet<string> existing = new(await db.Permissions.Select(x => x.Name).ToArrayAsync(ct));

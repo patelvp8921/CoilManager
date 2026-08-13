@@ -10,6 +10,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { productLabels, statusLabels, typeLabels, WorkOrderListItem } from './work-order.model';
 import { WorkOrderService } from './work-order.service';
 
@@ -28,6 +29,7 @@ import { WorkOrderService } from './work-order.service';
     MatProgressBarModule,
     MatSelectModule,
     MatTableModule,
+    MatSnackBarModule,
   ],
   templateUrl: './work-order-list.component.html',
   styleUrl: './work-order-list.component.scss',
@@ -45,6 +47,7 @@ export class WorkOrderListComponent implements OnInit {
   protected readonly status = new FormControl<number | null>(null);
   private readonly service = inject(WorkOrderService);
   private readonly route = inject(ActivatedRoute);
+  private readonly snack = inject(MatSnackBar);
 
   ngOnInit(): void {
     this.status.setValue(this.statusFromQuery());
@@ -69,6 +72,14 @@ export class WorkOrderListComponent implements OnInit {
     }).subscribe((response) => this.rows.set(response.data ?? []));
   }
 
+  protected runAction(row: WorkOrderListItem, action?: string): void {
+    const operation = action ?? (row.nextActionType === 'RecoverMissingLaminationJob' ? 'recover-lamination-job' : 'release');
+    if (operation === 'cancel' && !confirm(`Cancel ${row.workOrderNumber}?`)) return;
+    this.service.action(row.id, operation).subscribe({
+      next: () => { this.snack.open(`${row.workOrderNumber} updated.`, 'Close', { duration: 3000 }); this.load(); },
+      error: error => this.snack.open(error?.error?.message ?? error?.message ?? 'Action failed.', 'Close', { duration: 5000 }),
+    });
+  }
   protected resetFilters(): void {
     this.search.setValue('');
     this.type.setValue(null);

@@ -13,6 +13,7 @@ public sealed record OperationsDashboardDto(
     SlittingJobMetricsDto SlittingJobMetrics,
     IReadOnlyList<ProductionQueueItemDto> ProductionQueue,
     IReadOnlyList<LaminationQueueItemDto> LaminationProductionQueue,
+    IReadOnlyList<OperationalAlertDto> OperationalAlerts,
     QualitySummaryDto Quality,
     ProcurementSummaryDto Procurement,
     DispatchSummaryDto Dispatch,
@@ -149,3 +150,5 @@ public sealed record NotificationDto(
     string Severity,
     string Icon,
     string? Route = null);
+
+public sealed record OperationalAlertDto(string Id, string Severity, string Category, string Title, string Description, string RelativeTime, string AriaLabel, string? Route = null);

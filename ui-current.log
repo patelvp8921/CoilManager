@@ -1,0 +1,76 @@
+
+> coil-manager-ui@0.1.0 start
+> ng serve --host localhost --port 4200
+
+> Building...
+√ Building...
+Initial chunk files | Names                             |  Raw size
+main.js             | main                              |  65.22 kB | 
+styles.css          | styles                            |  11.88 kB | 
+chunk-BP4V3AZU.js   | -                                 |   3.39 kB | 
+chunk-EEHB4PCM.js   | -                                 |   1.51 kB | 
+
+                    | Initial total                     |  81.99 kB
+
+Lazy chunk files    | Names                             |  Raw size
+chunk-5K7JWZTB.js   | operations-dashboard-component    | 175.81 kB | 
+chunk-AOR7C6LN.js   | lamination-job-form-component     | 157.92 kB | 
+chunk-RHAHBBFA.js   | lamination-allocation-component   | 147.27 kB | 
+chunk-5KUKK2SG.js   | slitting-job-planning-component   |  98.94 kB | 
+chunk-SOCBU7KD.js   | sales-order-form-page-component   |  97.30 kB | 
+chunk-7SAV6S5A.js   | complete-lamination-job-component |  84.52 kB | 
+chunk-APC7EFYO.js   | security-admin-component          |  83.65 kB | 
+chunk-GR3U3UZO.js   | work-order-detail-component       |  78.89 kB | 
+chunk-OMRZW2LF.js   | raw-coil-create-page-component    |  74.16 kB | 
+chunk-SJIFAQAU.js   | work-order-form-component         |  73.41 kB | 
+chunk-R4JV4ZXC.js   | admin-analytics-component         |  65.23 kB | 
+chunk-VR3A4BBT.js   | slitting-job-list-page-component  |  60.23 kB | 
+chunk-ODAZDB5H.js   | raw-coil-edit-page-component      |  53.80 kB | 
+chunk-P6EUPWEZ.js   | raw-coil-list-page-component      |  53.12 kB | 
+chunk-N6UIMPNE.js   | sales-order-detail-page-component |  50.83 kB | 
+...and 42 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [11.724 seconds] - 2026-08-13T18:09:50.206Z
+
+Watch mode enabled. Watching for file changes...
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m4200[22m/[39m
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Application bundle generation failed. [5.917 seconds] - 2026-08-13T18:14:25.481Z
+
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Application bundle generation failed. [0.619 seconds] - 2026-08-13T18:14:50.838Z
+
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names                             |  Raw size
+main.js             | main                              |  65.22 kB | 
+styles.css          | styles                            |  11.88 kB | 
+chunk-BP4V3AZU.js   | -                                 |   3.39 kB | 
+chunk-EEHB4PCM.js   | -                                 |   1.51 kB | 
+
+                    | Initial total                     |  81.99 kB
+
+Lazy chunk files    | Names                             |  Raw size
+chunk-L3GPLOPK.js   | operations-dashboard-component    | 167.48 kB | 
+chunk-AOR7C6LN.js   | lamination-job-form-component     | 157.92 kB | 
+chunk-RHAHBBFA.js   | lamination-allocation-component   | 147.27 kB | 
+chunk-5KUKK2SG.js   | slitting-job-planning-component   |  98.94 kB | 
+chunk-SOCBU7KD.js   | sales-order-form-page-component   |  97.30 kB | 
+chunk-7SAV6S5A.js   | complete-lamination-job-component |  84.52 kB | 
+chunk-APC7EFYO.js   | security-admin-component          |  83.65 kB | 
+chunk-GR3U3UZO.js   | work-order-detail-component       |  78.89 kB | 
+chunk-OMRZW2LF.js   | raw-coil-create-page-component    |  74.16 kB | 
+chunk-SJIFAQAU.js   | work-order-form-component         |  73.41 kB | 
+chunk-R4JV4ZXC.js   | admin-analytics-component         |  65.23 kB | 
+chunk-VR3A4BBT.js   | slitting-job-list-page-component  |  60.23 kB | 
+chunk-ODAZDB5H.js   | raw-coil-edit-page-component      |  53.80 kB | 
+chunk-P6EUPWEZ.js   | raw-coil-list-page-component      |  53.12 kB | 
+chunk-N6UIMPNE.js   | sales-order-detail-page-component |  50.83 kB | 
+...and 42 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [1.574 seconds] - 2026-08-13T18:16:56.994Z
+
+Page reload sent to client(s).

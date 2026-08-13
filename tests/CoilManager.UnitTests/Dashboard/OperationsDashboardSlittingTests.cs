@@ -47,6 +47,19 @@ public sealed class OperationsDashboardSlittingTests
         Assert.Equal("Waiting to Start", dashboard.ProductionQueue[1].Status);
     }
 
+    [Fact]
+    public async Task GetOperationsDashboardAsync_IncludesIncomingDraftJobsAndNoDispatchAlerts()
+    {
+        RawCoil motherCoil = CreateMotherCoil();
+        SlittingJob draft = CreateJob(motherCoil, "AE/S/2026/00004");
+        OperationsDashboardService service = new(new FakeRawCoilRepository([motherCoil]), new FakeSlittingJobRepository([draft]));
+
+        OperationsDashboardDto dashboard = await service.GetOperationsDashboardAsync();
+
+        ProductionQueueItemDto item = Assert.Single(dashboard.ProductionQueue);
+        Assert.Equal("Planned", item.Status);
+        Assert.DoesNotContain(dashboard.OperationalAlerts, alert => alert.Category.StartsWith("dispatch", StringComparison.OrdinalIgnoreCase));
+    }
     private static RawCoil CreateMotherCoil()
     {
         Supplier supplier = new("Prime Supplier", "PS");

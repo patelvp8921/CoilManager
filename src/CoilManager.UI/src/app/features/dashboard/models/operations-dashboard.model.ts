@@ -9,6 +9,7 @@ export interface OperationsDashboard {
   slittingJobMetrics: SlittingJobMetrics;
   productionQueue: readonly ProductionQueueItem[];
   laminationProductionQueue: readonly LaminationProductionQueueItem[];
+  operationalAlerts: readonly OperationalAlert[];
   quality: QualitySummary;
   procurement: ProcurementSummary;
   dispatch: DispatchSummary;
@@ -121,6 +122,16 @@ export interface LaminationProductionQueueItem {
   plannedDate: string;
   machine?: string | null;
   shift?: string | null;
+}
+export interface OperationalAlert {
+  id: string;
+  severity: 'critical' | 'warning' | 'information';
+  category: string;
+  title: string;
+  description: string;
+  relativeTime: string;
+  ariaLabel: string;
+  route?: string | null;
 }
 export interface QualitySummary {
   pendingQa: number;

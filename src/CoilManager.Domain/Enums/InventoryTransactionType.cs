@@ -9,5 +9,6 @@ public enum InventoryTransactionType
     SlittingStarted = 5,
     LaminationAllocationReserved = 6,
     LaminationAllocationReleased = 7,
-    LaminationConsumption = 8
+    LaminationConsumption = 8,
+    Dispatch = 9
 }

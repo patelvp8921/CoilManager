@@ -25,3 +25,5 @@ small { display: block; margin-top: 4px; }
   .filter-actions { justify-content: stretch; }
   .filter-actions button { flex: 1; }
 }
+
+.next-action{white-space:nowrap;border-radius:6px}.next-action.warning{border-color:#f79009;color:#b54708}.next-action-text{font-weight:600;color:#344054}.shortage{color:#b42318;font-weight:700}.row-actions{display:flex;align-items:center}.danger{color:#b42318}

@@ -7,12 +7,12 @@ namespace CoilManager.UnitTests.WorkOrders;
 
 public sealed class WorkOrderTests
 {
-    [Fact] public void Number_format_is_stable() => Assert.Equal("WO-2026-00001", WorkOrderService.FormatNumber(2026, 1));
+    [Fact] public void Number_format_is_stable() => Assert.Equal("WO/2026/00001", WorkOrderService.FormatNumber(2026, 1));
 
     [Theory]
     [InlineData(WorkOrderProductType.MotherCoil, WorkOrderOperationStatus.NotRequired, WorkOrderOperationStatus.NotRequired)]
-    [InlineData(WorkOrderProductType.SlitCoil, WorkOrderOperationStatus.Pending, WorkOrderOperationStatus.NotRequired)]
-    [InlineData(WorkOrderProductType.Lamination, WorkOrderOperationStatus.Pending, WorkOrderOperationStatus.Pending)]
+    [InlineData(WorkOrderProductType.SlitCoil, WorkOrderOperationStatus.NotRequired, WorkOrderOperationStatus.NotRequired)]
+    [InlineData(WorkOrderProductType.Lamination, WorkOrderOperationStatus.NotRequired, WorkOrderOperationStatus.Pending)]
     public void Product_routing_is_configured(WorkOrderProductType product, WorkOrderOperationStatus slitting, WorkOrderOperationStatus lamination)
     {
         WorkOrder wo = Create(product);
@@ -37,11 +37,10 @@ public sealed class WorkOrderTests
         InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => wo.Complete("operator", DateTimeOffset.UtcNow)); Assert.Contains("required operations are pending", error.Message);
     }
 
-    [Fact] public void Lamination_slitting_may_be_not_required()
+    [Fact] public void Lamination_slitting_is_not_a_work_order_operation_in_the_mvp()
     {
         WorkOrder wo = Create(WorkOrderProductType.Lamination);
         WorkOrderOperation operation = wo.Operations.Single(x => x.OperationType == WorkOrderOperationType.Slitting);
-        operation.MarkNotRequired("Slit Coil stock selected");
         Assert.Equal(WorkOrderOperationStatus.NotRequired, operation.Status); Assert.False(operation.IsRequired);
     }
 
@@ -103,13 +102,96 @@ public sealed class WorkOrderTests
         Assert.Equal(SlittingJobProductionType.Inventory, job.ProductionType); Assert.Null(job.WorkOrderId);
     }
 
-    [Fact] public void Linked_slitting_job_updates_operation_status()
+    [Fact] public void Slit_coil_work_order_does_not_activate_slitting_when_a_job_changes()
     {
         WorkOrder wo = Create(WorkOrderProductType.SlitCoil); WorkOrderOperation op = wo.Operations.Single(x => x.OperationType == WorkOrderOperationType.Slitting);
-        op.SynchronizeSlittingJob(SlittingJobStatus.Released, DateTimeOffset.UtcNow); Assert.Equal(WorkOrderOperationStatus.InProgress, op.Status);
-        op.SynchronizeSlittingJob(SlittingJobStatus.Completed, DateTimeOffset.UtcNow); Assert.Equal(WorkOrderOperationStatus.Completed, op.Status);
+        op.SynchronizeSlittingJob(SlittingJobStatus.Released, DateTimeOffset.UtcNow);
+        Assert.Equal(WorkOrderOperationStatus.NotRequired, op.Status);
     }
 
+    [Theory]
+    [InlineData(WorkOrderProductType.MotherCoil)]
+    [InlineData(WorkOrderProductType.SlitCoil)]
+    public void Inventory_product_derives_full_existing_inventory_plan(WorkOrderProductType product)
+    {
+        WorkOrder wo = Create(product);
+        Assert.Equal(FulfilmentStrategy.ExistingInventoryOnly, wo.FulfilmentStrategy);
+        Assert.Equal(1000, wo.PlannedInventoryQuantity);
+        Assert.Equal(0, wo.PlannedProductionQuantity);
+        Assert.Equal(ProductionRoute.None, wo.ProductionRoute);
+    }
+
+    [Fact] public void Slit_coil_cannot_be_switched_to_mixed_or_slitting_production_in_the_mvp()
+    {
+        WorkOrder wo = Create(WorkOrderProductType.SlitCoil);
+        wo.ConfigureFulfilment(FulfilmentStrategy.InventoryAndProduction, 400, 600, ProductionRoute.SlittingOnly);
+        Assert.Equal(FulfilmentStrategy.ExistingInventoryOnly, wo.FulfilmentStrategy);
+        Assert.Equal(1000, wo.PlannedInventoryQuantity);
+        Assert.Equal(0, wo.PlannedProductionQuantity);
+        Assert.Equal(ProductionRoute.None, wo.ProductionRoute);
+    }
+
+    [Fact] public void Lamination_derives_lamination_only_production_plan()
+    {
+        WorkOrder wo = Create(WorkOrderProductType.Lamination);
+        Assert.Equal(FulfilmentStrategy.ProductionOnly, wo.FulfilmentStrategy);
+        Assert.Equal(0, wo.PlannedInventoryQuantity);
+        Assert.Equal(1000, wo.PlannedProductionQuantity);
+        Assert.Equal(ProductionRoute.LaminationOnly, wo.ProductionRoute);
+    }
+
+    [Fact] public void Cancellation_reason_is_required()
+    {
+        WorkOrder wo = Create();
+        Assert.Throws<ArgumentException>(() => wo.Cancel("", "planner", DateTimeOffset.UtcNow));
+    }
+
+    [Fact] public void Fulfilment_recalculation_derives_operational_status()
+    {
+        WorkOrder wo = Create(); wo.Release("planner", DateTimeOffset.UtcNow);
+        wo.RecalculateFulfilment(0, 0, true); Assert.Equal(WorkOrderStatus.InFulfilment, wo.Status);
+        wo.RecalculateFulfilment(250, 0, true); Assert.Equal(WorkOrderStatus.PartiallyReady, wo.Status); Assert.Equal(250, wo.ReadyQuantity);
+        wo.RecalculateFulfilment(1000, 0, true); Assert.Equal(WorkOrderStatus.Ready, wo.Status); Assert.Equal(0, wo.UnplannedQuantity);
+    }
+
+    [Fact] public void Planned_production_does_not_count_as_ready()
+    {
+        WorkOrder wo = Create(WorkOrderProductType.SlitCoil); wo.Release("planner", DateTimeOffset.UtcNow);
+        wo.RecalculateFulfilment(0, 0, true);
+        Assert.Equal(0, wo.ReadyQuantity); Assert.Equal(WorkOrderStatus.InFulfilment, wo.Status);
+    }
+
+    [Fact] public void Ready_work_order_cannot_be_completed_without_dispatch()
+    {
+        WorkOrder wo = Create(WorkOrderProductType.SlitCoil); wo.Release("planner", DateTimeOffset.UtcNow);
+        wo.RecalculateFulfilment(1000, 0, true);
+        Assert.Throws<InvalidOperationException>(() => wo.Complete("planner", DateTimeOffset.UtcNow));
+        Assert.Equal(WorkOrderStatus.Ready, wo.Status);
+    }
+
+    [Fact] public void Partial_dispatch_moves_ready_work_order_to_partially_dispatched()
+    {
+        WorkOrder wo = Create(WorkOrderProductType.SlitCoil); wo.Release("planner", DateTimeOffset.UtcNow);
+        wo.RecalculateFulfilment(1000, 0, true); wo.RecordDispatch(400, "dispatcher", DateTimeOffset.UtcNow);
+        Assert.Equal(WorkOrderStatus.PartiallyDispatched, wo.Status);
+        Assert.Equal(400, wo.DispatchedQuantity);
+    }
+
+    [Fact] public void Final_dispatch_completes_work_order_and_dispatch_operation()
+    {
+        WorkOrder wo = Create(WorkOrderProductType.SlitCoil); wo.Release("planner", DateTimeOffset.UtcNow);
+        wo.RecalculateFulfilment(1000, 0, true); wo.RecordDispatch(400, "dispatcher", DateTimeOffset.UtcNow);
+        wo.RecordDispatch(1000, "dispatcher", DateTimeOffset.UtcNow);
+        Assert.Equal(WorkOrderStatus.Completed, wo.Status);
+        Assert.Equal(WorkOrderOperationStatus.Completed, wo.Operations.Single(x => x.OperationType == WorkOrderOperationType.Dispatch).Status);
+    }
+
+    [Fact] public void Reserved_allocation_can_be_adjusted_and_releases_the_difference()
+    {
+        var allocation = new WorkOrderMaterialAllocation(Guid.NewGuid(), CoilType.MotherCoil, Guid.NewGuid(), "MC-ADJ", 300, 200, DateTimeOffset.UtcNow, "planner", null);
+        allocation.Adjust(220, 280, "Reduced requirement");
+        Assert.Equal(220, allocation.AllocatedWeight); Assert.Equal(280, allocation.RemainingWeightAfterAllocation); Assert.True(allocation.IsActive);
+    }
     private static WorkOrder Create(WorkOrderProductType product = WorkOrderProductType.MotherCoil) => new("WO-2026-00001", WorkOrderType.InventoryProduction, product, null, null,
         new DateOnly(2026, 7, 13), new DateOnly(2026, 7, 20), 3, null, .23m, "CRGO", .9m, null, 1000, 1000, null, null);
 }

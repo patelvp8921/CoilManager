@@ -1,0 +1,706 @@
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of RoleManagementPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/admin/security/role-management-page.component.ts:2:52:
+[37m      2 │ ...p-role-management',imports:[[32mDatePipe[37m,ReactiveFormsModule,RouterL...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of OtpComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of ResetPasswordComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of CoilSearchComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/coil-search/pages/coil-search/coil-search.component.ts:2:68:
+[37m      2 │ ...ports:[ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMod...
+        ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of DispatchDetailComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/dispatch/dispatch-detail.component.ts:2:52:
+[37m      2 │ ...p-dispatch-detail',imports:[[32mDatePipe[37m,DecimalPipe,RouterLink,MatB...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of RoleManagementPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/admin/security/role-management-page.component.ts:2:52:
+[37m      2 │ ...p-role-management',imports:[[32mDatePipe[37m,ReactiveFormsModule,RouterL...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of OtpComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of ResetPasswordComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of CoilSearchComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/coil-search/pages/coil-search/coil-search.component.ts:2:68:
+[37m      2 │ ...ports:[ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMod...
+        ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of DispatchDetailComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/dispatch/dispatch-detail.component.ts:2:52:
+[37m      2 │ ...p-dispatch-detail',imports:[[32mDatePipe[37m,DecimalPipe,RouterLink,MatB...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of RoleManagementPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/admin/security/role-management-page.component.ts:2:52:
+[37m      2 │ ...p-role-management',imports:[[32mDatePipe[37m,ReactiveFormsModule,RouterL...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of OtpComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of ResetPasswordComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of CoilSearchComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/coil-search/pages/coil-search/coil-search.component.ts:2:68:
+[37m      2 │ ...ports:[ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMod...
+        ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of DispatchDetailComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/dispatch/dispatch-detail.component.ts:15:4:
+[37m      15 │     [32mDatePipe[37m,
+         ╵     [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of RoleManagementPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/admin/security/role-management-page.component.ts:2:52:
+[37m      2 │ ...p-role-management',imports:[[32mDatePipe[37m,ReactiveFormsModule,RouterL...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of OtpComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of ResetPasswordComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of CoilSearchComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/coil-search/pages/coil-search/coil-search.component.ts:2:68:
+[37m      2 │ ...ports:[ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMod...
+        ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of DispatchDetailComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/dispatch/dispatch-detail.component.ts:15:4:
+[37m      15 │     [32mDatePipe[37m,
+         ╵     [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of RoleManagementPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/admin/security/role-management-page.component.ts:2:52:
+[37m      2 │ ...p-role-management',imports:[[32mDatePipe[37m,ReactiveFormsModule,RouterL...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of OtpComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of ResetPasswordComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of CoilSearchComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/coil-search/pages/coil-search/coil-search.component.ts:2:68:
+[37m      2 │ ...ports:[ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMod...
+        ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of DispatchDetailComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/dispatch/dispatch-detail.component.ts:15:4:
+[37m      15 │     [32mDatePipe[37m,
+         ╵     [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of RoleManagementPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/admin/security/role-management-page.component.ts:2:52:
+[37m      2 │ ...p-role-management',imports:[[32mDatePipe[37m,ReactiveFormsModule,RouterL...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of OtpComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of ResetPasswordComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of CoilSearchComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/coil-search/pages/coil-search/coil-search.component.ts:2:68:
+[37m      2 │ ...ports:[ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMod...
+        ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of DispatchDetailComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/dispatch/dispatch-detail.component.ts:15:4:
+[37m      15 │     [32mDatePipe[37m,
+         ╵     [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of RoleManagementPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/admin/security/role-management-page.component.ts:2:52:
+[37m      2 │ ...p-role-management',imports:[[32mDatePipe[37m,ReactiveFormsModule,RouterL...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of OtpComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of ResetPasswordComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of CoilSearchComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/coil-search/pages/coil-search/coil-search.component.ts:2:68:
+[37m      2 │ ...ports:[ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMod...
+        ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of DispatchDetailComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/dispatch/dispatch-detail.component.ts:15:4:
+[37m      15 │     [32mDatePipe[37m,
+         ╵     [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of RoleManagementPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/admin/security/role-management-page.component.ts:2:52:
+[37m      2 │ ...p-role-management',imports:[[32mDatePipe[37m,ReactiveFormsModule,RouterL...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of OtpComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of ResetPasswordComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of CoilSearchComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/coil-search/pages/coil-search/coil-search.component.ts:2:68:
+[37m      2 │ ...ports:[ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMod...
+        ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of DispatchDetailComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/dispatch/dispatch-detail.component.ts:15:4:
+[37m      15 │     [32mDatePipe[37m,
+         ╵     [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of RoleManagementPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/admin/security/role-management-page.component.ts:2:52:
+[37m      2 │ ...p-role-management',imports:[[32mDatePipe[37m,ReactiveFormsModule,RouterL...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of OtpComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of ResetPasswordComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of CoilSearchComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/coil-search/pages/coil-search/coil-search.component.ts:2:68:
+[37m      2 │ ...ports:[ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMod...
+        ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of DispatchDetailComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/dispatch/dispatch-detail.component.ts:15:4:
+[37m      15 │     [32mDatePipe[37m,
+         ╵     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'SalesOrderProductType' and 'WorkOrderProductType' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.ts:151:30:
+[37m      151 │ ...er((x) => [32mx.productType === WorkOrderProductType.Lamination[37m) ?...
+          ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of RoleManagementPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/admin/security/role-management-page.component.ts:2:52:
+[37m      2 │ ...p-role-management',imports:[[32mDatePipe[37m,ReactiveFormsModule,RouterL...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of OtpComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of ResetPasswordComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of CoilSearchComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/coil-search/pages/coil-search/coil-search.component.ts:2:68:
+[37m      2 │ ...ports:[ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMod...
+        ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of DispatchDetailComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/dispatch/dispatch-detail.component.ts:15:4:
+[37m      15 │     [32mDatePipe[37m,
+         ╵     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'SalesOrderProductType' and 'WorkOrderProductType' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.ts:151:30:
+[37m      151 │ ...er((x) => [32mx.productType === WorkOrderProductType.Lamination[37m) ?...
+          ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of RoleManagementPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/admin/security/role-management-page.component.ts:2:52:
+[37m      2 │ ...p-role-management',imports:[[32mDatePipe[37m,ReactiveFormsModule,RouterL...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of OtpComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of ResetPasswordComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of CoilSearchComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/coil-search/pages/coil-search/coil-search.component.ts:2:68:
+[37m      2 │ ...ports:[ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMod...
+        ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of DispatchDetailComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/dispatch/dispatch-detail.component.ts:15:4:
+[37m      15 │     [32mDatePipe[37m,
+         ╵     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2367: This comparison appears to be unintentional because the types 'SalesOrderProductType' and 'WorkOrderProductType' have no overlap.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.ts:151:30:
+[37m      151 │ ...er((x) => [32mx.productType === WorkOrderProductType.Lamination[37m) ?...
+          ╵              [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of RoleManagementPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/admin/security/role-management-page.component.ts:2:52:
+[37m      2 │ ...p-role-management',imports:[[32mDatePipe[37m,ReactiveFormsModule,RouterL...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of OtpComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of ResetPasswordComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of CoilSearchComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/coil-search/pages/coil-search/coil-search.component.ts:2:68:
+[37m      2 │ ...ports:[ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMod...
+        ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of DispatchDetailComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/dispatch/dispatch-detail.component.ts:15:4:
+[37m      15 │     [32mDatePipe[37m,
+         ╵     [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of RoleManagementPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/admin/security/role-management-page.component.ts:2:52:
+[37m      2 │ ...p-role-management',imports:[[32mDatePipe[37m,ReactiveFormsModule,RouterL...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of OtpComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of ResetPasswordComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of CoilSearchComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/coil-search/pages/coil-search/coil-search.component.ts:2:68:
+[37m      2 │ ...ports:[ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMod...
+        ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of DispatchDetailComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/dispatch/dispatch-detail.component.ts:15:4:
+[37m      15 │     [32mDatePipe[37m,
+         ╵     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'isLamination' does not exist on type 'WorkOrderFormComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.html:99:75:
+[37m      99 │ ...nput formControlName="customerName" [readonly]="[32misLamination[37m()" />
+         ╵                                                    [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component WorkOrderFormComponent.
+
+    src/app/features/work-orders/work-order-form.component.ts:58:15:
+[37m      58 │   templateUrl: [32m'./work-order-form.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'isLamination' does not exist on type 'WorkOrderFormComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.html:100:29:
+[37m      100 │ ...            <mat-hint>{{ [32misLamination[37m() ? "From Sales Order" :...
+          ╵                             [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component WorkOrderFormComponent.
+
+    src/app/features/work-orders/work-order-form.component.ts:58:15:
+[37m      58 │   templateUrl: [32m'./work-order-form.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'isLamination' does not exist on type 'WorkOrderFormComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.html:104:82:
+[37m      104 │ ...mControlName="salesOrderReference" [readonly]="[32misLamination[37m()" />
+          ╵                                                   [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component WorkOrderFormComponent.
+
+    src/app/features/work-orders/work-order-form.component.ts:58:15:
+[37m      58 │   templateUrl: [32m'./work-order-form.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'isLamination' does not exist on type 'WorkOrderFormComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.html:105:29:
+[37m      105 │ ...            <mat-hint>{{ [32misLamination[37m() ? "From Sales Order" :...
+          ╵                             [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component WorkOrderFormComponent.
+
+    src/app/features/work-orders/work-order-form.component.ts:58:15:
+[37m      58 │   templateUrl: [32m'./work-order-form.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'isLamination' does not exist on type 'WorkOrderFormComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.html:110:24:
+[37m      110 │               ><span>{{ [32misLamination[37m() ? "Customer, requirement, ...
+          ╵                         [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component WorkOrderFormComponent.
+
+    src/app/features/work-orders/work-order-form.component.ts:58:15:
+[37m      58 │   templateUrl: [32m'./work-order-form.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'isLamination' does not exist on type 'WorkOrderFormComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.html:134:19:
+[37m      134 │               @if ([32misLamination[37m()) {
+          ╵                    [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component WorkOrderFormComponent.
+
+    src/app/features/work-orders/work-order-form.component.ts:58:15:
+[37m      58 │   templateUrl: [32m'./work-order-form.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'isLamination' does not exist on type 'WorkOrderFormComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.html:160:30:
+[37m      160 │                   [readonly]="[32misLamination[37m()"
+          ╵                               [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component WorkOrderFormComponent.
+
+    src/app/features/work-orders/work-order-form.component.ts:58:15:
+[37m      58 │   templateUrl: [32m'./work-order-form.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'isLamination' does not exist on type 'WorkOrderFormComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.html:172:30:
+[37m      172 │                   [readonly]="[32misLamination[37m()"
+          ╵                               [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component WorkOrderFormComponent.
+
+    src/app/features/work-orders/work-order-form.component.ts:58:15:
+[37m      58 │   templateUrl: [32m'./work-order-form.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'isLamination' does not exist on type 'WorkOrderFormComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.html:184:30:
+[37m      184 │                   [readonly]="[32misLamination[37m()"
+          ╵                               [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component WorkOrderFormComponent.
+
+    src/app/features/work-orders/work-order-form.component.ts:58:15:
+[37m      58 │   templateUrl: [32m'./work-order-form.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'isLamination' does not exist on type 'WorkOrderFormComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.html:191:77:
+[37m      191 │ ...Input formControlName="drawingNumber" [readonly]="[32misLamination[37m()"
+          ╵                                                      [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component WorkOrderFormComponent.
+
+    src/app/features/work-orders/work-order-form.component.ts:58:15:
+[37m      58 │   templateUrl: [32m'./work-order-form.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'isLamination' does not exist on type 'WorkOrderFormComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.html:210:30:
+[37m      210 │                   [disabled]="[32misLamination[37m()"
+          ╵                               [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component WorkOrderFormComponent.
+
+    src/app/features/work-orders/work-order-form.component.ts:58:15:
+[37m      58 │   templateUrl: [32m'./work-order-form.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'isLamination' does not exist on type 'WorkOrderFormComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.html:210:30:
+[37m      210 │                   [disabled]="[32misLamination[37m()"
+          ╵                               [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component WorkOrderFormComponent.
+
+    src/app/features/work-orders/work-order-form.component.ts:58:15:
+[37m      58 │   templateUrl: [32m'./work-order-form.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'isLamination' does not exist on type 'WorkOrderFormComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.html:227:30:
+[37m      227 │                   [readonly]="[32misLamination[37m()"
+          ╵                               [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component WorkOrderFormComponent.
+
+    src/app/features/work-orders/work-order-form.component.ts:58:15:
+[37m      58 │   templateUrl: [32m'./work-order-form.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'isLamination' does not exist on type 'WorkOrderFormComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.html:234:72:
+[37m      234 │ ...ontrolName="category" [readonly]="[32misLamination[37m()" /><mat-error>{{
+          ╵                                      [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component WorkOrderFormComponent.
+
+    src/app/features/work-orders/work-order-form.component.ts:58:15:
+[37m      58 │   templateUrl: [32m'./work-order-form.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'isLamination' does not exist on type 'WorkOrderFormComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/work-orders/work-order-form.component.html:245:30:
+[37m      245 │                   [readonly]="[32misLamination[37m()"
+          ╵                               [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component WorkOrderFormComponent.
+
+    src/app/features/work-orders/work-order-form.component.ts:58:15:
+[37m      58 │   templateUrl: [32m'./work-order-form.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of RoleManagementPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/admin/security/role-management-page.component.ts:2:52:
+[37m      2 │ ...p-role-management',imports:[[32mDatePipe[37m,ReactiveFormsModule,RouterL...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of OtpComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of ResetPasswordComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of CoilSearchComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/coil-search/pages/coil-search/coil-search.component.ts:2:68:
+[37m      2 │ ...ports:[ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMod...
+        ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of DispatchDetailComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/dispatch/dispatch-detail.component.ts:15:4:
+[37m      15 │     [32mDatePipe[37m,
+         ╵     [32m~~~~~~~~[0m
+
+

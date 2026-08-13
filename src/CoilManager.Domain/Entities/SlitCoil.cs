@@ -100,6 +100,9 @@ public sealed class SlitCoil : SoftDeletableEntity
 
     public void ConsumeForLamination(decimal weight) { if(weight<0||weight>Weight)throw new InvalidOperationException("Consumed weight exceeds current Slit Coil weight."); Weight-=weight; Status=Weight==0?CoilStatus.Consumed:CoilStatus.Available; }
 
+    public void SetStatus(CoilStatus status) => Status = status;
+    public void Dispatch(decimal weight,bool keepReserved){if(weight<=0||weight>Weight)throw new InvalidOperationException("Dispatch exceeds Slit Coil weight.");Weight-=weight;Status=Weight<=0?CoilStatus.Dispatched:keepReserved?CoilStatus.Reserved:CoilStatus.Available;}
+
     public void IncrementLabelVersion()
     {
         int version = int.TryParse(LabelVersion, out int current) ? current : 1;

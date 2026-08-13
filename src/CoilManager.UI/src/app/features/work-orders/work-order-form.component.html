@@ -1,12 +1,12 @@
 <section class="page-title-bar">
   <div>
-    <h1>{{ editId() ? 'Edit Work Order' : 'Create Work Order' }}</h1>
+    <h1>{{ editId() ? "Edit Work Order" : "Create Work Order" }}</h1>
     <nav>
       <a routerLink="/dashboard">Home</a>
       <mat-icon>chevron_right</mat-icon>
       <a routerLink="/work-orders">Work Orders</a>
       <mat-icon>chevron_right</mat-icon>
-      <strong>{{ editId() ? 'Edit' : 'Create' }}</strong>
+      <strong>{{ editId() ? "Edit" : "Create" }}</strong>
     </nav>
   </div>
   <span class="draft-badge">Draft</span>
@@ -21,7 +21,9 @@
 
       @if (apiErrors().length) {
         <div class="error-panel">
-          @for (error of apiErrors(); track error) { <span>{{ error }}</span> }
+          @for (error of apiErrors(); track error) {
+            <span>{{ error }}</span>
+          }
         </div>
       }
 
@@ -30,22 +32,36 @@
           <section class="form-section">
             <header>
               <div class="section-icon"><mat-icon>assignment</mat-icon></div>
-              <div><h2>Work Order Identity</h2><span>Document number, planning dates, and priority.</span></div>
+              <div>
+                <h2>Work Order Identity</h2>
+                <span>Document number, planning dates, and priority.</span>
+              </div>
             </header>
             <div class="form-grid">
               <mat-form-field appearance="outline">
                 <mat-label>Work Order Number</mat-label>
-                <input matInput [value]="number()" readonly>
-                <mat-hint>The server confirms the final number on save.</mat-hint>
+                <input matInput [value]="number()" readonly />
+                <mat-hint
+                  >The server confirms the final number on save.</mat-hint
+                >
               </mat-form-field>
               <mat-form-field appearance="outline">
                 <mat-label>Work Order Date</mat-label>
-                <input matInput type="date" formControlName="workOrderDate">
-                <mat-error>{{ errorFor('workOrderDate') }}</mat-error>
+                <input matInput type="date" formControlName="workOrderDate" />
+                <mat-error>{{ errorFor("workOrderDate") }}</mat-error>
               </mat-form-field>
               <mat-form-field appearance="outline">
                 <mat-label>Required Date</mat-label>
-                <input matInput type="date" formControlName="requiredDate">
+                <input
+                  matInput
+                  [matDatepicker]="requiredDatePicker"
+                  formControlName="requiredDate"
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="requiredDatePicker"
+                />
+                <mat-datepicker #requiredDatePicker />
               </mat-form-field>
               <mat-form-field appearance="outline">
                 <mat-label>Priority</mat-label>
@@ -61,99 +77,203 @@
           <section class="form-section">
             <header>
               <div class="section-icon"><mat-icon>source</mat-icon></div>
-              <div><h2>Order Source</h2><span>Customer demand, inventory production, rework, or trial.</span></div>
+              <div>
+                <h2>Order Source</h2>
+                <span
+                  >Customer demand, inventory production, rework, or
+                  trial.</span
+                >
+              </div>
             </header>
             <div class="form-grid">
               <mat-form-field appearance="outline">
                 <mat-label>Work Order Type</mat-label>
                 <mat-select formControlName="workOrderType">
-                  @for (type of typeLabels; track $index) { <mat-option [value]="$index">{{ type }}</mat-option> }
+                  @for (type of typeLabels; track $index) {
+                    <mat-option [value]="$index">{{ type }}</mat-option>
+                  }
                 </mat-select>
               </mat-form-field>
               <mat-form-field appearance="outline">
                 <mat-label>Customer Name</mat-label>
-                <input matInput formControlName="customerName">
-                <mat-hint>Optional for MVP</mat-hint>
+                <input matInput formControlName="customerName" [readonly]="isSalesOrderDriven()" />
+                <mat-hint>From Sales Order</mat-hint>
               </mat-form-field>
               <mat-form-field appearance="outline">
                 <mat-label>Sales Order Reference</mat-label>
-                <input matInput formControlName="salesOrderReference">
-                <mat-hint>Optional for MVP</mat-hint>
+                <input matInput formControlName="salesOrderReference" [readonly]="isSalesOrderDriven()" />
+                <mat-hint>From Sales Order</mat-hint>
               </mat-form-field>
             </div>
-            <div class="info-banner"><mat-icon>info</mat-icon><span>Customer and Sales Order masters are deferred; these references are optional text fields.</span></div>
+            <div class="info-banner">
+              <mat-icon>info</mat-icon
+              ><span>Customer, requirement, and material specification are controlled by the selected Sales Order line.</span>
+            </div>
           </section>
 
           <section class="form-section">
             <header>
               <div class="section-icon"><mat-icon>inventory_2</mat-icon></div>
-              <div><h2>Product Requirement</h2><span>Product, dimensions, target weight, and quantity.</span></div>
+              <div>
+                <h2>Product Requirement</h2>
+                <span>Product, dimensions, target weight, and quantity.</span>
+              </div>
             </header>
             <div class="form-grid">
               <mat-form-field appearance="outline">
                 <mat-label>Product Type</mat-label>
-                <mat-select formControlName="productType">
+                <mat-select formControlName="productType" (selectionChange)="productChanged()">
                   @for (product of productLabels; track $index) {
-                    <mat-option [value]="$index" [disabled]="$index === 3">{{ product }}{{ $index === 3 ? ' — Coming Soon' : '' }}</mat-option>
+                    <mat-option [value]="$index" [disabled]="$index === 3"
+                      >{{ product
+                      }}{{ $index === 3 ? " — Coming Soon" : "" }}</mat-option
+                    >
                   }
                 </mat-select>
               </mat-form-field>
-              <mat-form-field appearance="outline"><mat-label>Required Width (mm)</mat-label><input matInput type="number" step="0.001" formControlName="requiredWidth"><mat-error>{{ errorFor('requiredWidth') }}</mat-error></mat-form-field>
-              <mat-form-field appearance="outline"><mat-label>Required Weight (kg)</mat-label><input matInput type="number" step="0.001" formControlName="requiredWeight"><mat-error>{{ errorFor('requiredWeight') }}</mat-error></mat-form-field>
-              <mat-form-field appearance="outline"><mat-label>Required Quantity</mat-label><input matInput type="number" step="1" formControlName="requiredQuantity"><mat-error>{{ errorFor('requiredQuantity') }}</mat-error></mat-form-field>
-              <mat-form-field appearance="outline"><mat-label>Drawing Number</mat-label><input matInput formControlName="drawingNumber"></mat-form-field>
+              @if (isSalesOrderDriven()) {
+                <mat-form-field appearance="outline">
+                  <mat-label>Sales Order</mat-label>
+                  <mat-select formControlName="salesOrderId" (selectionChange)="salesOrderChanged($event.value)">
+                    @for (order of salesOrders(); track order.id) {
+                      <mat-option [value]="order.id">{{ order.salesOrderNumber }} - {{ order.customerName }}</mat-option>
+                    }
+                  </mat-select>
+                  <mat-hint>Confirmed Sales Orders only</mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Sales Order Item</mat-label>
+                  <mat-select formControlName="salesOrderLineId" (selectionChange)="salesOrderLineChanged($event.value)">
+                    @for (line of salesOrderLines(); track line.id) {
+                      <mat-option [value]="line.id">Line {{ line.lineNumber }} - {{ line.description }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              }
+              <mat-form-field appearance="outline"
+                ><mat-label>Required Width (mm)</mat-label
+                ><input
+                  matInput
+                  type="number"
+                  step="0.001"
+                  formControlName="requiredWidth"
+                  [readonly]="isSalesOrderDriven()"
+                /><mat-error>{{
+                  errorFor("requiredWidth")
+                }}</mat-error></mat-form-field
+              >
+              <mat-form-field appearance="outline"
+                ><mat-label>Required Weight (kg)</mat-label
+                ><input
+                  matInput
+                  type="number"
+                  step="0.001"
+                  formControlName="requiredWeight"
+                  [readonly]="isSalesOrderDriven()"
+                /><mat-error>{{
+                  errorFor("requiredWeight")
+                }}</mat-error></mat-form-field
+              >
+              <mat-form-field appearance="outline"
+                ><mat-label>Required Quantity</mat-label
+                ><input
+                  matInput
+                  type="number"
+                  step="1"
+                  formControlName="requiredQuantity"
+                  [readonly]="isSalesOrderDriven()"
+                /><mat-error>{{
+                  errorFor("requiredQuantity")
+                }}</mat-error></mat-form-field
+              >
+              <mat-form-field appearance="outline"
+                ><mat-label>Drawing Number</mat-label
+                ><input matInput formControlName="drawingNumber" [readonly]="isSalesOrderDriven()"
+              /></mat-form-field>
             </div>
           </section>
 
           <section class="form-section">
             <header>
               <div class="section-icon"><mat-icon>category</mat-icon></div>
-              <div><h2>Material Specification</h2><span>Grade and electrical steel specification.</span></div>
+              <div>
+                <h2>Material Specification</h2>
+                <span>Grade and electrical steel specification.</span>
+              </div>
             </header>
             <div class="form-grid">
               <mat-form-field appearance="outline">
                 <mat-label>Grade</mat-label>
-                <mat-select formControlName="gradeId" (selectionChange)="gradeChanged($event.value)">
+                <mat-select
+                  formControlName="gradeId"
+                  (selectionChange)="gradeChanged($event.value)"
+                  [disabled]="isSalesOrderDriven()"
+                >
                   <mat-option [value]="null">Not specified</mat-option>
-                  @for (grade of grades(); track grade.id) { <mat-option [value]="grade.id">{{ grade.code }} — {{ grade.name }}</mat-option> }
+                  @for (grade of grades(); track grade.id) {
+                    <mat-option [value]="grade.id"
+                      >{{ grade.code }} — {{ grade.name }}</mat-option
+                    >
+                  }
                 </mat-select>
               </mat-form-field>
-              <mat-form-field appearance="outline"><mat-label>Thickness (mm)</mat-label><input matInput type="number" step="0.001" formControlName="thickness"><mat-error>{{ errorFor('thickness') }}</mat-error></mat-form-field>
-              <mat-form-field appearance="outline"><mat-label>Category</mat-label><input matInput formControlName="category"><mat-error>{{ errorFor('category') }}</mat-error></mat-form-field>
-              <mat-form-field appearance="outline"><mat-label>Core Loss / kg</mat-label><input matInput type="number" step="0.0001" formControlName="coreLossPerKg"><mat-error>{{ errorFor('coreLossPerKg') }}</mat-error></mat-form-field>
+              <mat-form-field appearance="outline"
+                ><mat-label>Thickness (mm)</mat-label
+                ><input
+                  matInput
+                  type="number"
+                  step="0.001"
+                  formControlName="thickness"
+                  [readonly]="isSalesOrderDriven()"
+                /><mat-error>{{
+                  errorFor("thickness")
+                }}</mat-error></mat-form-field
+              >
+              <mat-form-field appearance="outline"
+                ><mat-label>Category</mat-label
+                ><input matInput formControlName="category" [readonly]="isSalesOrderDriven()" /><mat-error>{{
+                  errorFor("category")
+                }}</mat-error></mat-form-field
+              >
+              <mat-form-field appearance="outline"
+                ><mat-label>Core Loss / kg</mat-label
+                ><input
+                  matInput
+                  type="number"
+                  step="0.0001"
+                  formControlName="coreLossPerKg"
+                  [readonly]="isSalesOrderDriven()"
+                /><mat-error>{{
+                  errorFor("coreLossPerKg")
+                }}</mat-error></mat-form-field
+              >
             </div>
-          </section>
-
-          <section class="form-section">
-            <header>
-              <div class="section-icon"><mat-icon>account_tree</mat-icon></div>
-              <div><h2>Operation Routing</h2><span>Automatically configured from the selected product.</span></div>
-            </header>
-            <div class="route-grid">
-              @for (operation of routing(); track operation.name; let index = $index) {
-                <div class="route-card" [class.not-required]="!operation.required">
-                  <span class="route-sequence">{{ index + 1 }}</span>
-                  <mat-icon>{{ operation.required ? 'pending_actions' : 'remove_circle_outline' }}</mat-icon>
-                  <div><strong>{{ operation.name }}</strong><span>{{ operation.required ? 'Pending' : 'Not Required' }}</span></div>
-                </div>
-              }
-            </div>
-            <p class="section-note">For Lamination, Slitting may be marked Not Required later when suitable Slit Coil inventory is selected.</p>
           </section>
 
           <section class="form-section">
             <header>
               <div class="section-icon"><mat-icon>notes</mat-icon></div>
-              <div><h2>Remarks</h2><span>Optional instructions for planning and production.</span></div>
+              <div>
+                <h2>Remarks</h2>
+                <span>Optional instructions for planning and production.</span>
+              </div>
             </header>
-            <mat-form-field appearance="outline" class="full-width"><mat-label>Planning remarks</mat-label><textarea matInput rows="4" formControlName="remarks"></textarea></mat-form-field>
+            <mat-form-field appearance="outline" class="full-width"
+              ><mat-label>Planning remarks</mat-label
+              ><textarea matInput rows="4" formControlName="remarks"></textarea>
+            </mat-form-field>
           </section>
         </div>
 
         <div class="actions">
           <a mat-stroked-button routerLink="/work-orders">Cancel</a>
-          <button mat-flat-button type="submit" [disabled]="form.invalid || isLoading() || isSaving()">
-            <mat-icon>save</mat-icon>{{ editId() ? 'Update Work Order' : 'Create Work Order' }}
+          <button
+            mat-flat-button
+            type="submit"
+            [disabled]="form.invalid || isLoading() || isSaving()"
+          >
+            <mat-icon>save</mat-icon
+            >{{ editId() ? "Update Work Order" : "Create Work Order" }}
           </button>
         </div>
       </form>
@@ -162,18 +282,49 @@
 
   <aside class="summary-column">
     <mat-card appearance="outlined" class="summary-card">
-      <div class="summary-header"><div class="summary-icon"><mat-icon>assignment</mat-icon></div><div><span>Live Summary</span><strong>{{ number() }}</strong></div></div>
+      <div class="summary-header">
+        <div class="summary-icon"><mat-icon>assignment</mat-icon></div>
+        <div>
+          <span>Live Summary</span><strong>{{ number() }}</strong>
+        </div>
+      </div>
       <dl>
-        <div><dt>Source</dt><dd>{{ summary().source }}</dd></div>
-        <div><dt>Product</dt><dd>{{ summary().product }}</dd></div>
-        <div><dt>Grade</dt><dd>{{ summary().grade }}</dd></div>
-        <div><dt>Requirement</dt><dd>{{ summary().requiredWeight }} kg / {{ summary().requiredQuantity }} units</dd></div>
-        <div><dt>Priority</dt><dd><span class="priority-badge">P{{ summary().priority }}</span></dd></div>
+        <div>
+          <dt>Source</dt>
+          <dd>{{ summary().source }}</dd>
+        </div>
+        <div>
+          <dt>Product</dt>
+          <dd>{{ summary().product }}</dd>
+        </div>
+        <div>
+          <dt>Grade</dt>
+          <dd>{{ summary().grade }}</dd>
+        </div>
+        <div>
+          <dt>Requirement</dt>
+          <dd>
+            {{ summary().requiredWeight }} kg /
+            {{ summary().requiredQuantity }} units
+          </dd>
+        </div>
+        <div>
+          <dt>Priority</dt>
+          <dd>
+            <span class="priority-badge">P{{ summary().priority }}</span>
+          </dd>
+        </div>
       </dl>
     </mat-card>
     <mat-card appearance="outlined" class="help-card">
       <mat-icon>lightbulb</mat-icon>
-      <div><strong>Planning tip</strong><p>Save the Work Order in Draft, review its generated routing, then Release it before allocating material.</p></div>
+      <div>
+        <strong>Planning tip</strong>
+        <p>
+          Save the Work Order in Draft, review its generated routing, then
+          Release it before allocating material.
+        </p>
+      </div>
     </mat-card>
   </aside>
 </section>

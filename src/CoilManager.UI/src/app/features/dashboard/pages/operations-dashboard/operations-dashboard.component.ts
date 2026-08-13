@@ -69,6 +69,11 @@ export class OperationsDashboardComponent implements OnInit {
       });
   }
 
+  protected laminationRoute(status: number, id: string): readonly string[] {
+    if (status === 0) return ['/lamination-jobs', id, 'edit'];
+    if (status === 1 || status === 2) return ['/lamination-jobs', id, 'material-allocation'];
+    return ['/lamination-jobs', id, 'complete'];
+  }
   private resolveDashboardRole(): string {
     return 'Operations';
   }

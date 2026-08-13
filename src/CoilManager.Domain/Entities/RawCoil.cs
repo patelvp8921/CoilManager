@@ -146,4 +146,5 @@ public sealed class RawCoil : SoftDeletableEntity
     {
         Status = status;
     }
+    public void Dispatch(decimal weight,bool keepReserved){if(weight<=0||weight>Weight)throw new InvalidOperationException("Dispatch exceeds Mother Coil weight.");Weight-=weight;Status=Weight<=0?CoilStatus.Dispatched:keepReserved?CoilStatus.Reserved:CoilStatus.Available;}
 }

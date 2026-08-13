@@ -1,0 +1,303 @@
+[23:19:00 INF] Now listening on: http://localhost:5170
+[23:19:00 INF] Application started. Press Ctrl+C to shut down.
+[23:19:00 INF] Hosting environment: Development
+[23:19:00 INF] Content root path: C:\VISHAL\Codes\CoilManager\src\CoilManager.API
+[23:19:31 WRN] Failed to determine the https port for redirect.
+[23:19:31 INF] HTTP OPTIONS /api/work-orders/f552d63b-99f3-4da6-b26a-20e4df9766df responded 204 in 12.6092 ms
+[23:19:33 INF] HTTP OPTIONS /api/lamination-jobs responded 204 in 0.6956 ms
+[23:19:33 WRN] Entity 'SlitCoil' has a global query filter defined and is the required end of a relationship with the entity 'SlitCoilLabelPrintHistory'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+[23:19:33 WRN] Entity 'RawCoil' has a global query filter defined and is the required end of a relationship with the entity 'SlittingJob'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+[23:19:33 WRN] Entity 'User' has a global query filter defined and is the required end of a relationship with the entity 'UserRole'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+[23:19:33 WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+[23:19:34 INF] Executed DbCommand (37ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [app].[LaminationJobs] AS [l]
+WHERE [l].[IsDeleted] = CAST(0 AS bit)
+[23:19:34 INF] Executed DbCommand (40ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[CancellationReason], [t].[CancelledBy], [t].[CancelledOn], [t].[Category], [t].[ClosedBy], [t].[ClosedOn], [t].[CompletedBy], [t].[CompletedOn], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[CustomerCode], [t].[CustomerId], [t].[CustomerName], [t].[CustomerPONumber], [t].[Description], [t].[DispatchedQuantity], [t].[DrawingNumber], [t].[DrawingRevision], [t].[FulfilmentStrategy], [t].[GradeCode], [t].[GradeId], [t].[Length], [t].[OEMJobNumber], [t].[PlannedInventoryQuantity], [t].[PlannedProductionQuantity], [t].[PlannedStartDate], [t].[Planner], [t].[PlanningRequiredQuantity], [t].[Priority], [t].[ProducedQuantity], [t].[ProductType], [t].[ProductionRoute], [t].[QuantityUnit], [t].[ReadyQuantity], [t].[ReleasedBy], [t].[ReleasedOn], [t].[Remarks], [t].[RequiredDate], [t].[RequiredQuantity], [t].[RequiredWeight], [t].[RequiredWidth], [t].[ReservedInventoryQuantity], [t].[RowVersion], [t].[SalesOrderId], [t].[SalesOrderLineId], [t].[SalesOrderLineNumber], [t].[SalesOrderNumber], [t].[SalesOrderReference], [t].[SourceType], [t].[StartedBy], [t].[StartedOn], [t].[Status], [t].[Thickness], [t].[TransformerRating], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WorkOrderDate], [t].[WorkOrderNumber], [t].[WorkOrderType], [t].[Id0], [t].[Category0], [t].[Code], [t].[CoreLossPerKg0], [t].[CreatedAtUtc0], [t].[CreatedBy0], [t].[Description0], [t].[IsActive], [t].[Name], [t].[RowVersion0], [t].[ThicknessMm], [t].[UpdatedAtUtc0], [t].[UpdatedBy0], [w0].[Id], [w0].[CompletedOn], [w0].[IsRequired], [w0].[OperationType], [w0].[RelatedDocumentId], [w0].[RelatedDocumentNumber], [w0].[Remarks], [w0].[Sequence], [w0].[StartedOn], [w0].[Status], [w0].[WorkOrderId], [w1].[Id], [w1].[AllocatedWeight], [w1].[CoilNumber], [w1].[CoilType], [w1].[ConsumedWeight], [w1].[CreatedBy], [w1].[CreatedOn], [w1].[IssuedWeight], [w1].[MotherCoilId], [w1].[ReleasedBy], [w1].[ReleasedOn], [w1].[RemainingWeightAfterAllocation], [w1].[Remarks], [w1].[ReservedBy], [w1].[ReservedOn], [w1].[SlitCoilId], [w1].[Status], [w1].[WorkOrderId]
+FROM (
+    SELECT TOP(1) [w].[Id], [w].[CancellationReason], [w].[CancelledBy], [w].[CancelledOn], [w].[Category], [w].[ClosedBy], [w].[ClosedOn], [w].[CompletedBy], [w].[CompletedOn], [w].[CoreLossPerKg], [w].[CreatedAtUtc], [w].[CreatedBy], [w].[CustomerCode], [w].[CustomerId], [w].[CustomerName], [w].[CustomerPONumber], [w].[Description], [w].[DispatchedQuantity], [w].[DrawingNumber], [w].[DrawingRevision], [w].[FulfilmentStrategy], [w].[GradeCode], [w].[GradeId], [w].[Length], [w].[OEMJobNumber], [w].[PlannedInventoryQuantity], [w].[PlannedProductionQuantity], [w].[PlannedStartDate], [w].[Planner], [w].[PlanningRequiredQuantity], [w].[Priority], [w].[ProducedQuantity], [w].[ProductType], [w].[ProductionRoute], [w].[QuantityUnit], [w].[ReadyQuantity], [w].[ReleasedBy], [w].[ReleasedOn], [w].[Remarks], [w].[RequiredDate], [w].[RequiredQuantity], [w].[RequiredWeight], [w].[RequiredWidth], [w].[ReservedInventoryQuantity], [w].[RowVersion], [w].[SalesOrderId], [w].[SalesOrderLineId], [w].[SalesOrderLineNumber], [w].[SalesOrderNumber], [w].[SalesOrderReference], [w].[SourceType], [w].[StartedBy], [w].[StartedOn], [w].[Status], [w].[Thickness], [w].[TransformerRating], [w].[UpdatedAtUtc], [w].[UpdatedBy], [w].[WorkOrderDate], [w].[WorkOrderNumber], [w].[WorkOrderType], [g].[Id] AS [Id0], [g].[Category] AS [Category0], [g].[Code], [g].[CoreLossPerKg] AS [CoreLossPerKg0], [g].[CreatedAtUtc] AS [CreatedAtUtc0], [g].[CreatedBy] AS [CreatedBy0], [g].[Description] AS [Description0], [g].[IsActive], [g].[Name], [g].[RowVersion] AS [RowVersion0], [g].[ThicknessMm], [g].[UpdatedAtUtc] AS [UpdatedAtUtc0], [g].[UpdatedBy] AS [UpdatedBy0]
+    FROM [app].[WorkOrders] AS [w]
+    LEFT JOIN [app].[Grades] AS [g] ON [w].[GradeId] = [g].[Id]
+    WHERE [w].[Id] = @__id_0
+) AS [t]
+LEFT JOIN [app].[WorkOrderOperations] AS [w0] ON [t].[Id] = [w0].[WorkOrderId]
+LEFT JOIN [app].[WorkOrderMaterialAllocations] AS [w1] ON [t].[Id] = [w1].[WorkOrderId]
+ORDER BY [t].[Id], [t].[Id0], [w0].[Id]
+[23:19:34 INF] Executed DbCommand (7ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[AllocatedBy], [t].[AllocatedOn], [t].[BottomPlateWeight], [t].[CancelledBy], [t].[CancelledOn], [t].[Category], [t].[CenterPlateWeight], [t].[CompletedBy], [t].[CompletedOn], [t].[CompletionRemarks], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[Customer], [t].[CustomerCoreLossPerKg], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[DesignType], [t].[DrawingAttachmentName], [t].[DrawingAttachmentPath], [t].[GradeId], [t].[IsDeleted], [t].[JobOrDrawingNumber], [t].[LaminationJobNumber], [t].[LeftSidePlateWeight], [t].[NoLoadLossWatts], [t].[NumberOfSteps], [t].[PlannedDate], [t].[PlannerName], [t].[Rating], [t].[ReleasedBy], [t].[ReleasedOn], [t].[Remarks], [t].[RequiredDate], [t].[RightSidePlateWeight], [t].[RowVersion], [t].[Shift], [t].[Status], [t].[StepLapOrientation], [t].[Thickness], [t].[TopPlateWeight], [t].[TotalAllocatedWeight], [t].[TotalConsumedWeight], [t].[TotalGoodPieces], [t].[TotalJobWeight], [t].[TotalPlannedPieces], [t].[TotalPlannedWeight], [t].[TotalRejectedPieces], [t].[TotalScrapWeight], [t].[TotalWeight], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WorkOrderId], [t].[WorkOrderNumber], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy]
+FROM (
+    SELECT [l].[Id], [l].[AllocatedBy], [l].[AllocatedOn], [l].[BottomPlateWeight], [l].[CancelledBy], [l].[CancelledOn], [l].[Category], [l].[CenterPlateWeight], [l].[CompletedBy], [l].[CompletedOn], [l].[CompletionRemarks], [l].[CoreLossPerKg], [l].[CreatedAtUtc], [l].[CreatedBy], [l].[Customer], [l].[CustomerCoreLossPerKg], [l].[DeletedAtUtc], [l].[DeletedBy], [l].[DesignType], [l].[DrawingAttachmentName], [l].[DrawingAttachmentPath], [l].[GradeId], [l].[IsDeleted], [l].[JobOrDrawingNumber], [l].[LaminationJobNumber], [l].[LeftSidePlateWeight], [l].[NoLoadLossWatts], [l].[NumberOfSteps], [l].[PlannedDate], [l].[PlannerName], [l].[Rating], [l].[ReleasedBy], [l].[ReleasedOn], [l].[Remarks], [l].[RequiredDate], [l].[RightSidePlateWeight], [l].[RowVersion], [l].[Shift], [l].[Status], [l].[StepLapOrientation], [l].[Thickness], [l].[TopPlateWeight], [l].[TotalAllocatedWeight], [l].[TotalConsumedWeight], [l].[TotalGoodPieces], [l].[TotalJobWeight], [l].[TotalPlannedPieces], [l].[TotalPlannedWeight], [l].[TotalRejectedPieces], [l].[TotalScrapWeight], [l].[TotalWeight], [l].[UpdatedAtUtc], [l].[UpdatedBy], [l].[WorkOrderId], [l].[WorkOrderNumber]
+    FROM [app].[LaminationJobs] AS [l]
+    WHERE [l].[IsDeleted] = CAST(0 AS bit)
+    ORDER BY [l].[CreatedAtUtc] DESC
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [t]
+INNER JOIN [app].[Grades] AS [g] ON [t].[GradeId] = [g].[Id]
+ORDER BY [t].[CreatedAtUtc] DESC
+[23:19:34 INF] Executed DbCommand (7ms) [Parameters=[@__workOrderId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[CancelledBy], [s].[CancelledOn], [s].[CompletedBy], [s].[CompletedOn], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[KnifeThickness], [s].[LeftEdgeTrim], [s].[MachineId], [s].[MotherCoilId], [s].[PlannerId], [s].[PlanningDate], [s].[ProductionType], [s].[ReleasedBy], [s].[ReleasedOn], [s].[Remarks], [s].[RightEdgeTrim], [s].[RowVersion], [s].[Shift], [s].[SlittingJobNo], [s].[StartedBy], [s].[StartedOn], [s].[Status], [s].[UpdatedAtUtc], [s].[UpdatedBy], [s].[WorkOrderId], [s].[WorkOrderNumber], [s].[WorkOrderOperationId]
+FROM [app].[SlittingJobs] AS [s]
+WHERE [s].[WorkOrderId] = @__workOrderId_0
+[23:19:34 INF] HTTP GET /api/lamination-jobs responded 200 in 1354.8788 ms
+[23:19:34 INF] Executed DbCommand (7ms) [Parameters=[@__workOrderId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[AllocatedBy], [t].[AllocatedOn], [t].[BottomPlateWeight], [t].[CancelledBy], [t].[CancelledOn], [t].[Category], [t].[CenterPlateWeight], [t].[CompletedBy], [t].[CompletedOn], [t].[CompletionRemarks], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[Customer], [t].[CustomerCoreLossPerKg], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[DesignType], [t].[DrawingAttachmentName], [t].[DrawingAttachmentPath], [t].[GradeId], [t].[IsDeleted], [t].[JobOrDrawingNumber], [t].[LaminationJobNumber], [t].[LeftSidePlateWeight], [t].[NoLoadLossWatts], [t].[NumberOfSteps], [t].[PlannedDate], [t].[PlannerName], [t].[Rating], [t].[ReleasedBy], [t].[ReleasedOn], [t].[Remarks], [t].[RequiredDate], [t].[RightSidePlateWeight], [t].[RowVersion], [t].[Shift], [t].[Status], [t].[StepLapOrientation], [t].[Thickness], [t].[TopPlateWeight], [t].[TotalAllocatedWeight], [t].[TotalConsumedWeight], [t].[TotalGoodPieces], [t].[TotalJobWeight], [t].[TotalPlannedPieces], [t].[TotalPlannedWeight], [t].[TotalRejectedPieces], [t].[TotalScrapWeight], [t].[TotalWeight], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WorkOrderId], [t].[WorkOrderNumber], [l0].[Id], [l0].[AllocatedWeight], [l0].[ConsumedWeight], [l0].[CreatedBy], [l0].[CreatedOn], [l0].[IssuedWeight], [l0].[LaminationJobId], [l0].[ReleasedBy], [l0].[ReleasedOn], [l0].[RemainingWeightAfterAllocation], [l0].[Remarks], [l0].[RequiredWidth], [l0].[ReservedBy], [l0].[ReservedOn], [l0].[SlitCoilId], [l0].[SlitCoilNumber], [l0].[Status]
+FROM (
+    SELECT TOP(1) [l].[Id], [l].[AllocatedBy], [l].[AllocatedOn], [l].[BottomPlateWeight], [l].[CancelledBy], [l].[CancelledOn], [l].[Category], [l].[CenterPlateWeight], [l].[CompletedBy], [l].[CompletedOn], [l].[CompletionRemarks], [l].[CoreLossPerKg], [l].[CreatedAtUtc], [l].[CreatedBy], [l].[Customer], [l].[CustomerCoreLossPerKg], [l].[DeletedAtUtc], [l].[DeletedBy], [l].[DesignType], [l].[DrawingAttachmentName], [l].[DrawingAttachmentPath], [l].[GradeId], [l].[IsDeleted], [l].[JobOrDrawingNumber], [l].[LaminationJobNumber], [l].[LeftSidePlateWeight], [l].[NoLoadLossWatts], [l].[NumberOfSteps], [l].[PlannedDate], [l].[PlannerName], [l].[Rating], [l].[ReleasedBy], [l].[ReleasedOn], [l].[Remarks], [l].[RequiredDate], [l].[RightSidePlateWeight], [l].[RowVersion], [l].[Shift], [l].[Status], [l].[StepLapOrientation], [l].[Thickness], [l].[TopPlateWeight], [l].[TotalAllocatedWeight], [l].[TotalConsumedWeight], [l].[TotalGoodPieces], [l].[TotalJobWeight], [l].[TotalPlannedPieces], [l].[TotalPlannedWeight], [l].[TotalRejectedPieces], [l].[TotalScrapWeight], [l].[TotalWeight], [l].[UpdatedAtUtc], [l].[UpdatedBy], [l].[WorkOrderId], [l].[WorkOrderNumber]
+    FROM [app].[LaminationJobs] AS [l]
+    WHERE [l].[IsDeleted] = CAST(0 AS bit) AND [l].[WorkOrderId] = @__workOrderId_0
+) AS [t]
+LEFT JOIN [app].[LaminationJobMaterialAllocations] AS [l0] ON [t].[Id] = [l0].[LaminationJobId]
+ORDER BY [t].[Id]
+[23:19:34 INF] HTTP GET /api/work-orders/f552d63b-99f3-4da6-b26a-20e4df9766df responded 200 in 2929.8044 ms
+[23:19:34 INF] HTTP OPTIONS /api/work-orders/f552d63b-99f3-4da6-b26a-20e4df9766df/next-actions responded 204 in 0.0558 ms
+[23:19:34 INF] Executed DbCommand (1ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[CancellationReason], [t].[CancelledBy], [t].[CancelledOn], [t].[Category], [t].[ClosedBy], [t].[ClosedOn], [t].[CompletedBy], [t].[CompletedOn], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[CustomerCode], [t].[CustomerId], [t].[CustomerName], [t].[CustomerPONumber], [t].[Description], [t].[DispatchedQuantity], [t].[DrawingNumber], [t].[DrawingRevision], [t].[FulfilmentStrategy], [t].[GradeCode], [t].[GradeId], [t].[Length], [t].[OEMJobNumber], [t].[PlannedInventoryQuantity], [t].[PlannedProductionQuantity], [t].[PlannedStartDate], [t].[Planner], [t].[PlanningRequiredQuantity], [t].[Priority], [t].[ProducedQuantity], [t].[ProductType], [t].[ProductionRoute], [t].[QuantityUnit], [t].[ReadyQuantity], [t].[ReleasedBy], [t].[ReleasedOn], [t].[Remarks], [t].[RequiredDate], [t].[RequiredQuantity], [t].[RequiredWeight], [t].[RequiredWidth], [t].[ReservedInventoryQuantity], [t].[RowVersion], [t].[SalesOrderId], [t].[SalesOrderLineId], [t].[SalesOrderLineNumber], [t].[SalesOrderNumber], [t].[SalesOrderReference], [t].[SourceType], [t].[StartedBy], [t].[StartedOn], [t].[Status], [t].[Thickness], [t].[TransformerRating], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WorkOrderDate], [t].[WorkOrderNumber], [t].[WorkOrderType], [t].[Id0], [t].[Category0], [t].[Code], [t].[CoreLossPerKg0], [t].[CreatedAtUtc0], [t].[CreatedBy0], [t].[Description0], [t].[IsActive], [t].[Name], [t].[RowVersion0], [t].[ThicknessMm], [t].[UpdatedAtUtc0], [t].[UpdatedBy0], [w0].[Id], [w0].[CompletedOn], [w0].[IsRequired], [w0].[OperationType], [w0].[RelatedDocumentId], [w0].[RelatedDocumentNumber], [w0].[Remarks], [w0].[Sequence], [w0].[StartedOn], [w0].[Status], [w0].[WorkOrderId], [w1].[Id], [w1].[AllocatedWeight], [w1].[CoilNumber], [w1].[CoilType], [w1].[ConsumedWeight], [w1].[CreatedBy], [w1].[CreatedOn], [w1].[IssuedWeight], [w1].[MotherCoilId], [w1].[ReleasedBy], [w1].[ReleasedOn], [w1].[RemainingWeightAfterAllocation], [w1].[Remarks], [w1].[ReservedBy], [w1].[ReservedOn], [w1].[SlitCoilId], [w1].[Status], [w1].[WorkOrderId]
+FROM (
+    SELECT TOP(1) [w].[Id], [w].[CancellationReason], [w].[CancelledBy], [w].[CancelledOn], [w].[Category], [w].[ClosedBy], [w].[ClosedOn], [w].[CompletedBy], [w].[CompletedOn], [w].[CoreLossPerKg], [w].[CreatedAtUtc], [w].[CreatedBy], [w].[CustomerCode], [w].[CustomerId], [w].[CustomerName], [w].[CustomerPONumber], [w].[Description], [w].[DispatchedQuantity], [w].[DrawingNumber], [w].[DrawingRevision], [w].[FulfilmentStrategy], [w].[GradeCode], [w].[GradeId], [w].[Length], [w].[OEMJobNumber], [w].[PlannedInventoryQuantity], [w].[PlannedProductionQuantity], [w].[PlannedStartDate], [w].[Planner], [w].[PlanningRequiredQuantity], [w].[Priority], [w].[ProducedQuantity], [w].[ProductType], [w].[ProductionRoute], [w].[QuantityUnit], [w].[ReadyQuantity], [w].[ReleasedBy], [w].[ReleasedOn], [w].[Remarks], [w].[RequiredDate], [w].[RequiredQuantity], [w].[RequiredWeight], [w].[RequiredWidth], [w].[ReservedInventoryQuantity], [w].[RowVersion], [w].[SalesOrderId], [w].[SalesOrderLineId], [w].[SalesOrderLineNumber], [w].[SalesOrderNumber], [w].[SalesOrderReference], [w].[SourceType], [w].[StartedBy], [w].[StartedOn], [w].[Status], [w].[Thickness], [w].[TransformerRating], [w].[UpdatedAtUtc], [w].[UpdatedBy], [w].[WorkOrderDate], [w].[WorkOrderNumber], [w].[WorkOrderType], [g].[Id] AS [Id0], [g].[Category] AS [Category0], [g].[Code], [g].[CoreLossPerKg] AS [CoreLossPerKg0], [g].[CreatedAtUtc] AS [CreatedAtUtc0], [g].[CreatedBy] AS [CreatedBy0], [g].[Description] AS [Description0], [g].[IsActive], [g].[Name], [g].[RowVersion] AS [RowVersion0], [g].[ThicknessMm], [g].[UpdatedAtUtc] AS [UpdatedAtUtc0], [g].[UpdatedBy] AS [UpdatedBy0]
+    FROM [app].[WorkOrders] AS [w]
+    LEFT JOIN [app].[Grades] AS [g] ON [w].[GradeId] = [g].[Id]
+    WHERE [w].[Id] = @__id_0
+) AS [t]
+LEFT JOIN [app].[WorkOrderOperations] AS [w0] ON [t].[Id] = [w0].[WorkOrderId]
+LEFT JOIN [app].[WorkOrderMaterialAllocations] AS [w1] ON [t].[Id] = [w1].[WorkOrderId]
+ORDER BY [t].[Id], [t].[Id0], [w0].[Id]
+[23:19:34 INF] Executed DbCommand (1ms) [Parameters=[@__workOrderId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[CancelledBy], [s].[CancelledOn], [s].[CompletedBy], [s].[CompletedOn], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[KnifeThickness], [s].[LeftEdgeTrim], [s].[MachineId], [s].[MotherCoilId], [s].[PlannerId], [s].[PlanningDate], [s].[ProductionType], [s].[ReleasedBy], [s].[ReleasedOn], [s].[Remarks], [s].[RightEdgeTrim], [s].[RowVersion], [s].[Shift], [s].[SlittingJobNo], [s].[StartedBy], [s].[StartedOn], [s].[Status], [s].[UpdatedAtUtc], [s].[UpdatedBy], [s].[WorkOrderId], [s].[WorkOrderNumber], [s].[WorkOrderOperationId]
+FROM [app].[SlittingJobs] AS [s]
+WHERE [s].[WorkOrderId] = @__workOrderId_0
+[23:19:34 INF] Executed DbCommand (1ms) [Parameters=[@__workOrderId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[AllocatedBy], [t].[AllocatedOn], [t].[BottomPlateWeight], [t].[CancelledBy], [t].[CancelledOn], [t].[Category], [t].[CenterPlateWeight], [t].[CompletedBy], [t].[CompletedOn], [t].[CompletionRemarks], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[Customer], [t].[CustomerCoreLossPerKg], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[DesignType], [t].[DrawingAttachmentName], [t].[DrawingAttachmentPath], [t].[GradeId], [t].[IsDeleted], [t].[JobOrDrawingNumber], [t].[LaminationJobNumber], [t].[LeftSidePlateWeight], [t].[NoLoadLossWatts], [t].[NumberOfSteps], [t].[PlannedDate], [t].[PlannerName], [t].[Rating], [t].[ReleasedBy], [t].[ReleasedOn], [t].[Remarks], [t].[RequiredDate], [t].[RightSidePlateWeight], [t].[RowVersion], [t].[Shift], [t].[Status], [t].[StepLapOrientation], [t].[Thickness], [t].[TopPlateWeight], [t].[TotalAllocatedWeight], [t].[TotalConsumedWeight], [t].[TotalGoodPieces], [t].[TotalJobWeight], [t].[TotalPlannedPieces], [t].[TotalPlannedWeight], [t].[TotalRejectedPieces], [t].[TotalScrapWeight], [t].[TotalWeight], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WorkOrderId], [t].[WorkOrderNumber], [l0].[Id], [l0].[AllocatedWeight], [l0].[ConsumedWeight], [l0].[CreatedBy], [l0].[CreatedOn], [l0].[IssuedWeight], [l0].[LaminationJobId], [l0].[ReleasedBy], [l0].[ReleasedOn], [l0].[RemainingWeightAfterAllocation], [l0].[Remarks], [l0].[RequiredWidth], [l0].[ReservedBy], [l0].[ReservedOn], [l0].[SlitCoilId], [l0].[SlitCoilNumber], [l0].[Status]
+FROM (
+    SELECT TOP(1) [l].[Id], [l].[AllocatedBy], [l].[AllocatedOn], [l].[BottomPlateWeight], [l].[CancelledBy], [l].[CancelledOn], [l].[Category], [l].[CenterPlateWeight], [l].[CompletedBy], [l].[CompletedOn], [l].[CompletionRemarks], [l].[CoreLossPerKg], [l].[CreatedAtUtc], [l].[CreatedBy], [l].[Customer], [l].[CustomerCoreLossPerKg], [l].[DeletedAtUtc], [l].[DeletedBy], [l].[DesignType], [l].[DrawingAttachmentName], [l].[DrawingAttachmentPath], [l].[GradeId], [l].[IsDeleted], [l].[JobOrDrawingNumber], [l].[LaminationJobNumber], [l].[LeftSidePlateWeight], [l].[NoLoadLossWatts], [l].[NumberOfSteps], [l].[PlannedDate], [l].[PlannerName], [l].[Rating], [l].[ReleasedBy], [l].[ReleasedOn], [l].[Remarks], [l].[RequiredDate], [l].[RightSidePlateWeight], [l].[RowVersion], [l].[Shift], [l].[Status], [l].[StepLapOrientation], [l].[Thickness], [l].[TopPlateWeight], [l].[TotalAllocatedWeight], [l].[TotalConsumedWeight], [l].[TotalGoodPieces], [l].[TotalJobWeight], [l].[TotalPlannedPieces], [l].[TotalPlannedWeight], [l].[TotalRejectedPieces], [l].[TotalScrapWeight], [l].[TotalWeight], [l].[UpdatedAtUtc], [l].[UpdatedBy], [l].[WorkOrderId], [l].[WorkOrderNumber]
+    FROM [app].[LaminationJobs] AS [l]
+    WHERE [l].[IsDeleted] = CAST(0 AS bit) AND [l].[WorkOrderId] = @__workOrderId_0
+) AS [t]
+LEFT JOIN [app].[LaminationJobMaterialAllocations] AS [l0] ON [t].[Id] = [l0].[LaminationJobId]
+ORDER BY [t].[Id]
+[23:19:34 INF] HTTP GET /api/work-orders/f552d63b-99f3-4da6-b26a-20e4df9766df/next-actions responded 200 in 111.3906 ms
+[23:19:35 INF] HTTP OPTIONS /api/work-orders responded 204 in 0.0927 ms
+[23:19:35 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [app].[WorkOrders] AS [w]
+[23:19:35 INF] Executed DbCommand (21ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[WorkOrderNumber], [t].[WorkOrderType], [t].[ProductType], [t].[CustomerName], [t].[SalesOrderReference], [t].[RequiredDate], [t].[Priority], [t].[Status], [t].[CreatedAtUtc], [t].[RequiredWeight], [t].[RequiredQuantity], [t].[PlanningRequiredQuantity], [t].[QuantityUnit], [t].[c], [t].[c0], [t].[c1], [t0].[Id], [t0].[LaminationJobNumber], [t0].[Status], [t0].[TotalWeight], [t0].[TotalAllocatedWeight], [t0].[c]
+FROM (
+    SELECT [w].[Id], [w].[WorkOrderNumber], [w].[WorkOrderType], [w].[ProductType], [w].[CustomerName], [w].[SalesOrderReference], [w].[RequiredDate], [w].[Priority], [w].[Status], [w].[CreatedAtUtc], [w].[RequiredWeight], [w].[RequiredQuantity], [w].[PlanningRequiredQuantity], [w].[QuantityUnit], COALESCE((
+        SELECT COALESCE(SUM([w0].[AllocatedWeight]), 0.0)
+        FROM [app].[WorkOrderMaterialAllocations] AS [w0]
+        WHERE [w].[Id] = [w0].[WorkOrderId] AND [w0].[Status] IN (N'Reserved', N'Issued', N'PartiallyConsumed')), 0.0) AS [c], (
+        SELECT COUNT(*)
+        FROM [app].[WorkOrderOperations] AS [w1]
+        WHERE [w].[Id] = [w1].[WorkOrderId] AND [w1].[IsRequired] = CAST(1 AS bit)) AS [c0], (
+        SELECT COUNT(*)
+        FROM [app].[WorkOrderOperations] AS [w2]
+        WHERE [w].[Id] = [w2].[WorkOrderId] AND [w2].[IsRequired] = CAST(1 AS bit) AND [w2].[Status] = N'Completed') AS [c1]
+    FROM [app].[WorkOrders] AS [w]
+    ORDER BY [w].[CreatedAtUtc] DESC
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [t]
+LEFT JOIN (
+    SELECT [t1].[Id], [t1].[LaminationJobNumber], [t1].[Status], [t1].[TotalWeight], [t1].[TotalAllocatedWeight], [t1].[c], [t1].[WorkOrderId]
+    FROM (
+        SELECT [l].[Id], [l].[LaminationJobNumber], [l].[Status], [l].[TotalWeight], [l].[TotalAllocatedWeight], 1 AS [c], [l].[WorkOrderId], ROW_NUMBER() OVER(PARTITION BY [l].[WorkOrderId] ORDER BY [l].[Id]) AS [row]
+        FROM [app].[LaminationJobs] AS [l]
+        WHERE [l].[IsDeleted] = CAST(0 AS bit)
+    ) AS [t1]
+    WHERE [t1].[row] <= 1
+) AS [t0] ON [t].[Id] = [t0].[WorkOrderId]
+ORDER BY [t].[CreatedAtUtc] DESC
+[23:19:35 INF] HTTP GET /api/work-orders responded 200 in 143.6662 ms
+[23:19:39 INF] HTTP OPTIONS /api/work-orders/f552d63b-99f3-4da6-b26a-20e4df9766df/release responded 204 in 0.2080 ms
+[23:19:39 INF] Executed DbCommand (2ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[CancellationReason], [t].[CancelledBy], [t].[CancelledOn], [t].[Category], [t].[ClosedBy], [t].[ClosedOn], [t].[CompletedBy], [t].[CompletedOn], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[CustomerCode], [t].[CustomerId], [t].[CustomerName], [t].[CustomerPONumber], [t].[Description], [t].[DispatchedQuantity], [t].[DrawingNumber], [t].[DrawingRevision], [t].[FulfilmentStrategy], [t].[GradeCode], [t].[GradeId], [t].[Length], [t].[OEMJobNumber], [t].[PlannedInventoryQuantity], [t].[PlannedProductionQuantity], [t].[PlannedStartDate], [t].[Planner], [t].[PlanningRequiredQuantity], [t].[Priority], [t].[ProducedQuantity], [t].[ProductType], [t].[ProductionRoute], [t].[QuantityUnit], [t].[ReadyQuantity], [t].[ReleasedBy], [t].[ReleasedOn], [t].[Remarks], [t].[RequiredDate], [t].[RequiredQuantity], [t].[RequiredWeight], [t].[RequiredWidth], [t].[ReservedInventoryQuantity], [t].[RowVersion], [t].[SalesOrderId], [t].[SalesOrderLineId], [t].[SalesOrderLineNumber], [t].[SalesOrderNumber], [t].[SalesOrderReference], [t].[SourceType], [t].[StartedBy], [t].[StartedOn], [t].[Status], [t].[Thickness], [t].[TransformerRating], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WorkOrderDate], [t].[WorkOrderNumber], [t].[WorkOrderType], [t].[Id0], [t].[Category0], [t].[Code], [t].[CoreLossPerKg0], [t].[CreatedAtUtc0], [t].[CreatedBy0], [t].[Description0], [t].[IsActive], [t].[Name], [t].[RowVersion0], [t].[ThicknessMm], [t].[UpdatedAtUtc0], [t].[UpdatedBy0], [w0].[Id], [w0].[CompletedOn], [w0].[IsRequired], [w0].[OperationType], [w0].[RelatedDocumentId], [w0].[RelatedDocumentNumber], [w0].[Remarks], [w0].[Sequence], [w0].[StartedOn], [w0].[Status], [w0].[WorkOrderId], [w1].[Id], [w1].[AllocatedWeight], [w1].[CoilNumber], [w1].[CoilType], [w1].[ConsumedWeight], [w1].[CreatedBy], [w1].[CreatedOn], [w1].[IssuedWeight], [w1].[MotherCoilId], [w1].[ReleasedBy], [w1].[ReleasedOn], [w1].[RemainingWeightAfterAllocation], [w1].[Remarks], [w1].[ReservedBy], [w1].[ReservedOn], [w1].[SlitCoilId], [w1].[Status], [w1].[WorkOrderId]
+FROM (
+    SELECT TOP(1) [w].[Id], [w].[CancellationReason], [w].[CancelledBy], [w].[CancelledOn], [w].[Category], [w].[ClosedBy], [w].[ClosedOn], [w].[CompletedBy], [w].[CompletedOn], [w].[CoreLossPerKg], [w].[CreatedAtUtc], [w].[CreatedBy], [w].[CustomerCode], [w].[CustomerId], [w].[CustomerName], [w].[CustomerPONumber], [w].[Description], [w].[DispatchedQuantity], [w].[DrawingNumber], [w].[DrawingRevision], [w].[FulfilmentStrategy], [w].[GradeCode], [w].[GradeId], [w].[Length], [w].[OEMJobNumber], [w].[PlannedInventoryQuantity], [w].[PlannedProductionQuantity], [w].[PlannedStartDate], [w].[Planner], [w].[PlanningRequiredQuantity], [w].[Priority], [w].[ProducedQuantity], [w].[ProductType], [w].[ProductionRoute], [w].[QuantityUnit], [w].[ReadyQuantity], [w].[ReleasedBy], [w].[ReleasedOn], [w].[Remarks], [w].[RequiredDate], [w].[RequiredQuantity], [w].[RequiredWeight], [w].[RequiredWidth], [w].[ReservedInventoryQuantity], [w].[RowVersion], [w].[SalesOrderId], [w].[SalesOrderLineId], [w].[SalesOrderLineNumber], [w].[SalesOrderNumber], [w].[SalesOrderReference], [w].[SourceType], [w].[StartedBy], [w].[StartedOn], [w].[Status], [w].[Thickness], [w].[TransformerRating], [w].[UpdatedAtUtc], [w].[UpdatedBy], [w].[WorkOrderDate], [w].[WorkOrderNumber], [w].[WorkOrderType], [g].[Id] AS [Id0], [g].[Category] AS [Category0], [g].[Code], [g].[CoreLossPerKg] AS [CoreLossPerKg0], [g].[CreatedAtUtc] AS [CreatedAtUtc0], [g].[CreatedBy] AS [CreatedBy0], [g].[Description] AS [Description0], [g].[IsActive], [g].[Name], [g].[RowVersion] AS [RowVersion0], [g].[ThicknessMm], [g].[UpdatedAtUtc] AS [UpdatedAtUtc0], [g].[UpdatedBy] AS [UpdatedBy0]
+    FROM [app].[WorkOrders] AS [w]
+    LEFT JOIN [app].[Grades] AS [g] ON [w].[GradeId] = [g].[Id]
+    WHERE [w].[Id] = @__id_0
+) AS [t]
+LEFT JOIN [app].[WorkOrderOperations] AS [w0] ON [t].[Id] = [w0].[WorkOrderId]
+LEFT JOIN [app].[WorkOrderMaterialAllocations] AS [w1] ON [t].[Id] = [w1].[WorkOrderId]
+ORDER BY [t].[Id], [t].[Id0], [w0].[Id]
+[23:19:39 INF] Executed DbCommand (1ms) [Parameters=[@__workOrderId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[AllocatedBy], [t].[AllocatedOn], [t].[BottomPlateWeight], [t].[CancelledBy], [t].[CancelledOn], [t].[Category], [t].[CenterPlateWeight], [t].[CompletedBy], [t].[CompletedOn], [t].[CompletionRemarks], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[Customer], [t].[CustomerCoreLossPerKg], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[DesignType], [t].[DrawingAttachmentName], [t].[DrawingAttachmentPath], [t].[GradeId], [t].[IsDeleted], [t].[JobOrDrawingNumber], [t].[LaminationJobNumber], [t].[LeftSidePlateWeight], [t].[NoLoadLossWatts], [t].[NumberOfSteps], [t].[PlannedDate], [t].[PlannerName], [t].[Rating], [t].[ReleasedBy], [t].[ReleasedOn], [t].[Remarks], [t].[RequiredDate], [t].[RightSidePlateWeight], [t].[RowVersion], [t].[Shift], [t].[Status], [t].[StepLapOrientation], [t].[Thickness], [t].[TopPlateWeight], [t].[TotalAllocatedWeight], [t].[TotalConsumedWeight], [t].[TotalGoodPieces], [t].[TotalJobWeight], [t].[TotalPlannedPieces], [t].[TotalPlannedWeight], [t].[TotalRejectedPieces], [t].[TotalScrapWeight], [t].[TotalWeight], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WorkOrderId], [t].[WorkOrderNumber], [l0].[Id], [l0].[AllocatedWeight], [l0].[ConsumedWeight], [l0].[CreatedBy], [l0].[CreatedOn], [l0].[IssuedWeight], [l0].[LaminationJobId], [l0].[ReleasedBy], [l0].[ReleasedOn], [l0].[RemainingWeightAfterAllocation], [l0].[Remarks], [l0].[RequiredWidth], [l0].[ReservedBy], [l0].[ReservedOn], [l0].[SlitCoilId], [l0].[SlitCoilNumber], [l0].[Status]
+FROM (
+    SELECT TOP(1) [l].[Id], [l].[AllocatedBy], [l].[AllocatedOn], [l].[BottomPlateWeight], [l].[CancelledBy], [l].[CancelledOn], [l].[Category], [l].[CenterPlateWeight], [l].[CompletedBy], [l].[CompletedOn], [l].[CompletionRemarks], [l].[CoreLossPerKg], [l].[CreatedAtUtc], [l].[CreatedBy], [l].[Customer], [l].[CustomerCoreLossPerKg], [l].[DeletedAtUtc], [l].[DeletedBy], [l].[DesignType], [l].[DrawingAttachmentName], [l].[DrawingAttachmentPath], [l].[GradeId], [l].[IsDeleted], [l].[JobOrDrawingNumber], [l].[LaminationJobNumber], [l].[LeftSidePlateWeight], [l].[NoLoadLossWatts], [l].[NumberOfSteps], [l].[PlannedDate], [l].[PlannerName], [l].[Rating], [l].[ReleasedBy], [l].[ReleasedOn], [l].[Remarks], [l].[RequiredDate], [l].[RightSidePlateWeight], [l].[RowVersion], [l].[Shift], [l].[Status], [l].[StepLapOrientation], [l].[Thickness], [l].[TopPlateWeight], [l].[TotalAllocatedWeight], [l].[TotalConsumedWeight], [l].[TotalGoodPieces], [l].[TotalJobWeight], [l].[TotalPlannedPieces], [l].[TotalPlannedWeight], [l].[TotalRejectedPieces], [l].[TotalScrapWeight], [l].[TotalWeight], [l].[UpdatedAtUtc], [l].[UpdatedBy], [l].[WorkOrderId], [l].[WorkOrderNumber]
+    FROM [app].[LaminationJobs] AS [l]
+    WHERE [l].[IsDeleted] = CAST(0 AS bit) AND [l].[WorkOrderId] = @__workOrderId_0
+) AS [t]
+LEFT JOIN [app].[LaminationJobMaterialAllocations] AS [l0] ON [t].[Id] = [l0].[LaminationJobId]
+ORDER BY [t].[Id]
+[23:19:39 INF] Executed DbCommand (4ms) [Parameters=[@__prefix_0_startswith='?' (Size = 30)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [l].[LaminationJobNumber]
+FROM [app].[LaminationJobs] AS [l]
+WHERE [l].[IsDeleted] = CAST(0 AS bit) AND [l].[LaminationJobNumber] LIKE @__prefix_0_startswith ESCAPE N'\'
+ORDER BY [l].[LaminationJobNumber] DESC
+[23:19:39 WRN] Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+[23:19:40 INF] Executed DbCommand (21ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Size = 4000), @p2='?' (DbType = DateTimeOffset), @p3='?' (Precision = 18) (Scale = 3) (DbType = Decimal), @p4='?' (Size = 4000), @p5='?' (DbType = DateTimeOffset), @p6='?' (Size = 20), @p7='?' (Precision = 18) (Scale = 3) (DbType = Decimal), @p8='?' (Size = 4000), @p9='?' (DbType = DateTimeOffset), @p10='?' (Size = 2000), @p11='?' (Precision = 18) (Scale = 4) (DbType = Decimal), @p12='?' (DbType = DateTimeOffset), @p13='?' (Size = 4000), @p14='?' (Size = 200), @p15='?' (Precision = 18) (Scale = 4) (DbType = Decimal), @p16='?' (DbType = DateTimeOffset), @p17='?' (Size = 4000), @p18='?' (Size = 4000), @p19='?' (Size = 4000), @p20='?' (Size = 4000), @p21='?' (DbType = Guid), @p22='?' (DbType = Boolean), @p23='?' (Size = 100), @p24='?' (Size = 30), @p25='?' (Precision = 18) (Scale = 3) (DbType = Decimal), @p26='?' (Precision = 18) (Scale = 2) (DbType = Decimal), @p27='?' (DbType = Int32), @p28='?' (DbType = Date), @p29='?' (Size = 4000), @p30='?' (Size = 100), @p31='?' (Size = 4000), @p32='?' (DbType = DateTimeOffset), @p33='?' (Size = 4000), @p34='?' (DbType = Date), @p35='?' (Precision = 18) (Scale = 3) (DbType = Decimal), @p36='?' (Size = 4000), @p37='?' (Size = 450), @p38='?' (Size = 4000), @p39='?' (Precision = 18) (Scale = 3) (DbType = Decimal), @p40='?' (Precision = 18) (Scale = 3) (DbType = Decimal), @p41='?' (Precision = 18) (Scale = 3) (DbType = Decimal), @p42='?' (Precision = 18) (Scale = 3) (DbType = Decimal), @p43='?' (DbType = Int32), @p44='?' (Precision = 18) (Scale = 3) (DbType = Decimal), @p45='?' (DbType = Int32), @p46='?' (Precision = 18) (Scale = 3) (DbType = Decimal), @p47='?' (DbType = Int32), @p48='?' (Precision = 18) (Scale = 3) (DbType = Decimal), @p49='?' (Precision = 18) (Scale = 3) (DbType = Decimal), @p50='?' (DbType = DateTimeOffset), @p51='?' (Size = 4000), @p52='?' (DbType = Guid), @p53='?' (Size = 4000), @p56='?' (DbType = Guid), @p54='?' (DbType = Guid), @p55='?' (Size = 50), @p61='?' (DbType = Guid), @p57='?' (Size = 100), @p58='?' (DbType = DateTimeOffset), @p62='?' (Size = 8) (DbType = Binary), @p59='?' (Size = 30), @p60='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [app].[LaminationJobs] ([Id], [AllocatedBy], [AllocatedOn], [BottomPlateWeight], [CancelledBy], [CancelledOn], [Category], [CenterPlateWeight], [CompletedBy], [CompletedOn], [CompletionRemarks], [CoreLossPerKg], [CreatedAtUtc], [CreatedBy], [Customer], [CustomerCoreLossPerKg], [DeletedAtUtc], [DeletedBy], [DesignType], [DrawingAttachmentName], [DrawingAttachmentPath], [GradeId], [IsDeleted], [JobOrDrawingNumber], [LaminationJobNumber], [LeftSidePlateWeight], [NoLoadLossWatts], [NumberOfSteps], [PlannedDate], [PlannerName], [Rating], [ReleasedBy], [ReleasedOn], [Remarks], [RequiredDate], [RightSidePlateWeight], [Shift], [Status], [StepLapOrientation], [Thickness], [TopPlateWeight], [TotalAllocatedWeight], [TotalConsumedWeight], [TotalGoodPieces], [TotalJobWeight], [TotalPlannedPieces], [TotalPlannedWeight], [TotalRejectedPieces], [TotalScrapWeight], [TotalWeight], [UpdatedAtUtc], [UpdatedBy], [WorkOrderId], [WorkOrderNumber])
+OUTPUT INSERTED.[RowVersion]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24, @p25, @p26, @p27, @p28, @p29, @p30, @p31, @p32, @p33, @p34, @p35, @p36, @p37, @p38, @p39, @p40, @p41, @p42, @p43, @p44, @p45, @p46, @p47, @p48, @p49, @p50, @p51, @p52, @p53);
+UPDATE [app].[WorkOrderOperations] SET [RelatedDocumentId] = @p54, [RelatedDocumentNumber] = @p55
+OUTPUT 1
+WHERE [Id] = @p56;
+UPDATE [app].[WorkOrders] SET [ReleasedBy] = @p57, [ReleasedOn] = @p58, [Status] = @p59, [UpdatedAtUtc] = @p60
+OUTPUT INSERTED.[RowVersion]
+WHERE [Id] = @p61 AND [RowVersion] = @p62;
+[23:19:40 INF] Executed DbCommand (1ms) [Parameters=[@__workOrderId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[CancelledBy], [s].[CancelledOn], [s].[CompletedBy], [s].[CompletedOn], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[KnifeThickness], [s].[LeftEdgeTrim], [s].[MachineId], [s].[MotherCoilId], [s].[PlannerId], [s].[PlanningDate], [s].[ProductionType], [s].[ReleasedBy], [s].[ReleasedOn], [s].[Remarks], [s].[RightEdgeTrim], [s].[RowVersion], [s].[Shift], [s].[SlittingJobNo], [s].[StartedBy], [s].[StartedOn], [s].[Status], [s].[UpdatedAtUtc], [s].[UpdatedBy], [s].[WorkOrderId], [s].[WorkOrderNumber], [s].[WorkOrderOperationId]
+FROM [app].[SlittingJobs] AS [s]
+WHERE [s].[WorkOrderId] = @__workOrderId_0
+[23:19:40 INF] Executed DbCommand (2ms) [Parameters=[@__workOrderId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[AllocatedBy], [t].[AllocatedOn], [t].[BottomPlateWeight], [t].[CancelledBy], [t].[CancelledOn], [t].[Category], [t].[CenterPlateWeight], [t].[CompletedBy], [t].[CompletedOn], [t].[CompletionRemarks], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[Customer], [t].[CustomerCoreLossPerKg], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[DesignType], [t].[DrawingAttachmentName], [t].[DrawingAttachmentPath], [t].[GradeId], [t].[IsDeleted], [t].[JobOrDrawingNumber], [t].[LaminationJobNumber], [t].[LeftSidePlateWeight], [t].[NoLoadLossWatts], [t].[NumberOfSteps], [t].[PlannedDate], [t].[PlannerName], [t].[Rating], [t].[ReleasedBy], [t].[ReleasedOn], [t].[Remarks], [t].[RequiredDate], [t].[RightSidePlateWeight], [t].[RowVersion], [t].[Shift], [t].[Status], [t].[StepLapOrientation], [t].[Thickness], [t].[TopPlateWeight], [t].[TotalAllocatedWeight], [t].[TotalConsumedWeight], [t].[TotalGoodPieces], [t].[TotalJobWeight], [t].[TotalPlannedPieces], [t].[TotalPlannedWeight], [t].[TotalRejectedPieces], [t].[TotalScrapWeight], [t].[TotalWeight], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WorkOrderId], [t].[WorkOrderNumber], [l0].[Id], [l0].[AllocatedWeight], [l0].[ConsumedWeight], [l0].[CreatedBy], [l0].[CreatedOn], [l0].[IssuedWeight], [l0].[LaminationJobId], [l0].[ReleasedBy], [l0].[ReleasedOn], [l0].[RemainingWeightAfterAllocation], [l0].[Remarks], [l0].[RequiredWidth], [l0].[ReservedBy], [l0].[ReservedOn], [l0].[SlitCoilId], [l0].[SlitCoilNumber], [l0].[Status]
+FROM (
+    SELECT TOP(1) [l].[Id], [l].[AllocatedBy], [l].[AllocatedOn], [l].[BottomPlateWeight], [l].[CancelledBy], [l].[CancelledOn], [l].[Category], [l].[CenterPlateWeight], [l].[CompletedBy], [l].[CompletedOn], [l].[CompletionRemarks], [l].[CoreLossPerKg], [l].[CreatedAtUtc], [l].[CreatedBy], [l].[Customer], [l].[CustomerCoreLossPerKg], [l].[DeletedAtUtc], [l].[DeletedBy], [l].[DesignType], [l].[DrawingAttachmentName], [l].[DrawingAttachmentPath], [l].[GradeId], [l].[IsDeleted], [l].[JobOrDrawingNumber], [l].[LaminationJobNumber], [l].[LeftSidePlateWeight], [l].[NoLoadLossWatts], [l].[NumberOfSteps], [l].[PlannedDate], [l].[PlannerName], [l].[Rating], [l].[ReleasedBy], [l].[ReleasedOn], [l].[Remarks], [l].[RequiredDate], [l].[RightSidePlateWeight], [l].[RowVersion], [l].[Shift], [l].[Status], [l].[StepLapOrientation], [l].[Thickness], [l].[TopPlateWeight], [l].[TotalAllocatedWeight], [l].[TotalConsumedWeight], [l].[TotalGoodPieces], [l].[TotalJobWeight], [l].[TotalPlannedPieces], [l].[TotalPlannedWeight], [l].[TotalRejectedPieces], [l].[TotalScrapWeight], [l].[TotalWeight], [l].[UpdatedAtUtc], [l].[UpdatedBy], [l].[WorkOrderId], [l].[WorkOrderNumber]
+    FROM [app].[LaminationJobs] AS [l]
+    WHERE [l].[IsDeleted] = CAST(0 AS bit) AND [l].[WorkOrderId] = @__workOrderId_0
+) AS [t]
+LEFT JOIN [app].[LaminationJobMaterialAllocations] AS [l0] ON [t].[Id] = [l0].[LaminationJobId]
+ORDER BY [t].[Id]
+[23:19:40 INF] HTTP POST /api/work-orders/f552d63b-99f3-4da6-b26a-20e4df9766df/release responded 200 in 465.8273 ms
+[23:19:40 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [app].[WorkOrders] AS [w]
+[23:19:40 INF] Executed DbCommand (2ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[WorkOrderNumber], [t].[WorkOrderType], [t].[ProductType], [t].[CustomerName], [t].[SalesOrderReference], [t].[RequiredDate], [t].[Priority], [t].[Status], [t].[CreatedAtUtc], [t].[RequiredWeight], [t].[RequiredQuantity], [t].[PlanningRequiredQuantity], [t].[QuantityUnit], [t].[c], [t].[c0], [t].[c1], [t0].[Id], [t0].[LaminationJobNumber], [t0].[Status], [t0].[TotalWeight], [t0].[TotalAllocatedWeight], [t0].[c]
+FROM (
+    SELECT [w].[Id], [w].[WorkOrderNumber], [w].[WorkOrderType], [w].[ProductType], [w].[CustomerName], [w].[SalesOrderReference], [w].[RequiredDate], [w].[Priority], [w].[Status], [w].[CreatedAtUtc], [w].[RequiredWeight], [w].[RequiredQuantity], [w].[PlanningRequiredQuantity], [w].[QuantityUnit], COALESCE((
+        SELECT COALESCE(SUM([w0].[AllocatedWeight]), 0.0)
+        FROM [app].[WorkOrderMaterialAllocations] AS [w0]
+        WHERE [w].[Id] = [w0].[WorkOrderId] AND [w0].[Status] IN (N'Reserved', N'Issued', N'PartiallyConsumed')), 0.0) AS [c], (
+        SELECT COUNT(*)
+        FROM [app].[WorkOrderOperations] AS [w1]
+        WHERE [w].[Id] = [w1].[WorkOrderId] AND [w1].[IsRequired] = CAST(1 AS bit)) AS [c0], (
+        SELECT COUNT(*)
+        FROM [app].[WorkOrderOperations] AS [w2]
+        WHERE [w].[Id] = [w2].[WorkOrderId] AND [w2].[IsRequired] = CAST(1 AS bit) AND [w2].[Status] = N'Completed') AS [c1]
+    FROM [app].[WorkOrders] AS [w]
+    ORDER BY [w].[CreatedAtUtc] DESC
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [t]
+LEFT JOIN (
+    SELECT [t1].[Id], [t1].[LaminationJobNumber], [t1].[Status], [t1].[TotalWeight], [t1].[TotalAllocatedWeight], [t1].[c], [t1].[WorkOrderId]
+    FROM (
+        SELECT [l].[Id], [l].[LaminationJobNumber], [l].[Status], [l].[TotalWeight], [l].[TotalAllocatedWeight], 1 AS [c], [l].[WorkOrderId], ROW_NUMBER() OVER(PARTITION BY [l].[WorkOrderId] ORDER BY [l].[Id]) AS [row]
+        FROM [app].[LaminationJobs] AS [l]
+        WHERE [l].[IsDeleted] = CAST(0 AS bit)
+    ) AS [t1]
+    WHERE [t1].[row] <= 1
+) AS [t0] ON [t].[Id] = [t0].[WorkOrderId]
+ORDER BY [t].[CreatedAtUtc] DESC
+[23:19:40 INF] HTTP GET /api/work-orders responded 200 in 12.8214 ms
+[23:19:45 INF] HTTP OPTIONS /api/lookups/grades responded 204 in 0.1447 ms
+[23:19:45 INF] HTTP OPTIONS /api/lamination-jobs/a33835fe-1b89-46a8-8150-08f95917e4ee responded 204 in 0.0946 ms
+[23:19:46 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [g].[Id], [g].[Code], [g].[Name], [g].[ThicknessMm], [g].[Category], [g].[CoreLossPerKg]
+FROM [app].[Grades] AS [g]
+WHERE [g].[IsActive] = CAST(1 AS bit)
+ORDER BY [g].[Code]
+[23:19:46 INF] HTTP GET /api/lookups/grades responded 200 in 36.7798 ms
+[23:19:46 WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+[23:19:46 INF] Executed DbCommand (21ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[AllocatedBy], [t].[AllocatedOn], [t].[BottomPlateWeight], [t].[CancelledBy], [t].[CancelledOn], [t].[Category], [t].[CenterPlateWeight], [t].[CompletedBy], [t].[CompletedOn], [t].[CompletionRemarks], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[Customer], [t].[CustomerCoreLossPerKg], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[DesignType], [t].[DrawingAttachmentName], [t].[DrawingAttachmentPath], [t].[GradeId], [t].[IsDeleted], [t].[JobOrDrawingNumber], [t].[LaminationJobNumber], [t].[LeftSidePlateWeight], [t].[NoLoadLossWatts], [t].[NumberOfSteps], [t].[PlannedDate], [t].[PlannerName], [t].[Rating], [t].[ReleasedBy], [t].[ReleasedOn], [t].[Remarks], [t].[RequiredDate], [t].[RightSidePlateWeight], [t].[RowVersion], [t].[Shift], [t].[Status], [t].[StepLapOrientation], [t].[Thickness], [t].[TopPlateWeight], [t].[TotalAllocatedWeight], [t].[TotalConsumedWeight], [t].[TotalGoodPieces], [t].[TotalJobWeight], [t].[TotalPlannedPieces], [t].[TotalPlannedWeight], [t].[TotalRejectedPieces], [t].[TotalScrapWeight], [t].[TotalWeight], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WorkOrderId], [t].[WorkOrderNumber], [t].[Id0], [t].[Category0], [t].[Code], [t].[CoreLossPerKg0], [t].[CreatedAtUtc0], [t].[CreatedBy0], [t].[Description], [t].[IsActive], [t].[Name], [t].[RowVersion0], [t].[ThicknessMm], [t].[UpdatedAtUtc0], [t].[UpdatedBy0], [t0].[Id], [t0].[LaminationJobId], [t0].[PlannedWeight], [t0].[Remarks], [t0].[Sequence], [t0].[StackQuantity], [t0].[StepNumber], [t0].[Width], [t0].[Id0], [t0].[LaminationJobStepId], [t0].[Length], [t0].[PlannedWeight0], [t0].[PlateType], [t0].[Quantity], [t0].[Remarks0], [t0].[Width0], [t0].[Id00], [t0].[DimensionCode], [t0].[DimensionValue], [t0].[DisplayName], [t0].[LaminationJobPlateId], [t0].[Remarks00], [t0].[Sequence0], [t0].[Unit], [l3].[Id], [l3].[AllocatedWeight], [l3].[ConsumedWeight], [l3].[CreatedBy], [l3].[CreatedOn], [l3].[IssuedWeight], [l3].[LaminationJobId], [l3].[ReleasedBy], [l3].[ReleasedOn], [l3].[RemainingWeightAfterAllocation], [l3].[Remarks], [l3].[RequiredWidth], [l3].[ReservedBy], [l3].[ReservedOn], [l3].[SlitCoilId], [l3].[SlitCoilNumber], [l3].[Status]
+FROM (
+    SELECT TOP(2) [l].[Id], [l].[AllocatedBy], [l].[AllocatedOn], [l].[BottomPlateWeight], [l].[CancelledBy], [l].[CancelledOn], [l].[Category], [l].[CenterPlateWeight], [l].[CompletedBy], [l].[CompletedOn], [l].[CompletionRemarks], [l].[CoreLossPerKg], [l].[CreatedAtUtc], [l].[CreatedBy], [l].[Customer], [l].[CustomerCoreLossPerKg], [l].[DeletedAtUtc], [l].[DeletedBy], [l].[DesignType], [l].[DrawingAttachmentName], [l].[DrawingAttachmentPath], [l].[GradeId], [l].[IsDeleted], [l].[JobOrDrawingNumber], [l].[LaminationJobNumber], [l].[LeftSidePlateWeight], [l].[NoLoadLossWatts], [l].[NumberOfSteps], [l].[PlannedDate], [l].[PlannerName], [l].[Rating], [l].[ReleasedBy], [l].[ReleasedOn], [l].[Remarks], [l].[RequiredDate], [l].[RightSidePlateWeight], [l].[RowVersion], [l].[Shift], [l].[Status], [l].[StepLapOrientation], [l].[Thickness], [l].[TopPlateWeight], [l].[TotalAllocatedWeight], [l].[TotalConsumedWeight], [l].[TotalGoodPieces], [l].[TotalJobWeight], [l].[TotalPlannedPieces], [l].[TotalPlannedWeight], [l].[TotalRejectedPieces], [l].[TotalScrapWeight], [l].[TotalWeight], [l].[UpdatedAtUtc], [l].[UpdatedBy], [l].[WorkOrderId], [l].[WorkOrderNumber], [g].[Id] AS [Id0], [g].[Category] AS [Category0], [g].[Code], [g].[CoreLossPerKg] AS [CoreLossPerKg0], [g].[CreatedAtUtc] AS [CreatedAtUtc0], [g].[CreatedBy] AS [CreatedBy0], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion] AS [RowVersion0], [g].[ThicknessMm], [g].[UpdatedAtUtc] AS [UpdatedAtUtc0], [g].[UpdatedBy] AS [UpdatedBy0]
+    FROM [app].[LaminationJobs] AS [l]
+    INNER JOIN [app].[Grades] AS [g] ON [l].[GradeId] = [g].[Id]
+    WHERE [l].[IsDeleted] = CAST(0 AS bit) AND [l].[Id] = @__id_0
+) AS [t]
+LEFT JOIN (
+    SELECT [l0].[Id], [l0].[LaminationJobId], [l0].[PlannedWeight], [l0].[Remarks], [l0].[Sequence], [l0].[StackQuantity], [l0].[StepNumber], [l0].[Width], [t1].[Id] AS [Id0], [t1].[LaminationJobStepId], [t1].[Length], [t1].[PlannedWeight] AS [PlannedWeight0], [t1].[PlateType], [t1].[Quantity], [t1].[Remarks] AS [Remarks0], [t1].[Width] AS [Width0], [t1].[Id0] AS [Id00], [t1].[DimensionCode], [t1].[DimensionValue], [t1].[DisplayName], [t1].[LaminationJobPlateId], [t1].[Remarks0] AS [Remarks00], [t1].[Sequence] AS [Sequence0], [t1].[Unit]
+    FROM [app].[LaminationJobSteps] AS [l0]
+    LEFT JOIN (
+        SELECT [l1].[Id], [l1].[LaminationJobStepId], [l1].[Length], [l1].[PlannedWeight], [l1].[PlateType], [l1].[Quantity], [l1].[Remarks], [l1].[Width], [l2].[Id] AS [Id0], [l2].[DimensionCode], [l2].[DimensionValue], [l2].[DisplayName], [l2].[LaminationJobPlateId], [l2].[Remarks] AS [Remarks0], [l2].[Sequence], [l2].[Unit]
+        FROM [app].[LaminationJobPlates] AS [l1]
+        LEFT JOIN [app].[LaminationPlateDimensions] AS [l2] ON [l1].[Id] = [l2].[LaminationJobPlateId]
+    ) AS [t1] ON [l0].[Id] = [t1].[LaminationJobStepId]
+) AS [t0] ON [t].[Id] = [t0].[LaminationJobId]
+LEFT JOIN [app].[LaminationJobMaterialAllocations] AS [l3] ON [t].[Id] = [l3].[LaminationJobId]
+ORDER BY [t].[Id], [t].[Id0], [t0].[Id], [t0].[Id0], [t0].[Id00]
+[23:19:46 INF] HTTP GET /api/lamination-jobs/a33835fe-1b89-46a8-8150-08f95917e4ee responded 200 in 139.0517 ms
+[23:20:01 INF] HTTP OPTIONS /api/lamination-jobs responded 204 in 0.2638 ms
+[23:20:01 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [app].[LaminationJobs] AS [l]
+WHERE [l].[IsDeleted] = CAST(0 AS bit)
+[23:20:01 INF] Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[AllocatedBy], [t].[AllocatedOn], [t].[BottomPlateWeight], [t].[CancelledBy], [t].[CancelledOn], [t].[Category], [t].[CenterPlateWeight], [t].[CompletedBy], [t].[CompletedOn], [t].[CompletionRemarks], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[Customer], [t].[CustomerCoreLossPerKg], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[DesignType], [t].[DrawingAttachmentName], [t].[DrawingAttachmentPath], [t].[GradeId], [t].[IsDeleted], [t].[JobOrDrawingNumber], [t].[LaminationJobNumber], [t].[LeftSidePlateWeight], [t].[NoLoadLossWatts], [t].[NumberOfSteps], [t].[PlannedDate], [t].[PlannerName], [t].[Rating], [t].[ReleasedBy], [t].[ReleasedOn], [t].[Remarks], [t].[RequiredDate], [t].[RightSidePlateWeight], [t].[RowVersion], [t].[Shift], [t].[Status], [t].[StepLapOrientation], [t].[Thickness], [t].[TopPlateWeight], [t].[TotalAllocatedWeight], [t].[TotalConsumedWeight], [t].[TotalGoodPieces], [t].[TotalJobWeight], [t].[TotalPlannedPieces], [t].[TotalPlannedWeight], [t].[TotalRejectedPieces], [t].[TotalScrapWeight], [t].[TotalWeight], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WorkOrderId], [t].[WorkOrderNumber], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy]
+FROM (
+    SELECT [l].[Id], [l].[AllocatedBy], [l].[AllocatedOn], [l].[BottomPlateWeight], [l].[CancelledBy], [l].[CancelledOn], [l].[Category], [l].[CenterPlateWeight], [l].[CompletedBy], [l].[CompletedOn], [l].[CompletionRemarks], [l].[CoreLossPerKg], [l].[CreatedAtUtc], [l].[CreatedBy], [l].[Customer], [l].[CustomerCoreLossPerKg], [l].[DeletedAtUtc], [l].[DeletedBy], [l].[DesignType], [l].[DrawingAttachmentName], [l].[DrawingAttachmentPath], [l].[GradeId], [l].[IsDeleted], [l].[JobOrDrawingNumber], [l].[LaminationJobNumber], [l].[LeftSidePlateWeight], [l].[NoLoadLossWatts], [l].[NumberOfSteps], [l].[PlannedDate], [l].[PlannerName], [l].[Rating], [l].[ReleasedBy], [l].[ReleasedOn], [l].[Remarks], [l].[RequiredDate], [l].[RightSidePlateWeight], [l].[RowVersion], [l].[Shift], [l].[Status], [l].[StepLapOrientation], [l].[Thickness], [l].[TopPlateWeight], [l].[TotalAllocatedWeight], [l].[TotalConsumedWeight], [l].[TotalGoodPieces], [l].[TotalJobWeight], [l].[TotalPlannedPieces], [l].[TotalPlannedWeight], [l].[TotalRejectedPieces], [l].[TotalScrapWeight], [l].[TotalWeight], [l].[UpdatedAtUtc], [l].[UpdatedBy], [l].[WorkOrderId], [l].[WorkOrderNumber]
+    FROM [app].[LaminationJobs] AS [l]
+    WHERE [l].[IsDeleted] = CAST(0 AS bit)
+    ORDER BY [l].[CreatedAtUtc] DESC
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [t]
+INNER JOIN [app].[Grades] AS [g] ON [t].[GradeId] = [g].[Id]
+ORDER BY [t].[CreatedAtUtc] DESC
+[23:20:01 INF] HTTP GET /api/lamination-jobs responded 200 in 14.4353 ms
+[23:20:03 INF] HTTP OPTIONS /api/work-orders responded 204 in 0.0758 ms
+[23:20:03 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [app].[WorkOrders] AS [w]
+[23:20:03 INF] Executed DbCommand (2ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[WorkOrderNumber], [t].[WorkOrderType], [t].[ProductType], [t].[CustomerName], [t].[SalesOrderReference], [t].[RequiredDate], [t].[Priority], [t].[Status], [t].[CreatedAtUtc], [t].[RequiredWeight], [t].[RequiredQuantity], [t].[PlanningRequiredQuantity], [t].[QuantityUnit], [t].[c], [t].[c0], [t].[c1], [t0].[Id], [t0].[LaminationJobNumber], [t0].[Status], [t0].[TotalWeight], [t0].[TotalAllocatedWeight], [t0].[c]
+FROM (
+    SELECT [w].[Id], [w].[WorkOrderNumber], [w].[WorkOrderType], [w].[ProductType], [w].[CustomerName], [w].[SalesOrderReference], [w].[RequiredDate], [w].[Priority], [w].[Status], [w].[CreatedAtUtc], [w].[RequiredWeight], [w].[RequiredQuantity], [w].[PlanningRequiredQuantity], [w].[QuantityUnit], COALESCE((
+        SELECT COALESCE(SUM([w0].[AllocatedWeight]), 0.0)
+        FROM [app].[WorkOrderMaterialAllocations] AS [w0]
+        WHERE [w].[Id] = [w0].[WorkOrderId] AND [w0].[Status] IN (N'Reserved', N'Issued', N'PartiallyConsumed')), 0.0) AS [c], (
+        SELECT COUNT(*)
+        FROM [app].[WorkOrderOperations] AS [w1]
+        WHERE [w].[Id] = [w1].[WorkOrderId] AND [w1].[IsRequired] = CAST(1 AS bit)) AS [c0], (
+        SELECT COUNT(*)
+        FROM [app].[WorkOrderOperations] AS [w2]
+        WHERE [w].[Id] = [w2].[WorkOrderId] AND [w2].[IsRequired] = CAST(1 AS bit) AND [w2].[Status] = N'Completed') AS [c1]
+    FROM [app].[WorkOrders] AS [w]
+    ORDER BY [w].[CreatedAtUtc] DESC
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [t]
+LEFT JOIN (
+    SELECT [t1].[Id], [t1].[LaminationJobNumber], [t1].[Status], [t1].[TotalWeight], [t1].[TotalAllocatedWeight], [t1].[c], [t1].[WorkOrderId]
+    FROM (
+        SELECT [l].[Id], [l].[LaminationJobNumber], [l].[Status], [l].[TotalWeight], [l].[TotalAllocatedWeight], 1 AS [c], [l].[WorkOrderId], ROW_NUMBER() OVER(PARTITION BY [l].[WorkOrderId] ORDER BY [l].[Id]) AS [row]
+        FROM [app].[LaminationJobs] AS [l]
+        WHERE [l].[IsDeleted] = CAST(0 AS bit)
+    ) AS [t1]
+    WHERE [t1].[row] <= 1
+) AS [t0] ON [t].[Id] = [t0].[WorkOrderId]
+ORDER BY [t].[CreatedAtUtc] DESC
+[23:20:03 INF] HTTP GET /api/work-orders responded 200 in 11.3858 ms
+[23:22:05 INF] HTTP OPTIONS /api/work-orders responded 204 in 0.0863 ms
+[23:22:05 INF] Executed DbCommand (6ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [app].[WorkOrders] AS [w]
+[23:22:05 INF] Executed DbCommand (36ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[WorkOrderNumber], [t].[WorkOrderType], [t].[ProductType], [t].[CustomerName], [t].[SalesOrderReference], [t].[RequiredDate], [t].[Priority], [t].[Status], [t].[CreatedAtUtc], [t].[RequiredWeight], [t].[RequiredQuantity], [t].[PlanningRequiredQuantity], [t].[QuantityUnit], [t].[c], [t].[c0], [t].[c1], [t0].[Id], [t0].[LaminationJobNumber], [t0].[Status], [t0].[TotalWeight], [t0].[TotalAllocatedWeight], [t0].[c]
+FROM (
+    SELECT [w].[Id], [w].[WorkOrderNumber], [w].[WorkOrderType], [w].[ProductType], [w].[CustomerName], [w].[SalesOrderReference], [w].[RequiredDate], [w].[Priority], [w].[Status], [w].[CreatedAtUtc], [w].[RequiredWeight], [w].[RequiredQuantity], [w].[PlanningRequiredQuantity], [w].[QuantityUnit], COALESCE((
+        SELECT COALESCE(SUM([w0].[AllocatedWeight]), 0.0)
+        FROM [app].[WorkOrderMaterialAllocations] AS [w0]
+        WHERE [w].[Id] = [w0].[WorkOrderId] AND [w0].[Status] IN (N'Reserved', N'Issued', N'PartiallyConsumed')), 0.0) AS [c], (
+        SELECT COUNT(*)
+        FROM [app].[WorkOrderOperations] AS [w1]
+        WHERE [w].[Id] = [w1].[WorkOrderId] AND [w1].[IsRequired] = CAST(1 AS bit)) AS [c0], (
+        SELECT COUNT(*)
+        FROM [app].[WorkOrderOperations] AS [w2]
+        WHERE [w].[Id] = [w2].[WorkOrderId] AND [w2].[IsRequired] = CAST(1 AS bit) AND [w2].[Status] = N'Completed') AS [c1]
+    FROM [app].[WorkOrders] AS [w]
+    ORDER BY [w].[CreatedAtUtc] DESC
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [t]
+LEFT JOIN (
+    SELECT [t1].[Id], [t1].[LaminationJobNumber], [t1].[Status], [t1].[TotalWeight], [t1].[TotalAllocatedWeight], [t1].[c], [t1].[WorkOrderId]
+    FROM (
+        SELECT [l].[Id], [l].[LaminationJobNumber], [l].[Status], [l].[TotalWeight], [l].[TotalAllocatedWeight], 1 AS [c], [l].[WorkOrderId], ROW_NUMBER() OVER(PARTITION BY [l].[WorkOrderId] ORDER BY [l].[Id]) AS [row]
+        FROM [app].[LaminationJobs] AS [l]
+        WHERE [l].[IsDeleted] = CAST(0 AS bit)
+    ) AS [t1]
+    WHERE [t1].[row] <= 1
+) AS [t0] ON [t].[Id] = [t0].[WorkOrderId]
+ORDER BY [t].[CreatedAtUtc] DESC
+[23:22:05 INF] HTTP GET /api/work-orders responded 200 in 53.8293 ms

@@ -11,11 +11,13 @@ public sealed class GlobalExceptionMiddleware
 
     private readonly RequestDelegate _next;
     private readonly ILogger<GlobalExceptionMiddleware> _logger;
+    private readonly IWebHostEnvironment _environment;
 
-    public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
+    public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger, IWebHostEnvironment environment)
     {
         _next = next;
         _logger = logger;
+        _environment = environment;
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -39,7 +41,7 @@ public sealed class GlobalExceptionMiddleware
         }
     }
 
-    private static async Task WriteProblemDetailsAsync(HttpContext context, Exception exception)
+    private async Task WriteProblemDetailsAsync(HttpContext context, Exception exception)
     {
         if (context.Response.HasStarted)
         {
@@ -53,7 +55,7 @@ public sealed class GlobalExceptionMiddleware
             SharedExceptions.ConflictException conflictException => (HttpStatusCode.Conflict, conflictException.Message, []),
             SharedExceptions.UnauthorizedException unauthorizedException => (HttpStatusCode.Unauthorized, unauthorizedException.Message, []),
             SharedExceptions.BusinessRuleException businessRuleException => ((HttpStatusCode)422, businessRuleException.Message, []),
-            _ => (HttpStatusCode.InternalServerError, "An unexpected error occurred.", [])
+            _ => (HttpStatusCode.InternalServerError, _environment.IsDevelopment() ? exception.GetBaseException().Message : "An unexpected error occurred.", [])
         };
 
         context.Response.Clear();

@@ -32,11 +32,17 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<WorkOrder> WorkOrders => Set<WorkOrder>();
     public DbSet<WorkOrderOperation> WorkOrderOperations => Set<WorkOrderOperation>();
     public DbSet<WorkOrderMaterialAllocation> WorkOrderMaterialAllocations => Set<WorkOrderMaterialAllocation>();
+    public DbSet<Dispatch> Dispatches => Set<Dispatch>();
+    public DbSet<DispatchPackage> DispatchPackages => Set<DispatchPackage>();
+    public DbSet<DispatchInventorySource> DispatchInventorySources => Set<DispatchInventorySource>();
     public DbSet<LaminationJob> LaminationJobs => Set<LaminationJob>();
     public DbSet<LaminationJobStep> LaminationJobSteps => Set<LaminationJobStep>();
     public DbSet<LaminationJobPlate> LaminationJobPlates => Set<LaminationJobPlate>();
     public DbSet<LaminationPlateDimension> LaminationPlateDimensions => Set<LaminationPlateDimension>();
     public DbSet<LaminationJobMaterialAllocation> LaminationJobMaterialAllocations => Set<LaminationJobMaterialAllocation>();
+    public DbSet<Customer> Customers => Set<Customer>();
+    public DbSet<SalesOrder> SalesOrders => Set<SalesOrder>();
+    public DbSet<SalesOrderLine> SalesOrderLines => Set<SalesOrderLine>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -11,6 +11,16 @@ public sealed class WorkOrderConfiguration : IEntityTypeConfiguration<WorkOrder>
         b.ToTable("WorkOrders", "app"); b.HasKey(x => x.Id);
         b.Property(x => x.WorkOrderNumber).HasMaxLength(20).IsRequired(); b.HasIndex(x => x.WorkOrderNumber).IsUnique();
         b.HasIndex(x => x.Status); b.HasIndex(x => x.RequiredDate); b.HasIndex(x => new { x.WorkOrderType, x.ProductType });
+        b.HasIndex(x => x.SourceType); b.HasIndex(x => x.SalesOrderId); b.HasIndex(x => x.SalesOrderLineId);
+        b.HasIndex(x => x.CustomerId); b.HasIndex(x => x.ProductType); b.HasIndex(x => x.FulfilmentStrategy); b.HasIndex(x => x.ProductionRoute);
+        b.Property(x => x.SourceType).HasConversion<string>().HasMaxLength(30);
+        b.Property(x => x.FulfilmentStrategy).HasConversion<string>().HasMaxLength(30);
+        b.Property(x => x.ProductionRoute).HasConversion<string>().HasMaxLength(30);
+        b.Property(x => x.QuantityUnit).HasConversion<string>().HasMaxLength(20);
+        b.Property(x => x.SalesOrderNumber).HasMaxLength(30); b.Property(x => x.CustomerCode).HasMaxLength(30); b.Property(x => x.CustomerPONumber).HasMaxLength(100);
+        b.Property(x => x.Description).HasMaxLength(500); b.Property(x => x.GradeCode).HasMaxLength(50); b.Property(x => x.DrawingRevision).HasMaxLength(50);
+        b.Property(x => x.OEMJobNumber).HasMaxLength(100); b.Property(x => x.TransformerRating).HasMaxLength(100); b.Property(x => x.Planner).HasMaxLength(100); b.Property(x => x.CancellationReason).HasMaxLength(500);
+        foreach (var property in new[] { nameof(WorkOrder.Length), nameof(WorkOrder.PlanningRequiredQuantity), nameof(WorkOrder.PlannedInventoryQuantity), nameof(WorkOrder.PlannedProductionQuantity), nameof(WorkOrder.ReservedInventoryQuantity), nameof(WorkOrder.ProducedQuantity), nameof(WorkOrder.ReadyQuantity), nameof(WorkOrder.DispatchedQuantity) }) b.Property(property).HasPrecision(18, 3);
         b.Property(x => x.WorkOrderType).HasConversion<string>().HasMaxLength(30); b.Property(x => x.ProductType).HasConversion<string>().HasMaxLength(30); b.Property(x => x.Status).HasConversion<string>().HasMaxLength(30);
         b.Property(x => x.CustomerName).HasMaxLength(200); b.Property(x => x.SalesOrderReference).HasMaxLength(100);
         b.Property(x => x.Category).HasMaxLength(30).IsRequired(); b.Property(x => x.DrawingNumber).HasMaxLength(100); b.Property(x => x.Remarks).HasMaxLength(1000);
@@ -18,6 +28,9 @@ public sealed class WorkOrderConfiguration : IEntityTypeConfiguration<WorkOrder>
         foreach (var name in new[] { nameof(WorkOrder.ReleasedBy), nameof(WorkOrder.StartedBy), nameof(WorkOrder.CompletedBy), nameof(WorkOrder.ClosedBy), nameof(WorkOrder.CancelledBy), nameof(WorkOrder.CreatedBy), nameof(WorkOrder.UpdatedBy) }) b.Property(name).HasMaxLength(100);
         b.Property(x => x.RowVersion).IsRowVersion();
         b.HasOne(x => x.Grade).WithMany().HasForeignKey(x => x.GradeId).OnDelete(DeleteBehavior.Restrict);
+        b.HasOne(x => x.SalesOrder).WithMany().HasForeignKey(x => x.SalesOrderId).OnDelete(DeleteBehavior.Restrict);
+        b.HasOne(x => x.SalesOrderLine).WithMany().HasForeignKey(x => x.SalesOrderLineId).OnDelete(DeleteBehavior.Restrict);
+        b.HasOne(x => x.Customer).WithMany().HasForeignKey(x => x.CustomerId).OnDelete(DeleteBehavior.Restrict);
         b.HasMany(x => x.Operations).WithOne(x => x.WorkOrder).HasForeignKey(x => x.WorkOrderId).OnDelete(DeleteBehavior.Cascade);
         b.HasMany(x => x.Allocations).WithOne(x => x.WorkOrder).HasForeignKey(x => x.WorkOrderId).OnDelete(DeleteBehavior.Cascade);
         b.Navigation(x => x.Operations).UsePropertyAccessMode(PropertyAccessMode.Field);
