@@ -172,3 +172,73 @@
          ╵     [32m~~~~~~~~[0m
 
 
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of RoleManagementPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/admin/security/role-management-page.component.ts:2:52:
+[37m      2 │ ...p-role-management',imports:[[32mDatePipe[37m,ReactiveFormsModule,RouterL...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of OtpComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of ResetPasswordComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of CoilSearchComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/coil-search/pages/coil-search/coil-search.component.ts:2:68:
+[37m      2 │ ...ports:[ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMod...
+        ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of DispatchDetailComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/dispatch/dispatch-detail.component.ts:15:4:
+[37m      15 │     [32mDatePipe[37m,
+         ╵     [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of RoleManagementPageComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/admin/security/role-management-page.component.ts:2:52:
+[37m      2 │ ...p-role-management',imports:[[32mDatePipe[37m,ReactiveFormsModule,RouterL...
+        ╵                                [32m~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of OtpComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of ResetPasswordComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/auth/auth-pages.component.ts:10:48:
+[37m      10 │ ...Module,ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMo...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of CoilSearchComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/coil-search/pages/coil-search/coil-search.component.ts:2:68:
+[37m      2 │ ...ports:[ReactiveFormsModule,[32mRouterLink[37m,MatButtonModule,MatCardMod...
+        ╵                               [32m~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: DatePipe is not used within the template of DispatchDetailComponent[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/features/dispatch/dispatch-detail.component.ts:15:4:
+[37m      15 │     [32mDatePipe[37m,
+         ╵     [32m~~~~~~~~[0m
+
+

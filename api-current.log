@@ -588,3 +588,1312 @@ FROM (
 LEFT JOIN [sales].[SalesOrderLines] AS [s0] ON [t].[Id] = [s0].[SalesOrderId]
 ORDER BY [t].[OrderDate] DESC, [t].[SalesOrderNumber] DESC, [t].[Id]
 [23:52:26 INF] HTTP GET /api/sales-orders responded 200 in 75.4572 ms
+[22:00:34 INF] HTTP GET /health responded 200 in 3.1645 ms
+[22:22:46 INF] HTTP OPTIONS /api/auth/login responded 204 in 0.2987 ms
+[22:22:47 INF] Executed DbCommand (13ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(2) [i].[Id], [i].[AccessFailedCount], [i].[ConcurrencyStamp], [i].[CreatedAtUtc], [i].[CreatedBy], [i].[DisplayName], [i].[Email], [i].[EmailConfirmed], [i].[IsActive], [i].[JobTitle], [i].[LastLoginAtUtc], [i].[LockoutEnabled], [i].[LockoutEnd], [i].[ModifiedAtUtc], [i].[ModifiedBy], [i].[MustChangePassword], [i].[NormalizedEmail], [i].[NormalizedUserName], [i].[PasswordHash], [i].[PhoneNumber], [i].[PhoneNumberConfirmed], [i].[SecurityStamp], [i].[TwoFactorEnabled], [i].[UserName]
+FROM [auth].[IdentityUsers] AS [i]
+WHERE [i].[NormalizedEmail] = @__normalizedEmail_0
+[22:22:47 INF] Executed DbCommand (8ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [i0].[Name]
+FROM [auth].[IdentityUserRoles] AS [i]
+INNER JOIN [auth].[IdentityRoles] AS [i0] ON [i].[RoleId] = [i0].[Id]
+WHERE [i].[UserId] = @__userId_0
+[22:22:47 INF] Executed DbCommand (47ms) [Parameters=[@__roleNames_0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+SELECT DISTINCT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[IdentityRoles] AS [i] ON [r].[RoleId] = [i].[Id]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [i].[Name] IN (
+    SELECT [r0].[value]
+    FROM OPENJSON(@__roleNames_0) WITH ([value] nvarchar(256) '$') AS [r0]
+)
+[22:22:48 INF] Executed DbCommand (10ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Size = 4000), @p2='?' (Size = 4000), @p3='?' (Size = 4000), @p4='?' (Size = 4000), @p5='?' (Size = 4000), @p6='?' (Size = 4000), @p7='?' (DbType = DateTimeOffset), @p8='?' (Size = 4000), @p9='?' (DbType = Guid), @p11='?' (DbType = Guid), @p12='?' (Size = 4000), @p10='?' (DbType = DateTimeOffset), @p13='?' (DbType = Guid), @p14='?' (Size = 4000), @p15='?' (Size = 4000), @p16='?' (Size = 4000), @p17='?' (DbType = DateTimeOffset), @p18='?' (DbType = DateTimeOffset), @p19='?' (DbType = DateTimeOffset), @p20='?' (Size = 128), @p21='?' (Size = 4000), @p22='?' (DbType = DateTimeOffset), @p23='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [audit].[AuditLogs] ([Id], [Action], [Category], [CorrelationId], [Details], [IpAddress], [Outcome], [TimestampUtc], [UserEmail], [UserId])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
+UPDATE [auth].[IdentityUsers] SET [LastLoginAtUtc] = @p10
+OUTPUT 1
+WHERE [Id] = @p11 AND [ConcurrencyStamp] = @p12;
+INSERT INTO [auth].[UserSessions] ([Id], [Browser], [Device], [IpAddress], [LastActivityAtUtc], [LoginAtUtc], [RefreshTokenExpiresAtUtc], [RefreshTokenHash], [ReplacedByTokenHash], [RevokedAtUtc], [UserId])
+VALUES (@p13, @p14, @p15, @p16, @p17, @p18, @p19, @p20, @p21, @p22, @p23);
+[22:22:48 INF] HTTP POST /api/auth/login responded 200 in 1818.9533 ms
+[22:22:48 INF] HTTP OPTIONS /api/dashboard/operations responded 204 in 0.0394 ms
+[22:22:48 INF] Executed DbCommand (12ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width], [s].[Id], [s].[Address], [s].[Code], [s].[ContactNo], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[Description], [s].[Email], [s].[GST], [s].[IsActive], [s].[Name], [s].[RowVersion], [s].[UpdatedAtUtc], [s].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy]
+FROM [app].[RawCoils] AS [r]
+INNER JOIN [app].[Suppliers] AS [s] ON [r].[SupplierId] = [s].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [r].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [r].[GradeId] = [g].[Id]
+WHERE [r].[IsDeleted] = CAST(0 AS bit)
+[22:22:48 INF] Executed DbCommand (26ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[CancelledBy], [s].[CancelledOn], [s].[CompletedBy], [s].[CompletedOn], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[KnifeThickness], [s].[LeftEdgeTrim], [s].[MachineId], [s].[MotherCoilId], [s].[PlannerId], [s].[PlanningDate], [s].[ProductionType], [s].[ReleasedBy], [s].[ReleasedOn], [s].[Remarks], [s].[RightEdgeTrim], [s].[RowVersion], [s].[Shift], [s].[SlittingJobNo], [s].[StartedBy], [s].[StartedOn], [s].[Status], [s].[UpdatedAtUtc], [s].[UpdatedBy], [s].[WorkOrderId], [s].[WorkOrderNumber], [s].[WorkOrderOperationId], [t].[Id], [t].[BISLicNumber], [t].[Category], [t].[CoilNumber], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[GradeId], [t].[HeatNumber], [t].[InvoiceNo], [t].[IsDeleted], [t].[Length], [t].[ManufacturerId], [t].[MillTCNo], [t].[PONumber], [t].[RawCoilNumber], [t].[ReceivedDate], [t].[RowVersion], [t].[Status], [t].[SupplierId], [t].[Thickness], [t].[ThicknessMm], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WarehouseLocation], [t].[WattLossPerKg], [t].[Weight], [t].[Width], [s0].[Id], [s0].[Address], [s0].[Code], [s0].[ContactNo], [s0].[CreatedAtUtc], [s0].[CreatedBy], [s0].[Description], [s0].[Email], [s0].[GST], [s0].[IsActive], [s0].[Name], [s0].[RowVersion], [s0].[UpdatedAtUtc], [s0].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [s1].[Id], [s1].[ActualWeight], [s1].[ActualWidth], [s1].[EstimatedWeight], [s1].[Remarks], [s1].[SequenceNo], [s1].[SlitCoilId], [s1].[SlittingJobId], [s1].[Status], [s1].[Width]
+FROM [app].[SlittingJobs] AS [s]
+INNER JOIN (
+    SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width]
+    FROM [app].[RawCoils] AS [r]
+    WHERE [r].[IsDeleted] = CAST(0 AS bit)
+) AS [t] ON [s].[MotherCoilId] = [t].[Id]
+INNER JOIN [app].[Suppliers] AS [s0] ON [t].[SupplierId] = [s0].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [t].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [t].[GradeId] = [g].[Id]
+LEFT JOIN [app].[SlittingJobItems] AS [s1] ON [s].[Id] = [s1].[SlittingJobId]
+ORDER BY [s].[Id], [t].[Id], [s0].[Id], [m].[Id], [g].[Id]
+[22:22:48 INF] Executed DbCommand (20ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[BarcodeValue], [s].[Category], [s].[CoilNumber], [s].[CoreLossPerKg], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[DeletedAtUtc], [s].[DeletedBy], [s].[GenerationLevel], [s].[GradeId], [s].[HeatNumber], [s].[IsDeleted], [s].[LabelLastPrintedBy], [s].[LabelLastPrintedOn], [s].[LabelPrintCount], [s].[LabelPrinted], [s].[LabelVersion], [s].[ManufacturerId], [s].[MotherCoilId], [s].[ParentCoilId], [s].[QrCodeValue], [s].[RootMotherCoilId], [s].[RowVersion], [s].[SlitSequence], [s].[SlittingJobId], [s].[Status], [s].[SupplierId], [s].[Thickness], [s].[UpdatedAtUtc], [s].[UpdatedBy], [s].[WarehouseLocation], [s].[Weight], [s].[Width], [t].[Id], [t].[BISLicNumber], [t].[Category], [t].[CoilNumber], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[GradeId], [t].[HeatNumber], [t].[InvoiceNo], [t].[IsDeleted], [t].[Length], [t].[ManufacturerId], [t].[MillTCNo], [t].[PONumber], [t].[RawCoilNumber], [t].[ReceivedDate], [t].[RowVersion], [t].[Status], [t].[SupplierId], [t].[Thickness], [t].[ThicknessMm], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WarehouseLocation], [t].[WattLossPerKg], [t].[Weight], [t].[Width], [s0].[Id], [s0].[Address], [s0].[Code], [s0].[ContactNo], [s0].[CreatedAtUtc], [s0].[CreatedBy], [s0].[Description], [s0].[Email], [s0].[GST], [s0].[IsActive], [s0].[Name], [s0].[RowVersion], [s0].[UpdatedAtUtc], [s0].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [s1].[Id], [s1].[CancelledBy], [s1].[CancelledOn], [s1].[CompletedBy], [s1].[CompletedOn], [s1].[CreatedAtUtc], [s1].[CreatedBy], [s1].[KnifeThickness], [s1].[LeftEdgeTrim], [s1].[MachineId], [s1].[MotherCoilId], [s1].[PlannerId], [s1].[PlanningDate], [s1].[ProductionType], [s1].[ReleasedBy], [s1].[ReleasedOn], [s1].[Remarks], [s1].[RightEdgeTrim], [s1].[RowVersion], [s1].[Shift], [s1].[SlittingJobNo], [s1].[StartedBy], [s1].[StartedOn], [s1].[Status], [s1].[UpdatedAtUtc], [s1].[UpdatedBy], [s1].[WorkOrderId], [s1].[WorkOrderNumber], [s1].[WorkOrderOperationId], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [s2].[Id], [s2].[Address], [s2].[Code], [s2].[ContactNo], [s2].[CreatedAtUtc], [s2].[CreatedBy], [s2].[Description], [s2].[Email], [s2].[GST], [s2].[IsActive], [s2].[Name], [s2].[RowVersion], [s2].[UpdatedAtUtc], [s2].[UpdatedBy], [m0].[Id], [m0].[Code], [m0].[Country], [m0].[CreatedAtUtc], [m0].[CreatedBy], [m0].[Description], [m0].[IsActive], [m0].[Name], [m0].[RowVersion], [m0].[UpdatedAtUtc], [m0].[UpdatedBy]
+FROM [app].[SlitCoils] AS [s]
+INNER JOIN (
+    SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width]
+    FROM [app].[RawCoils] AS [r]
+    WHERE [r].[IsDeleted] = CAST(0 AS bit)
+) AS [t] ON [s].[MotherCoilId] = [t].[Id]
+INNER JOIN [app].[Suppliers] AS [s0] ON [t].[SupplierId] = [s0].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [t].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[SlittingJobs] AS [s1] ON [s].[SlittingJobId] = [s1].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [s].[GradeId] = [g].[Id]
+INNER JOIN [app].[Suppliers] AS [s2] ON [s].[SupplierId] = [s2].[Id]
+INNER JOIN [app].[Manufacturers] AS [m0] ON [s].[ManufacturerId] = [m0].[Id]
+WHERE [s].[IsDeleted] = CAST(0 AS bit)
+[22:22:48 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[CoilNumber], [s].[Copies], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[LabelVersion], [s].[PrintType], [s].[PrintedBy], [s].[PrintedOn], [s].[PrinterName], [s].[Remarks], [s].[SlitCoilId], [s].[UpdatedAtUtc], [s].[UpdatedBy]
+FROM [app].[SlitCoilLabelPrintHistories] AS [s]
+[22:22:48 INF] Executed DbCommand (13ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [w].[Id], [w].[CancellationReason], [w].[CancelledBy], [w].[CancelledOn], [w].[Category], [w].[ClosedBy], [w].[ClosedOn], [w].[CompletedBy], [w].[CompletedOn], [w].[CoreLossPerKg], [w].[CreatedAtUtc], [w].[CreatedBy], [w].[CustomerCode], [w].[CustomerId], [w].[CustomerName], [w].[CustomerPONumber], [w].[Description], [w].[DispatchedQuantity], [w].[DrawingNumber], [w].[DrawingRevision], [w].[FulfilmentStrategy], [w].[GradeCode], [w].[GradeId], [w].[Length], [w].[OEMJobNumber], [w].[PlannedInventoryQuantity], [w].[PlannedProductionQuantity], [w].[PlannedStartDate], [w].[Planner], [w].[PlanningRequiredQuantity], [w].[Priority], [w].[ProducedQuantity], [w].[ProductType], [w].[ProductionRoute], [w].[QuantityUnit], [w].[ReadyQuantity], [w].[ReleasedBy], [w].[ReleasedOn], [w].[Remarks], [w].[RequiredDate], [w].[RequiredQuantity], [w].[RequiredWeight], [w].[RequiredWidth], [w].[ReservedInventoryQuantity], [w].[RowVersion], [w].[SalesOrderId], [w].[SalesOrderLineId], [w].[SalesOrderLineNumber], [w].[SalesOrderNumber], [w].[SalesOrderReference], [w].[SourceType], [w].[StartedBy], [w].[StartedOn], [w].[Status], [w].[Thickness], [w].[TransformerRating], [w].[UpdatedAtUtc], [w].[UpdatedBy], [w].[WorkOrderDate], [w].[WorkOrderNumber], [w].[WorkOrderType], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [w0].[Id], [w0].[CompletedOn], [w0].[IsRequired], [w0].[OperationType], [w0].[RelatedDocumentId], [w0].[RelatedDocumentNumber], [w0].[Remarks], [w0].[Sequence], [w0].[StartedOn], [w0].[Status], [w0].[WorkOrderId], [w1].[Id], [w1].[AllocatedWeight], [w1].[CoilNumber], [w1].[CoilType], [w1].[ConsumedWeight], [w1].[CreatedBy], [w1].[CreatedOn], [w1].[IssuedWeight], [w1].[MotherCoilId], [w1].[ReleasedBy], [w1].[ReleasedOn], [w1].[RemainingWeightAfterAllocation], [w1].[Remarks], [w1].[ReservedBy], [w1].[ReservedOn], [w1].[SlitCoilId], [w1].[Status], [w1].[WorkOrderId]
+FROM [app].[WorkOrders] AS [w]
+LEFT JOIN [app].[Grades] AS [g] ON [w].[GradeId] = [g].[Id]
+LEFT JOIN [app].[WorkOrderOperations] AS [w0] ON [w].[Id] = [w0].[WorkOrderId]
+LEFT JOIN [app].[WorkOrderMaterialAllocations] AS [w1] ON [w].[Id] = [w1].[WorkOrderId]
+ORDER BY [w].[Id], [g].[Id], [w0].[Id]
+[22:22:48 INF] Executed DbCommand (30ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [l].[Id], [l].[AllocatedBy], [l].[AllocatedOn], [l].[BottomPlateWeight], [l].[CancelledBy], [l].[CancelledOn], [l].[Category], [l].[CenterPlateWeight], [l].[CompletedBy], [l].[CompletedOn], [l].[CompletionRemarks], [l].[CoreLossPerKg], [l].[CreatedAtUtc], [l].[CreatedBy], [l].[Customer], [l].[CustomerCoreLossPerKg], [l].[DeletedAtUtc], [l].[DeletedBy], [l].[DesignType], [l].[DrawingAttachmentName], [l].[DrawingAttachmentPath], [l].[GradeId], [l].[IsDeleted], [l].[JobOrDrawingNumber], [l].[LaminationJobNumber], [l].[LeftSidePlateWeight], [l].[NoLoadLossWatts], [l].[NumberOfSteps], [l].[PlannedDate], [l].[PlannerName], [l].[Rating], [l].[ReleasedBy], [l].[ReleasedOn], [l].[Remarks], [l].[RequiredDate], [l].[RightSidePlateWeight], [l].[RowVersion], [l].[Shift], [l].[Status], [l].[StepLapOrientation], [l].[Thickness], [l].[TopPlateWeight], [l].[TotalAllocatedWeight], [l].[TotalConsumedWeight], [l].[TotalGoodPieces], [l].[TotalJobWeight], [l].[TotalPlannedPieces], [l].[TotalPlannedWeight], [l].[TotalRejectedPieces], [l].[TotalScrapWeight], [l].[TotalWeight], [l].[UpdatedAtUtc], [l].[UpdatedBy], [l].[WorkOrderId], [l].[WorkOrderNumber], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [t0].[Id], [t0].[LaminationJobId], [t0].[PlannedWeight], [t0].[Remarks], [t0].[Sequence], [t0].[StackQuantity], [t0].[StepNumber], [t0].[Width], [t0].[Id0], [t0].[LaminationJobStepId], [t0].[Length], [t0].[PlannedWeight0], [t0].[PlateType], [t0].[Quantity], [t0].[Remarks0], [t0].[Width0], [t0].[Id00], [t0].[DimensionCode], [t0].[DimensionValue], [t0].[DisplayName], [t0].[LaminationJobPlateId], [t0].[Remarks00], [t0].[Sequence0], [t0].[Unit], [l3].[Id], [l3].[AllocatedWeight], [l3].[ConsumedWeight], [l3].[CreatedBy], [l3].[CreatedOn], [l3].[IssuedWeight], [l3].[LaminationJobId], [l3].[ReleasedBy], [l3].[ReleasedOn], [l3].[RemainingWeightAfterAllocation], [l3].[Remarks], [l3].[RequiredWidth], [l3].[ReservedBy], [l3].[ReservedOn], [l3].[SlitCoilId], [l3].[SlitCoilNumber], [l3].[Status]
+FROM [app].[LaminationJobs] AS [l]
+INNER JOIN [app].[Grades] AS [g] ON [l].[GradeId] = [g].[Id]
+LEFT JOIN (
+    SELECT [l0].[Id], [l0].[LaminationJobId], [l0].[PlannedWeight], [l0].[Remarks], [l0].[Sequence], [l0].[StackQuantity], [l0].[StepNumber], [l0].[Width], [t].[Id] AS [Id0], [t].[LaminationJobStepId], [t].[Length], [t].[PlannedWeight] AS [PlannedWeight0], [t].[PlateType], [t].[Quantity], [t].[Remarks] AS [Remarks0], [t].[Width] AS [Width0], [t].[Id0] AS [Id00], [t].[DimensionCode], [t].[DimensionValue], [t].[DisplayName], [t].[LaminationJobPlateId], [t].[Remarks0] AS [Remarks00], [t].[Sequence] AS [Sequence0], [t].[Unit]
+    FROM [app].[LaminationJobSteps] AS [l0]
+    LEFT JOIN (
+        SELECT [l1].[Id], [l1].[LaminationJobStepId], [l1].[Length], [l1].[PlannedWeight], [l1].[PlateType], [l1].[Quantity], [l1].[Remarks], [l1].[Width], [l2].[Id] AS [Id0], [l2].[DimensionCode], [l2].[DimensionValue], [l2].[DisplayName], [l2].[LaminationJobPlateId], [l2].[Remarks] AS [Remarks0], [l2].[Sequence], [l2].[Unit]
+        FROM [app].[LaminationJobPlates] AS [l1]
+        LEFT JOIN [app].[LaminationPlateDimensions] AS [l2] ON [l1].[Id] = [l2].[LaminationJobPlateId]
+    ) AS [t] ON [l0].[Id] = [t].[LaminationJobStepId]
+) AS [t0] ON [l].[Id] = [t0].[LaminationJobId]
+LEFT JOIN [app].[LaminationJobMaterialAllocations] AS [l3] ON [l].[Id] = [l3].[LaminationJobId]
+WHERE [l].[IsDeleted] = CAST(0 AS bit)
+ORDER BY [l].[Id], [g].[Id], [t0].[Id], [t0].[Id0], [t0].[Id00]
+[22:22:48 INF] HTTP GET /api/dashboard/operations responded 200 in 142.1316 ms
+[22:22:58 INF] HTTP OPTIONS /api/customers responded 204 in 0.1836 ms
+[22:22:58 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [sales].[Customers] AS [c]
+[22:22:58 INF] Executed DbCommand (3ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [c].[Id], [c].[BillingAddress], [c].[City], [c].[ContactPerson], [c].[Country], [c].[CreatedAtUtc], [c].[CreatedBy], [c].[CreditDays], [c].[CustomerCode], [c].[CustomerName], [c].[Email], [c].[GSTNumber], [c].[IsActive], [c].[PAN], [c].[PaymentTerms], [c].[Phone], [c].[PostalCode], [c].[Remarks], [c].[RowVersion], [c].[ShippingAddress], [c].[ShortName], [c].[State], [c].[UpdatedAtUtc], [c].[UpdatedBy]
+FROM [sales].[Customers] AS [c]
+ORDER BY [c].[CustomerCode]
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+[22:22:58 INF] HTTP GET /api/customers responded 200 in 39.7789 ms
+[22:23:03 INF] HTTP OPTIONS /api/dashboard/operations responded 204 in 0.0879 ms
+[22:23:03 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width], [s].[Id], [s].[Address], [s].[Code], [s].[ContactNo], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[Description], [s].[Email], [s].[GST], [s].[IsActive], [s].[Name], [s].[RowVersion], [s].[UpdatedAtUtc], [s].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy]
+FROM [app].[RawCoils] AS [r]
+INNER JOIN [app].[Suppliers] AS [s] ON [r].[SupplierId] = [s].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [r].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [r].[GradeId] = [g].[Id]
+WHERE [r].[IsDeleted] = CAST(0 AS bit)
+[22:23:03 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[CancelledBy], [s].[CancelledOn], [s].[CompletedBy], [s].[CompletedOn], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[KnifeThickness], [s].[LeftEdgeTrim], [s].[MachineId], [s].[MotherCoilId], [s].[PlannerId], [s].[PlanningDate], [s].[ProductionType], [s].[ReleasedBy], [s].[ReleasedOn], [s].[Remarks], [s].[RightEdgeTrim], [s].[RowVersion], [s].[Shift], [s].[SlittingJobNo], [s].[StartedBy], [s].[StartedOn], [s].[Status], [s].[UpdatedAtUtc], [s].[UpdatedBy], [s].[WorkOrderId], [s].[WorkOrderNumber], [s].[WorkOrderOperationId], [t].[Id], [t].[BISLicNumber], [t].[Category], [t].[CoilNumber], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[GradeId], [t].[HeatNumber], [t].[InvoiceNo], [t].[IsDeleted], [t].[Length], [t].[ManufacturerId], [t].[MillTCNo], [t].[PONumber], [t].[RawCoilNumber], [t].[ReceivedDate], [t].[RowVersion], [t].[Status], [t].[SupplierId], [t].[Thickness], [t].[ThicknessMm], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WarehouseLocation], [t].[WattLossPerKg], [t].[Weight], [t].[Width], [s0].[Id], [s0].[Address], [s0].[Code], [s0].[ContactNo], [s0].[CreatedAtUtc], [s0].[CreatedBy], [s0].[Description], [s0].[Email], [s0].[GST], [s0].[IsActive], [s0].[Name], [s0].[RowVersion], [s0].[UpdatedAtUtc], [s0].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [s1].[Id], [s1].[ActualWeight], [s1].[ActualWidth], [s1].[EstimatedWeight], [s1].[Remarks], [s1].[SequenceNo], [s1].[SlitCoilId], [s1].[SlittingJobId], [s1].[Status], [s1].[Width]
+FROM [app].[SlittingJobs] AS [s]
+INNER JOIN (
+    SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width]
+    FROM [app].[RawCoils] AS [r]
+    WHERE [r].[IsDeleted] = CAST(0 AS bit)
+) AS [t] ON [s].[MotherCoilId] = [t].[Id]
+INNER JOIN [app].[Suppliers] AS [s0] ON [t].[SupplierId] = [s0].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [t].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [t].[GradeId] = [g].[Id]
+LEFT JOIN [app].[SlittingJobItems] AS [s1] ON [s].[Id] = [s1].[SlittingJobId]
+ORDER BY [s].[Id], [t].[Id], [s0].[Id], [m].[Id], [g].[Id]
+[22:23:03 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[BarcodeValue], [s].[Category], [s].[CoilNumber], [s].[CoreLossPerKg], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[DeletedAtUtc], [s].[DeletedBy], [s].[GenerationLevel], [s].[GradeId], [s].[HeatNumber], [s].[IsDeleted], [s].[LabelLastPrintedBy], [s].[LabelLastPrintedOn], [s].[LabelPrintCount], [s].[LabelPrinted], [s].[LabelVersion], [s].[ManufacturerId], [s].[MotherCoilId], [s].[ParentCoilId], [s].[QrCodeValue], [s].[RootMotherCoilId], [s].[RowVersion], [s].[SlitSequence], [s].[SlittingJobId], [s].[Status], [s].[SupplierId], [s].[Thickness], [s].[UpdatedAtUtc], [s].[UpdatedBy], [s].[WarehouseLocation], [s].[Weight], [s].[Width], [t].[Id], [t].[BISLicNumber], [t].[Category], [t].[CoilNumber], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[GradeId], [t].[HeatNumber], [t].[InvoiceNo], [t].[IsDeleted], [t].[Length], [t].[ManufacturerId], [t].[MillTCNo], [t].[PONumber], [t].[RawCoilNumber], [t].[ReceivedDate], [t].[RowVersion], [t].[Status], [t].[SupplierId], [t].[Thickness], [t].[ThicknessMm], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WarehouseLocation], [t].[WattLossPerKg], [t].[Weight], [t].[Width], [s0].[Id], [s0].[Address], [s0].[Code], [s0].[ContactNo], [s0].[CreatedAtUtc], [s0].[CreatedBy], [s0].[Description], [s0].[Email], [s0].[GST], [s0].[IsActive], [s0].[Name], [s0].[RowVersion], [s0].[UpdatedAtUtc], [s0].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [s1].[Id], [s1].[CancelledBy], [s1].[CancelledOn], [s1].[CompletedBy], [s1].[CompletedOn], [s1].[CreatedAtUtc], [s1].[CreatedBy], [s1].[KnifeThickness], [s1].[LeftEdgeTrim], [s1].[MachineId], [s1].[MotherCoilId], [s1].[PlannerId], [s1].[PlanningDate], [s1].[ProductionType], [s1].[ReleasedBy], [s1].[ReleasedOn], [s1].[Remarks], [s1].[RightEdgeTrim], [s1].[RowVersion], [s1].[Shift], [s1].[SlittingJobNo], [s1].[StartedBy], [s1].[StartedOn], [s1].[Status], [s1].[UpdatedAtUtc], [s1].[UpdatedBy], [s1].[WorkOrderId], [s1].[WorkOrderNumber], [s1].[WorkOrderOperationId], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [s2].[Id], [s2].[Address], [s2].[Code], [s2].[ContactNo], [s2].[CreatedAtUtc], [s2].[CreatedBy], [s2].[Description], [s2].[Email], [s2].[GST], [s2].[IsActive], [s2].[Name], [s2].[RowVersion], [s2].[UpdatedAtUtc], [s2].[UpdatedBy], [m0].[Id], [m0].[Code], [m0].[Country], [m0].[CreatedAtUtc], [m0].[CreatedBy], [m0].[Description], [m0].[IsActive], [m0].[Name], [m0].[RowVersion], [m0].[UpdatedAtUtc], [m0].[UpdatedBy]
+FROM [app].[SlitCoils] AS [s]
+INNER JOIN (
+    SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width]
+    FROM [app].[RawCoils] AS [r]
+    WHERE [r].[IsDeleted] = CAST(0 AS bit)
+) AS [t] ON [s].[MotherCoilId] = [t].[Id]
+INNER JOIN [app].[Suppliers] AS [s0] ON [t].[SupplierId] = [s0].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [t].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[SlittingJobs] AS [s1] ON [s].[SlittingJobId] = [s1].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [s].[GradeId] = [g].[Id]
+INNER JOIN [app].[Suppliers] AS [s2] ON [s].[SupplierId] = [s2].[Id]
+INNER JOIN [app].[Manufacturers] AS [m0] ON [s].[ManufacturerId] = [m0].[Id]
+WHERE [s].[IsDeleted] = CAST(0 AS bit)
+[22:23:03 INF] Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[CoilNumber], [s].[Copies], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[LabelVersion], [s].[PrintType], [s].[PrintedBy], [s].[PrintedOn], [s].[PrinterName], [s].[Remarks], [s].[SlitCoilId], [s].[UpdatedAtUtc], [s].[UpdatedBy]
+FROM [app].[SlitCoilLabelPrintHistories] AS [s]
+[22:23:03 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [w].[Id], [w].[CancellationReason], [w].[CancelledBy], [w].[CancelledOn], [w].[Category], [w].[ClosedBy], [w].[ClosedOn], [w].[CompletedBy], [w].[CompletedOn], [w].[CoreLossPerKg], [w].[CreatedAtUtc], [w].[CreatedBy], [w].[CustomerCode], [w].[CustomerId], [w].[CustomerName], [w].[CustomerPONumber], [w].[Description], [w].[DispatchedQuantity], [w].[DrawingNumber], [w].[DrawingRevision], [w].[FulfilmentStrategy], [w].[GradeCode], [w].[GradeId], [w].[Length], [w].[OEMJobNumber], [w].[PlannedInventoryQuantity], [w].[PlannedProductionQuantity], [w].[PlannedStartDate], [w].[Planner], [w].[PlanningRequiredQuantity], [w].[Priority], [w].[ProducedQuantity], [w].[ProductType], [w].[ProductionRoute], [w].[QuantityUnit], [w].[ReadyQuantity], [w].[ReleasedBy], [w].[ReleasedOn], [w].[Remarks], [w].[RequiredDate], [w].[RequiredQuantity], [w].[RequiredWeight], [w].[RequiredWidth], [w].[ReservedInventoryQuantity], [w].[RowVersion], [w].[SalesOrderId], [w].[SalesOrderLineId], [w].[SalesOrderLineNumber], [w].[SalesOrderNumber], [w].[SalesOrderReference], [w].[SourceType], [w].[StartedBy], [w].[StartedOn], [w].[Status], [w].[Thickness], [w].[TransformerRating], [w].[UpdatedAtUtc], [w].[UpdatedBy], [w].[WorkOrderDate], [w].[WorkOrderNumber], [w].[WorkOrderType], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [w0].[Id], [w0].[CompletedOn], [w0].[IsRequired], [w0].[OperationType], [w0].[RelatedDocumentId], [w0].[RelatedDocumentNumber], [w0].[Remarks], [w0].[Sequence], [w0].[StartedOn], [w0].[Status], [w0].[WorkOrderId], [w1].[Id], [w1].[AllocatedWeight], [w1].[CoilNumber], [w1].[CoilType], [w1].[ConsumedWeight], [w1].[CreatedBy], [w1].[CreatedOn], [w1].[IssuedWeight], [w1].[MotherCoilId], [w1].[ReleasedBy], [w1].[ReleasedOn], [w1].[RemainingWeightAfterAllocation], [w1].[Remarks], [w1].[ReservedBy], [w1].[ReservedOn], [w1].[SlitCoilId], [w1].[Status], [w1].[WorkOrderId]
+FROM [app].[WorkOrders] AS [w]
+LEFT JOIN [app].[Grades] AS [g] ON [w].[GradeId] = [g].[Id]
+LEFT JOIN [app].[WorkOrderOperations] AS [w0] ON [w].[Id] = [w0].[WorkOrderId]
+LEFT JOIN [app].[WorkOrderMaterialAllocations] AS [w1] ON [w].[Id] = [w1].[WorkOrderId]
+ORDER BY [w].[Id], [g].[Id], [w0].[Id]
+[22:23:03 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [l].[Id], [l].[AllocatedBy], [l].[AllocatedOn], [l].[BottomPlateWeight], [l].[CancelledBy], [l].[CancelledOn], [l].[Category], [l].[CenterPlateWeight], [l].[CompletedBy], [l].[CompletedOn], [l].[CompletionRemarks], [l].[CoreLossPerKg], [l].[CreatedAtUtc], [l].[CreatedBy], [l].[Customer], [l].[CustomerCoreLossPerKg], [l].[DeletedAtUtc], [l].[DeletedBy], [l].[DesignType], [l].[DrawingAttachmentName], [l].[DrawingAttachmentPath], [l].[GradeId], [l].[IsDeleted], [l].[JobOrDrawingNumber], [l].[LaminationJobNumber], [l].[LeftSidePlateWeight], [l].[NoLoadLossWatts], [l].[NumberOfSteps], [l].[PlannedDate], [l].[PlannerName], [l].[Rating], [l].[ReleasedBy], [l].[ReleasedOn], [l].[Remarks], [l].[RequiredDate], [l].[RightSidePlateWeight], [l].[RowVersion], [l].[Shift], [l].[Status], [l].[StepLapOrientation], [l].[Thickness], [l].[TopPlateWeight], [l].[TotalAllocatedWeight], [l].[TotalConsumedWeight], [l].[TotalGoodPieces], [l].[TotalJobWeight], [l].[TotalPlannedPieces], [l].[TotalPlannedWeight], [l].[TotalRejectedPieces], [l].[TotalScrapWeight], [l].[TotalWeight], [l].[UpdatedAtUtc], [l].[UpdatedBy], [l].[WorkOrderId], [l].[WorkOrderNumber], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [t0].[Id], [t0].[LaminationJobId], [t0].[PlannedWeight], [t0].[Remarks], [t0].[Sequence], [t0].[StackQuantity], [t0].[StepNumber], [t0].[Width], [t0].[Id0], [t0].[LaminationJobStepId], [t0].[Length], [t0].[PlannedWeight0], [t0].[PlateType], [t0].[Quantity], [t0].[Remarks0], [t0].[Width0], [t0].[Id00], [t0].[DimensionCode], [t0].[DimensionValue], [t0].[DisplayName], [t0].[LaminationJobPlateId], [t0].[Remarks00], [t0].[Sequence0], [t0].[Unit], [l3].[Id], [l3].[AllocatedWeight], [l3].[ConsumedWeight], [l3].[CreatedBy], [l3].[CreatedOn], [l3].[IssuedWeight], [l3].[LaminationJobId], [l3].[ReleasedBy], [l3].[ReleasedOn], [l3].[RemainingWeightAfterAllocation], [l3].[Remarks], [l3].[RequiredWidth], [l3].[ReservedBy], [l3].[ReservedOn], [l3].[SlitCoilId], [l3].[SlitCoilNumber], [l3].[Status]
+FROM [app].[LaminationJobs] AS [l]
+INNER JOIN [app].[Grades] AS [g] ON [l].[GradeId] = [g].[Id]
+LEFT JOIN (
+    SELECT [l0].[Id], [l0].[LaminationJobId], [l0].[PlannedWeight], [l0].[Remarks], [l0].[Sequence], [l0].[StackQuantity], [l0].[StepNumber], [l0].[Width], [t].[Id] AS [Id0], [t].[LaminationJobStepId], [t].[Length], [t].[PlannedWeight] AS [PlannedWeight0], [t].[PlateType], [t].[Quantity], [t].[Remarks] AS [Remarks0], [t].[Width] AS [Width0], [t].[Id0] AS [Id00], [t].[DimensionCode], [t].[DimensionValue], [t].[DisplayName], [t].[LaminationJobPlateId], [t].[Remarks0] AS [Remarks00], [t].[Sequence] AS [Sequence0], [t].[Unit]
+    FROM [app].[LaminationJobSteps] AS [l0]
+    LEFT JOIN (
+        SELECT [l1].[Id], [l1].[LaminationJobStepId], [l1].[Length], [l1].[PlannedWeight], [l1].[PlateType], [l1].[Quantity], [l1].[Remarks], [l1].[Width], [l2].[Id] AS [Id0], [l2].[DimensionCode], [l2].[DimensionValue], [l2].[DisplayName], [l2].[LaminationJobPlateId], [l2].[Remarks] AS [Remarks0], [l2].[Sequence], [l2].[Unit]
+        FROM [app].[LaminationJobPlates] AS [l1]
+        LEFT JOIN [app].[LaminationPlateDimensions] AS [l2] ON [l1].[Id] = [l2].[LaminationJobPlateId]
+    ) AS [t] ON [l0].[Id] = [t].[LaminationJobStepId]
+) AS [t0] ON [l].[Id] = [t0].[LaminationJobId]
+LEFT JOIN [app].[LaminationJobMaterialAllocations] AS [l3] ON [l].[Id] = [l3].[LaminationJobId]
+WHERE [l].[IsDeleted] = CAST(0 AS bit)
+ORDER BY [l].[Id], [g].[Id], [t0].[Id], [t0].[Id0], [t0].[Id00]
+[22:23:03 INF] HTTP GET /api/dashboard/operations responded 200 in 44.3183 ms
+[22:23:09 INF] HTTP OPTIONS /api/work-orders responded 204 in 0.0484 ms
+[22:23:09 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [app].[WorkOrders] AS [w]
+[22:23:09 INF] Executed DbCommand (18ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[WorkOrderNumber], [t].[WorkOrderType], [t].[ProductType], [t].[CustomerName], [t].[SalesOrderReference], [t].[RequiredDate], [t].[Priority], [t].[Status], [t].[CreatedAtUtc], [t].[RequiredWeight], [t].[RequiredQuantity], [t].[PlanningRequiredQuantity], [t].[QuantityUnit], [t].[c], [t].[c0], [t].[c1], [t0].[Id], [t0].[LaminationJobNumber], [t0].[Status], [t0].[TotalWeight], [t0].[TotalAllocatedWeight], [t0].[c]
+FROM (
+    SELECT [w].[Id], [w].[WorkOrderNumber], [w].[WorkOrderType], [w].[ProductType], [w].[CustomerName], [w].[SalesOrderReference], [w].[RequiredDate], [w].[Priority], [w].[Status], [w].[CreatedAtUtc], [w].[RequiredWeight], [w].[RequiredQuantity], [w].[PlanningRequiredQuantity], [w].[QuantityUnit], COALESCE((
+        SELECT COALESCE(SUM([w0].[AllocatedWeight]), 0.0)
+        FROM [app].[WorkOrderMaterialAllocations] AS [w0]
+        WHERE [w].[Id] = [w0].[WorkOrderId] AND [w0].[Status] IN (N'Reserved', N'Issued', N'PartiallyConsumed')), 0.0) AS [c], (
+        SELECT COUNT(*)
+        FROM [app].[WorkOrderOperations] AS [w1]
+        WHERE [w].[Id] = [w1].[WorkOrderId] AND [w1].[IsRequired] = CAST(1 AS bit)) AS [c0], (
+        SELECT COUNT(*)
+        FROM [app].[WorkOrderOperations] AS [w2]
+        WHERE [w].[Id] = [w2].[WorkOrderId] AND [w2].[IsRequired] = CAST(1 AS bit) AND [w2].[Status] = N'Completed') AS [c1]
+    FROM [app].[WorkOrders] AS [w]
+    ORDER BY [w].[CreatedAtUtc] DESC
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [t]
+LEFT JOIN (
+    SELECT [t1].[Id], [t1].[LaminationJobNumber], [t1].[Status], [t1].[TotalWeight], [t1].[TotalAllocatedWeight], [t1].[c], [t1].[WorkOrderId]
+    FROM (
+        SELECT [l].[Id], [l].[LaminationJobNumber], [l].[Status], [l].[TotalWeight], [l].[TotalAllocatedWeight], 1 AS [c], [l].[WorkOrderId], ROW_NUMBER() OVER(PARTITION BY [l].[WorkOrderId] ORDER BY [l].[Id]) AS [row]
+        FROM [app].[LaminationJobs] AS [l]
+        WHERE [l].[IsDeleted] = CAST(0 AS bit)
+    ) AS [t1]
+    WHERE [t1].[row] <= 1
+) AS [t0] ON [t].[Id] = [t0].[WorkOrderId]
+ORDER BY [t].[CreatedAtUtc] DESC
+[22:23:10 INF] HTTP GET /api/work-orders responded 200 in 109.0435 ms
+[22:23:25 INF] HTTP OPTIONS /api/admin/users responded 204 in 0.1369 ms
+[22:23:25 INF] HTTP OPTIONS /api/admin/roles responded 204 in 0.0820 ms
+[22:23:25 INF] HTTP OPTIONS /api/admin/permissions responded 204 in 0.0586 ms
+[22:23:25 INF] HTTP OPTIONS /api/admin/sessions responded 204 in 0.0451 ms
+[22:23:25 INF] HTTP OPTIONS /api/admin/audit responded 204 in 0.0321 ms
+[22:23:25 INF] HTTP OPTIONS /api/admin/company responded 204 in 0.0465 ms
+[22:23:25 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUsers] AS [i]
+[22:23:25 INF] Executed DbCommand (5ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [i].[Id], [i].[AccessFailedCount], [i].[ConcurrencyStamp], [i].[CreatedAtUtc], [i].[CreatedBy], [i].[DisplayName], [i].[Email], [i].[EmailConfirmed], [i].[IsActive], [i].[JobTitle], [i].[LastLoginAtUtc], [i].[LockoutEnabled], [i].[LockoutEnd], [i].[ModifiedAtUtc], [i].[ModifiedBy], [i].[MustChangePassword], [i].[NormalizedEmail], [i].[NormalizedUserName], [i].[PasswordHash], [i].[PhoneNumber], [i].[PhoneNumberConfirmed], [i].[SecurityStamp], [i].[TwoFactorEnabled], [i].[UserName]
+FROM [auth].[IdentityUsers] AS [i]
+ORDER BY [i].[DisplayName]
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+[22:23:25 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [i].[Id], [i].[ConcurrencyStamp], [i].[CreatedAtUtc], [i].[Description], [i].[IsSystem], [i].[Name], [i].[NormalizedName]
+FROM [auth].[IdentityRoles] AS [i]
+ORDER BY [i].[Name]
+[22:23:25 INF] Executed DbCommand (6ms) [Parameters=[@__current_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [u].[Id], [u].[UserId], [i].[Email], [u].[Device], [u].[Browser], [u].[IpAddress], [u].[LoginAtUtc], [u].[LastActivityAtUtc], CASE
+    WHEN [u].[Id] = @__current_0 THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END, CASE
+    WHEN [u].[RevokedAtUtc] IS NOT NULL THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+FROM [auth].[UserSessions] AS [u]
+INNER JOIN [auth].[IdentityUsers] AS [i] ON [u].[UserId] = [i].[Id]
+ORDER BY [u].[LastActivityAtUtc] DESC
+[22:23:25 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[Permissions] AS [p]
+ORDER BY [p].[Name]
+[22:23:25 INF] HTTP GET /api/admin/sessions responded 200 in 11.7248 ms
+[22:23:25 INF] HTTP GET /api/admin/permissions responded 200 in 18.2925 ms
+[22:23:25 INF] Executed DbCommand (5ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:23:25 INF] Executed DbCommand (3ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:23:25 INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [i0].[Name]
+FROM [auth].[IdentityUserRoles] AS [i]
+INNER JOIN [auth].[IdentityRoles] AS [i0] ON [i].[RoleId] = [i0].[Id]
+WHERE [i].[UserId] = @__userId_0
+[22:23:25 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [audit].[AuditLogs] AS [a]
+[22:23:25 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:23:25 INF] Executed DbCommand (0ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [i0].[Name]
+FROM [auth].[IdentityUserRoles] AS [i]
+INNER JOIN [auth].[IdentityRoles] AS [i0] ON [i].[RoleId] = [i0].[Id]
+WHERE [i].[UserId] = @__userId_0
+[22:23:25 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT TOP(2) [c].[Id], [c].[Address], [c].[BarcodePrefix], [c].[CompanyName], [c].[DefaultCurrency], [c].[DefaultTimezone], [c].[Email], [c].[GstNumber], [c].[LogoUrl], [c].[ModifiedAtUtc], [c].[ModifiedBy], [c].[PackingSlipFooter], [c].[Pan], [c].[Phone], [c].[ReportFooter], [c].[ReportHeader], [c].[SmtpHost], [c].[SmtpPasswordEncrypted], [c].[SmtpPort], [c].[SmtpUseTls], [c].[SmtpUserName], [c].[Website]
+FROM [config].[CompanyProfile] AS [c]
+[22:23:25 INF] HTTP GET /api/admin/users responded 200 in 31.3179 ms
+[22:23:25 INF] HTTP GET /api/admin/company responded 200 in 18.9680 ms
+[22:23:25 INF] Executed DbCommand (3ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:23:25 INF] Executed DbCommand (3ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [a].[Id], [a].[TimestampUtc], [a].[UserId], [a].[UserEmail], [a].[Category], [a].[Action], [a].[Outcome], [a].[IpAddress], [a].[Details]
+FROM [audit].[AuditLogs] AS [a]
+ORDER BY [a].[TimestampUtc] DESC
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+[22:23:25 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:23:25 INF] HTTP GET /api/admin/audit responded 200 in 24.7308 ms
+[22:23:25 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:23:25 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:23:25 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:23:25 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:23:25 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:23:25 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:23:25 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:23:25 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:23:25 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:23:25 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:23:25 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:23:25 INF] HTTP GET /api/admin/roles responded 200 in 48.4854 ms
+[22:23:30 INF] HTTP OPTIONS /api/admin/manufacturers responded 204 in 0.0726 ms
+[22:23:30 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [app].[Manufacturers] AS [m]
+[22:23:30 INF] Executed DbCommand (10ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy]
+FROM [app].[Manufacturers] AS [m]
+ORDER BY [m].[Code]
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+[22:23:30 INF] HTTP GET /api/admin/manufacturers responded 200 in 51.6622 ms
+[22:23:31 INF] HTTP OPTIONS /api/admin/suppliers responded 204 in 0.0484 ms
+[22:23:31 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [app].[Suppliers] AS [s]
+[22:23:32 INF] Executed DbCommand (3ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[Address], [s].[Code], [s].[ContactNo], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[Description], [s].[Email], [s].[GST], [s].[IsActive], [s].[Name], [s].[RowVersion], [s].[UpdatedAtUtc], [s].[UpdatedBy]
+FROM [app].[Suppliers] AS [s]
+ORDER BY [s].[Code]
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+[22:23:32 INF] HTTP GET /api/admin/suppliers responded 200 in 30.8332 ms
+[22:23:33 INF] HTTP OPTIONS /api/admin/grades responded 204 in 0.0667 ms
+[22:23:33 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [app].[Grades] AS [g]
+[22:23:33 INF] Executed DbCommand (3ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy]
+FROM [app].[Grades] AS [g]
+ORDER BY [g].[Code]
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+[22:23:33 INF] HTTP GET /api/admin/grades responded 200 in 24.4157 ms
+[22:23:37 INF] HTTP OPTIONS /api/lamination-jobs responded 204 in 0.0418 ms
+[22:23:37 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [app].[LaminationJobs] AS [l]
+WHERE [l].[IsDeleted] = CAST(0 AS bit)
+[22:23:37 INF] Executed DbCommand (7ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[AllocatedBy], [t].[AllocatedOn], [t].[BottomPlateWeight], [t].[CancelledBy], [t].[CancelledOn], [t].[Category], [t].[CenterPlateWeight], [t].[CompletedBy], [t].[CompletedOn], [t].[CompletionRemarks], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[Customer], [t].[CustomerCoreLossPerKg], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[DesignType], [t].[DrawingAttachmentName], [t].[DrawingAttachmentPath], [t].[GradeId], [t].[IsDeleted], [t].[JobOrDrawingNumber], [t].[LaminationJobNumber], [t].[LeftSidePlateWeight], [t].[NoLoadLossWatts], [t].[NumberOfSteps], [t].[PlannedDate], [t].[PlannerName], [t].[Rating], [t].[ReleasedBy], [t].[ReleasedOn], [t].[Remarks], [t].[RequiredDate], [t].[RightSidePlateWeight], [t].[RowVersion], [t].[Shift], [t].[Status], [t].[StepLapOrientation], [t].[Thickness], [t].[TopPlateWeight], [t].[TotalAllocatedWeight], [t].[TotalConsumedWeight], [t].[TotalGoodPieces], [t].[TotalJobWeight], [t].[TotalPlannedPieces], [t].[TotalPlannedWeight], [t].[TotalRejectedPieces], [t].[TotalScrapWeight], [t].[TotalWeight], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WorkOrderId], [t].[WorkOrderNumber], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy]
+FROM (
+    SELECT [l].[Id], [l].[AllocatedBy], [l].[AllocatedOn], [l].[BottomPlateWeight], [l].[CancelledBy], [l].[CancelledOn], [l].[Category], [l].[CenterPlateWeight], [l].[CompletedBy], [l].[CompletedOn], [l].[CompletionRemarks], [l].[CoreLossPerKg], [l].[CreatedAtUtc], [l].[CreatedBy], [l].[Customer], [l].[CustomerCoreLossPerKg], [l].[DeletedAtUtc], [l].[DeletedBy], [l].[DesignType], [l].[DrawingAttachmentName], [l].[DrawingAttachmentPath], [l].[GradeId], [l].[IsDeleted], [l].[JobOrDrawingNumber], [l].[LaminationJobNumber], [l].[LeftSidePlateWeight], [l].[NoLoadLossWatts], [l].[NumberOfSteps], [l].[PlannedDate], [l].[PlannerName], [l].[Rating], [l].[ReleasedBy], [l].[ReleasedOn], [l].[Remarks], [l].[RequiredDate], [l].[RightSidePlateWeight], [l].[RowVersion], [l].[Shift], [l].[Status], [l].[StepLapOrientation], [l].[Thickness], [l].[TopPlateWeight], [l].[TotalAllocatedWeight], [l].[TotalConsumedWeight], [l].[TotalGoodPieces], [l].[TotalJobWeight], [l].[TotalPlannedPieces], [l].[TotalPlannedWeight], [l].[TotalRejectedPieces], [l].[TotalScrapWeight], [l].[TotalWeight], [l].[UpdatedAtUtc], [l].[UpdatedBy], [l].[WorkOrderId], [l].[WorkOrderNumber]
+    FROM [app].[LaminationJobs] AS [l]
+    WHERE [l].[IsDeleted] = CAST(0 AS bit)
+    ORDER BY [l].[CreatedAtUtc] DESC
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [t]
+INNER JOIN [app].[Grades] AS [g] ON [t].[GradeId] = [g].[Id]
+ORDER BY [t].[CreatedAtUtc] DESC
+[22:23:37 INF] HTTP GET /api/lamination-jobs responded 200 in 74.8233 ms
+[22:23:40 INF] HTTP OPTIONS /api/slitting-jobs responded 204 in 0.0275 ms
+[22:23:40 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [app].[SlittingJobs] AS [s]
+[22:23:40 INF] Executed DbCommand (15ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[CancelledBy], [t].[CancelledOn], [t].[CompletedBy], [t].[CompletedOn], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[KnifeThickness], [t].[LeftEdgeTrim], [t].[MachineId], [t].[MotherCoilId], [t].[PlannerId], [t].[PlanningDate], [t].[ProductionType], [t].[ReleasedBy], [t].[ReleasedOn], [t].[Remarks], [t].[RightEdgeTrim], [t].[RowVersion], [t].[Shift], [t].[SlittingJobNo], [t].[StartedBy], [t].[StartedOn], [t].[Status], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WorkOrderId], [t].[WorkOrderNumber], [t].[WorkOrderOperationId], [t0].[Id], [t0].[BISLicNumber], [t0].[Category], [t0].[CoilNumber], [t0].[CoreLossPerKg], [t0].[CreatedAtUtc], [t0].[CreatedBy], [t0].[DeletedAtUtc], [t0].[DeletedBy], [t0].[GradeId], [t0].[HeatNumber], [t0].[InvoiceNo], [t0].[IsDeleted], [t0].[Length], [t0].[ManufacturerId], [t0].[MillTCNo], [t0].[PONumber], [t0].[RawCoilNumber], [t0].[ReceivedDate], [t0].[RowVersion], [t0].[Status], [t0].[SupplierId], [t0].[Thickness], [t0].[ThicknessMm], [t0].[UpdatedAtUtc], [t0].[UpdatedBy], [t0].[WarehouseLocation], [t0].[WattLossPerKg], [t0].[Weight], [t0].[Width], [s0].[Id], [s0].[Address], [s0].[Code], [s0].[ContactNo], [s0].[CreatedAtUtc], [s0].[CreatedBy], [s0].[Description], [s0].[Email], [s0].[GST], [s0].[IsActive], [s0].[Name], [s0].[RowVersion], [s0].[UpdatedAtUtc], [s0].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [s1].[Id], [s1].[ActualWeight], [s1].[ActualWidth], [s1].[EstimatedWeight], [s1].[Remarks], [s1].[SequenceNo], [s1].[SlitCoilId], [s1].[SlittingJobId], [s1].[Status], [s1].[Width]
+FROM (
+    SELECT [s].[Id], [s].[CancelledBy], [s].[CancelledOn], [s].[CompletedBy], [s].[CompletedOn], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[KnifeThickness], [s].[LeftEdgeTrim], [s].[MachineId], [s].[MotherCoilId], [s].[PlannerId], [s].[PlanningDate], [s].[ProductionType], [s].[ReleasedBy], [s].[ReleasedOn], [s].[Remarks], [s].[RightEdgeTrim], [s].[RowVersion], [s].[Shift], [s].[SlittingJobNo], [s].[StartedBy], [s].[StartedOn], [s].[Status], [s].[UpdatedAtUtc], [s].[UpdatedBy], [s].[WorkOrderId], [s].[WorkOrderNumber], [s].[WorkOrderOperationId]
+    FROM [app].[SlittingJobs] AS [s]
+    ORDER BY [s].[CreatedAtUtc]
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [t]
+INNER JOIN (
+    SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width]
+    FROM [app].[RawCoils] AS [r]
+    WHERE [r].[IsDeleted] = CAST(0 AS bit)
+) AS [t0] ON [t].[MotherCoilId] = [t0].[Id]
+INNER JOIN [app].[Suppliers] AS [s0] ON [t0].[SupplierId] = [s0].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [t0].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [t0].[GradeId] = [g].[Id]
+LEFT JOIN [app].[SlittingJobItems] AS [s1] ON [t].[Id] = [s1].[SlittingJobId]
+ORDER BY [t].[CreatedAtUtc], [t].[Id], [t0].[Id], [s0].[Id], [m].[Id], [g].[Id]
+[22:23:40 INF] HTTP GET /api/slitting-jobs responded 200 in 65.2338 ms
+[22:23:44 INF] HTTP OPTIONS /api/dashboard/operations responded 204 in 0.0300 ms
+[22:23:44 INF] HTTP OPTIONS /api/rawcoils responded 204 in 0.0217 ms
+[22:23:44 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width], [s].[Id], [s].[Address], [s].[Code], [s].[ContactNo], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[Description], [s].[Email], [s].[GST], [s].[IsActive], [s].[Name], [s].[RowVersion], [s].[UpdatedAtUtc], [s].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy]
+FROM [app].[RawCoils] AS [r]
+INNER JOIN [app].[Suppliers] AS [s] ON [r].[SupplierId] = [s].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [r].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [r].[GradeId] = [g].[Id]
+WHERE [r].[IsDeleted] = CAST(0 AS bit)
+[22:23:44 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[CancelledBy], [s].[CancelledOn], [s].[CompletedBy], [s].[CompletedOn], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[KnifeThickness], [s].[LeftEdgeTrim], [s].[MachineId], [s].[MotherCoilId], [s].[PlannerId], [s].[PlanningDate], [s].[ProductionType], [s].[ReleasedBy], [s].[ReleasedOn], [s].[Remarks], [s].[RightEdgeTrim], [s].[RowVersion], [s].[Shift], [s].[SlittingJobNo], [s].[StartedBy], [s].[StartedOn], [s].[Status], [s].[UpdatedAtUtc], [s].[UpdatedBy], [s].[WorkOrderId], [s].[WorkOrderNumber], [s].[WorkOrderOperationId], [t].[Id], [t].[BISLicNumber], [t].[Category], [t].[CoilNumber], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[GradeId], [t].[HeatNumber], [t].[InvoiceNo], [t].[IsDeleted], [t].[Length], [t].[ManufacturerId], [t].[MillTCNo], [t].[PONumber], [t].[RawCoilNumber], [t].[ReceivedDate], [t].[RowVersion], [t].[Status], [t].[SupplierId], [t].[Thickness], [t].[ThicknessMm], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WarehouseLocation], [t].[WattLossPerKg], [t].[Weight], [t].[Width], [s0].[Id], [s0].[Address], [s0].[Code], [s0].[ContactNo], [s0].[CreatedAtUtc], [s0].[CreatedBy], [s0].[Description], [s0].[Email], [s0].[GST], [s0].[IsActive], [s0].[Name], [s0].[RowVersion], [s0].[UpdatedAtUtc], [s0].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [s1].[Id], [s1].[ActualWeight], [s1].[ActualWidth], [s1].[EstimatedWeight], [s1].[Remarks], [s1].[SequenceNo], [s1].[SlitCoilId], [s1].[SlittingJobId], [s1].[Status], [s1].[Width]
+FROM [app].[SlittingJobs] AS [s]
+INNER JOIN (
+    SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width]
+    FROM [app].[RawCoils] AS [r]
+    WHERE [r].[IsDeleted] = CAST(0 AS bit)
+) AS [t] ON [s].[MotherCoilId] = [t].[Id]
+INNER JOIN [app].[Suppliers] AS [s0] ON [t].[SupplierId] = [s0].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [t].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [t].[GradeId] = [g].[Id]
+LEFT JOIN [app].[SlittingJobItems] AS [s1] ON [s].[Id] = [s1].[SlittingJobId]
+ORDER BY [s].[Id], [t].[Id], [s0].[Id], [m].[Id], [g].[Id]
+[22:23:44 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[BarcodeValue], [s].[Category], [s].[CoilNumber], [s].[CoreLossPerKg], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[DeletedAtUtc], [s].[DeletedBy], [s].[GenerationLevel], [s].[GradeId], [s].[HeatNumber], [s].[IsDeleted], [s].[LabelLastPrintedBy], [s].[LabelLastPrintedOn], [s].[LabelPrintCount], [s].[LabelPrinted], [s].[LabelVersion], [s].[ManufacturerId], [s].[MotherCoilId], [s].[ParentCoilId], [s].[QrCodeValue], [s].[RootMotherCoilId], [s].[RowVersion], [s].[SlitSequence], [s].[SlittingJobId], [s].[Status], [s].[SupplierId], [s].[Thickness], [s].[UpdatedAtUtc], [s].[UpdatedBy], [s].[WarehouseLocation], [s].[Weight], [s].[Width], [t].[Id], [t].[BISLicNumber], [t].[Category], [t].[CoilNumber], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[GradeId], [t].[HeatNumber], [t].[InvoiceNo], [t].[IsDeleted], [t].[Length], [t].[ManufacturerId], [t].[MillTCNo], [t].[PONumber], [t].[RawCoilNumber], [t].[ReceivedDate], [t].[RowVersion], [t].[Status], [t].[SupplierId], [t].[Thickness], [t].[ThicknessMm], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WarehouseLocation], [t].[WattLossPerKg], [t].[Weight], [t].[Width], [s0].[Id], [s0].[Address], [s0].[Code], [s0].[ContactNo], [s0].[CreatedAtUtc], [s0].[CreatedBy], [s0].[Description], [s0].[Email], [s0].[GST], [s0].[IsActive], [s0].[Name], [s0].[RowVersion], [s0].[UpdatedAtUtc], [s0].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [s1].[Id], [s1].[CancelledBy], [s1].[CancelledOn], [s1].[CompletedBy], [s1].[CompletedOn], [s1].[CreatedAtUtc], [s1].[CreatedBy], [s1].[KnifeThickness], [s1].[LeftEdgeTrim], [s1].[MachineId], [s1].[MotherCoilId], [s1].[PlannerId], [s1].[PlanningDate], [s1].[ProductionType], [s1].[ReleasedBy], [s1].[ReleasedOn], [s1].[Remarks], [s1].[RightEdgeTrim], [s1].[RowVersion], [s1].[Shift], [s1].[SlittingJobNo], [s1].[StartedBy], [s1].[StartedOn], [s1].[Status], [s1].[UpdatedAtUtc], [s1].[UpdatedBy], [s1].[WorkOrderId], [s1].[WorkOrderNumber], [s1].[WorkOrderOperationId], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [s2].[Id], [s2].[Address], [s2].[Code], [s2].[ContactNo], [s2].[CreatedAtUtc], [s2].[CreatedBy], [s2].[Description], [s2].[Email], [s2].[GST], [s2].[IsActive], [s2].[Name], [s2].[RowVersion], [s2].[UpdatedAtUtc], [s2].[UpdatedBy], [m0].[Id], [m0].[Code], [m0].[Country], [m0].[CreatedAtUtc], [m0].[CreatedBy], [m0].[Description], [m0].[IsActive], [m0].[Name], [m0].[RowVersion], [m0].[UpdatedAtUtc], [m0].[UpdatedBy]
+FROM [app].[SlitCoils] AS [s]
+INNER JOIN (
+    SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width]
+    FROM [app].[RawCoils] AS [r]
+    WHERE [r].[IsDeleted] = CAST(0 AS bit)
+) AS [t] ON [s].[MotherCoilId] = [t].[Id]
+INNER JOIN [app].[Suppliers] AS [s0] ON [t].[SupplierId] = [s0].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [t].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[SlittingJobs] AS [s1] ON [s].[SlittingJobId] = [s1].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [s].[GradeId] = [g].[Id]
+INNER JOIN [app].[Suppliers] AS [s2] ON [s].[SupplierId] = [s2].[Id]
+INNER JOIN [app].[Manufacturers] AS [m0] ON [s].[ManufacturerId] = [m0].[Id]
+WHERE [s].[IsDeleted] = CAST(0 AS bit)
+[22:23:44 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[CoilNumber], [s].[Copies], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[LabelVersion], [s].[PrintType], [s].[PrintedBy], [s].[PrintedOn], [s].[PrinterName], [s].[Remarks], [s].[SlitCoilId], [s].[UpdatedAtUtc], [s].[UpdatedBy]
+FROM [app].[SlitCoilLabelPrintHistories] AS [s]
+[22:23:44 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [w].[Id], [w].[CancellationReason], [w].[CancelledBy], [w].[CancelledOn], [w].[Category], [w].[ClosedBy], [w].[ClosedOn], [w].[CompletedBy], [w].[CompletedOn], [w].[CoreLossPerKg], [w].[CreatedAtUtc], [w].[CreatedBy], [w].[CustomerCode], [w].[CustomerId], [w].[CustomerName], [w].[CustomerPONumber], [w].[Description], [w].[DispatchedQuantity], [w].[DrawingNumber], [w].[DrawingRevision], [w].[FulfilmentStrategy], [w].[GradeCode], [w].[GradeId], [w].[Length], [w].[OEMJobNumber], [w].[PlannedInventoryQuantity], [w].[PlannedProductionQuantity], [w].[PlannedStartDate], [w].[Planner], [w].[PlanningRequiredQuantity], [w].[Priority], [w].[ProducedQuantity], [w].[ProductType], [w].[ProductionRoute], [w].[QuantityUnit], [w].[ReadyQuantity], [w].[ReleasedBy], [w].[ReleasedOn], [w].[Remarks], [w].[RequiredDate], [w].[RequiredQuantity], [w].[RequiredWeight], [w].[RequiredWidth], [w].[ReservedInventoryQuantity], [w].[RowVersion], [w].[SalesOrderId], [w].[SalesOrderLineId], [w].[SalesOrderLineNumber], [w].[SalesOrderNumber], [w].[SalesOrderReference], [w].[SourceType], [w].[StartedBy], [w].[StartedOn], [w].[Status], [w].[Thickness], [w].[TransformerRating], [w].[UpdatedAtUtc], [w].[UpdatedBy], [w].[WorkOrderDate], [w].[WorkOrderNumber], [w].[WorkOrderType], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [w0].[Id], [w0].[CompletedOn], [w0].[IsRequired], [w0].[OperationType], [w0].[RelatedDocumentId], [w0].[RelatedDocumentNumber], [w0].[Remarks], [w0].[Sequence], [w0].[StartedOn], [w0].[Status], [w0].[WorkOrderId], [w1].[Id], [w1].[AllocatedWeight], [w1].[CoilNumber], [w1].[CoilType], [w1].[ConsumedWeight], [w1].[CreatedBy], [w1].[CreatedOn], [w1].[IssuedWeight], [w1].[MotherCoilId], [w1].[ReleasedBy], [w1].[ReleasedOn], [w1].[RemainingWeightAfterAllocation], [w1].[Remarks], [w1].[ReservedBy], [w1].[ReservedOn], [w1].[SlitCoilId], [w1].[Status], [w1].[WorkOrderId]
+FROM [app].[WorkOrders] AS [w]
+LEFT JOIN [app].[Grades] AS [g] ON [w].[GradeId] = [g].[Id]
+LEFT JOIN [app].[WorkOrderOperations] AS [w0] ON [w].[Id] = [w0].[WorkOrderId]
+LEFT JOIN [app].[WorkOrderMaterialAllocations] AS [w1] ON [w].[Id] = [w1].[WorkOrderId]
+ORDER BY [w].[Id], [g].[Id], [w0].[Id]
+[22:23:44 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [l].[Id], [l].[AllocatedBy], [l].[AllocatedOn], [l].[BottomPlateWeight], [l].[CancelledBy], [l].[CancelledOn], [l].[Category], [l].[CenterPlateWeight], [l].[CompletedBy], [l].[CompletedOn], [l].[CompletionRemarks], [l].[CoreLossPerKg], [l].[CreatedAtUtc], [l].[CreatedBy], [l].[Customer], [l].[CustomerCoreLossPerKg], [l].[DeletedAtUtc], [l].[DeletedBy], [l].[DesignType], [l].[DrawingAttachmentName], [l].[DrawingAttachmentPath], [l].[GradeId], [l].[IsDeleted], [l].[JobOrDrawingNumber], [l].[LaminationJobNumber], [l].[LeftSidePlateWeight], [l].[NoLoadLossWatts], [l].[NumberOfSteps], [l].[PlannedDate], [l].[PlannerName], [l].[Rating], [l].[ReleasedBy], [l].[ReleasedOn], [l].[Remarks], [l].[RequiredDate], [l].[RightSidePlateWeight], [l].[RowVersion], [l].[Shift], [l].[Status], [l].[StepLapOrientation], [l].[Thickness], [l].[TopPlateWeight], [l].[TotalAllocatedWeight], [l].[TotalConsumedWeight], [l].[TotalGoodPieces], [l].[TotalJobWeight], [l].[TotalPlannedPieces], [l].[TotalPlannedWeight], [l].[TotalRejectedPieces], [l].[TotalScrapWeight], [l].[TotalWeight], [l].[UpdatedAtUtc], [l].[UpdatedBy], [l].[WorkOrderId], [l].[WorkOrderNumber], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [t0].[Id], [t0].[LaminationJobId], [t0].[PlannedWeight], [t0].[Remarks], [t0].[Sequence], [t0].[StackQuantity], [t0].[StepNumber], [t0].[Width], [t0].[Id0], [t0].[LaminationJobStepId], [t0].[Length], [t0].[PlannedWeight0], [t0].[PlateType], [t0].[Quantity], [t0].[Remarks0], [t0].[Width0], [t0].[Id00], [t0].[DimensionCode], [t0].[DimensionValue], [t0].[DisplayName], [t0].[LaminationJobPlateId], [t0].[Remarks00], [t0].[Sequence0], [t0].[Unit], [l3].[Id], [l3].[AllocatedWeight], [l3].[ConsumedWeight], [l3].[CreatedBy], [l3].[CreatedOn], [l3].[IssuedWeight], [l3].[LaminationJobId], [l3].[ReleasedBy], [l3].[ReleasedOn], [l3].[RemainingWeightAfterAllocation], [l3].[Remarks], [l3].[RequiredWidth], [l3].[ReservedBy], [l3].[ReservedOn], [l3].[SlitCoilId], [l3].[SlitCoilNumber], [l3].[Status]
+FROM [app].[LaminationJobs] AS [l]
+INNER JOIN [app].[Grades] AS [g] ON [l].[GradeId] = [g].[Id]
+LEFT JOIN (
+    SELECT [l0].[Id], [l0].[LaminationJobId], [l0].[PlannedWeight], [l0].[Remarks], [l0].[Sequence], [l0].[StackQuantity], [l0].[StepNumber], [l0].[Width], [t].[Id] AS [Id0], [t].[LaminationJobStepId], [t].[Length], [t].[PlannedWeight] AS [PlannedWeight0], [t].[PlateType], [t].[Quantity], [t].[Remarks] AS [Remarks0], [t].[Width] AS [Width0], [t].[Id0] AS [Id00], [t].[DimensionCode], [t].[DimensionValue], [t].[DisplayName], [t].[LaminationJobPlateId], [t].[Remarks0] AS [Remarks00], [t].[Sequence] AS [Sequence0], [t].[Unit]
+    FROM [app].[LaminationJobSteps] AS [l0]
+    LEFT JOIN (
+        SELECT [l1].[Id], [l1].[LaminationJobStepId], [l1].[Length], [l1].[PlannedWeight], [l1].[PlateType], [l1].[Quantity], [l1].[Remarks], [l1].[Width], [l2].[Id] AS [Id0], [l2].[DimensionCode], [l2].[DimensionValue], [l2].[DisplayName], [l2].[LaminationJobPlateId], [l2].[Remarks] AS [Remarks0], [l2].[Sequence], [l2].[Unit]
+        FROM [app].[LaminationJobPlates] AS [l1]
+        LEFT JOIN [app].[LaminationPlateDimensions] AS [l2] ON [l1].[Id] = [l2].[LaminationJobPlateId]
+    ) AS [t] ON [l0].[Id] = [t].[LaminationJobStepId]
+) AS [t0] ON [l].[Id] = [t0].[LaminationJobId]
+LEFT JOIN [app].[LaminationJobMaterialAllocations] AS [l3] ON [l].[Id] = [l3].[LaminationJobId]
+WHERE [l].[IsDeleted] = CAST(0 AS bit)
+ORDER BY [l].[Id], [g].[Id], [t0].[Id], [t0].[Id0], [t0].[Id00]
+[22:23:44 INF] HTTP GET /api/dashboard/operations responded 200 in 46.6935 ms
+[22:23:45 WRN] You do not have a valid license key for the Lucky Penny software AutoMapper. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+[22:23:45 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [app].[RawCoils] AS [r]
+WHERE [r].[IsDeleted] = CAST(0 AS bit)
+[22:23:45 INF] Executed DbCommand (12ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[RawCoilNumber], [t].[CoilNumber], [t].[HeatNumber], [t].[PONumber], [t].[InvoiceNo], [t].[MillTCNo], [t].[BISLicNumber], [t].[SupplierId], [s].[Name], [t].[ManufacturerId], [m].[Name], [t].[GradeId], [g].[Code], [t].[Thickness], [t].[Category], [t].[Width], [t].[Weight], [t].[Length], [t].[CoreLossPerKg], [t].[WarehouseLocation], [t].[Status], [t].[ReceivedDate], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[IsDeleted], [t].[DeletedAtUtc], [t].[RowVersion]
+FROM (
+    SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[Weight], [r].[Width]
+    FROM [app].[RawCoils] AS [r]
+    WHERE [r].[IsDeleted] = CAST(0 AS bit)
+    ORDER BY [r].[CreatedAtUtc]
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [t]
+INNER JOIN [app].[Suppliers] AS [s] ON [t].[SupplierId] = [s].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [t].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [t].[GradeId] = [g].[Id]
+ORDER BY [t].[CreatedAtUtc]
+[22:23:45 INF] HTTP GET /api/rawcoils responded 200 in 220.2280 ms
+[22:23:52 INF] HTTP OPTIONS /api/rawcoils/next-coil-id responded 204 in 0.0423 ms
+[22:23:52 INF] HTTP OPTIONS /api/lookups/suppliers responded 204 in 0.0317 ms
+[22:23:52 INF] HTTP OPTIONS /api/lookups/manufacturers responded 204 in 0.0288 ms
+[22:23:52 INF] HTTP OPTIONS /api/lookups/grades responded 204 in 0.1005 ms
+[22:23:52 INF] Executed DbCommand (2ms) [Parameters=[@__prefix_0_startswith='?' (Size = 20)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [app].[RawCoils] AS [r]
+WHERE [r].[RawCoilNumber] LIKE @__prefix_0_startswith ESCAPE N'\'
+[22:23:52 INF] Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[Code], [s].[Name]
+FROM [app].[Suppliers] AS [s]
+WHERE [s].[IsActive] = CAST(1 AS bit)
+ORDER BY [s].[Name]
+[22:23:52 INF] Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [m].[Id], [m].[Code], [m].[Name]
+FROM [app].[Manufacturers] AS [m]
+WHERE [m].[IsActive] = CAST(1 AS bit)
+ORDER BY [m].[Name]
+[22:23:52 INF] Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [g].[Id], [g].[Code], [g].[Name], [g].[ThicknessMm], [g].[Category], [g].[CoreLossPerKg]
+FROM [app].[Grades] AS [g]
+WHERE [g].[IsActive] = CAST(1 AS bit)
+ORDER BY [g].[Code]
+[22:23:52 INF] HTTP GET /api/lookups/manufacturers responded 200 in 34.4812 ms
+[22:23:52 INF] HTTP GET /api/lookups/suppliers responded 200 in 38.6588 ms
+[22:23:52 INF] HTTP GET /api/lookups/grades responded 200 in 32.7306 ms
+[22:23:52 INF] Executed DbCommand (2ms) [Parameters=[@__rawCoilNumber_0='?' (Size = 20)], CommandType='Text', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [app].[RawCoils] AS [r]
+        WHERE [r].[RawCoilNumber] = @__rawCoilNumber_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+[22:23:52 INF] Executed DbCommand (1ms) [Parameters=[@__rawCoilNumber_0='?' (Size = 20)], CommandType='Text', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [app].[RawCoils] AS [r]
+        WHERE [r].[RawCoilNumber] = @__rawCoilNumber_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+[22:23:52 INF] HTTP GET /api/rawcoils/next-coil-id responded 200 in 48.5210 ms
+[22:23:55 INF] HTTP OPTIONS /api/dashboard/operations responded 204 in 0.0317 ms
+[22:23:55 INF] HTTP OPTIONS /api/rawcoils responded 204 in 0.0240 ms
+[22:23:55 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width], [s].[Id], [s].[Address], [s].[Code], [s].[ContactNo], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[Description], [s].[Email], [s].[GST], [s].[IsActive], [s].[Name], [s].[RowVersion], [s].[UpdatedAtUtc], [s].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy]
+FROM [app].[RawCoils] AS [r]
+INNER JOIN [app].[Suppliers] AS [s] ON [r].[SupplierId] = [s].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [r].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [r].[GradeId] = [g].[Id]
+WHERE [r].[IsDeleted] = CAST(0 AS bit)
+[22:23:55 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[CancelledBy], [s].[CancelledOn], [s].[CompletedBy], [s].[CompletedOn], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[KnifeThickness], [s].[LeftEdgeTrim], [s].[MachineId], [s].[MotherCoilId], [s].[PlannerId], [s].[PlanningDate], [s].[ProductionType], [s].[ReleasedBy], [s].[ReleasedOn], [s].[Remarks], [s].[RightEdgeTrim], [s].[RowVersion], [s].[Shift], [s].[SlittingJobNo], [s].[StartedBy], [s].[StartedOn], [s].[Status], [s].[UpdatedAtUtc], [s].[UpdatedBy], [s].[WorkOrderId], [s].[WorkOrderNumber], [s].[WorkOrderOperationId], [t].[Id], [t].[BISLicNumber], [t].[Category], [t].[CoilNumber], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[GradeId], [t].[HeatNumber], [t].[InvoiceNo], [t].[IsDeleted], [t].[Length], [t].[ManufacturerId], [t].[MillTCNo], [t].[PONumber], [t].[RawCoilNumber], [t].[ReceivedDate], [t].[RowVersion], [t].[Status], [t].[SupplierId], [t].[Thickness], [t].[ThicknessMm], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WarehouseLocation], [t].[WattLossPerKg], [t].[Weight], [t].[Width], [s0].[Id], [s0].[Address], [s0].[Code], [s0].[ContactNo], [s0].[CreatedAtUtc], [s0].[CreatedBy], [s0].[Description], [s0].[Email], [s0].[GST], [s0].[IsActive], [s0].[Name], [s0].[RowVersion], [s0].[UpdatedAtUtc], [s0].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [s1].[Id], [s1].[ActualWeight], [s1].[ActualWidth], [s1].[EstimatedWeight], [s1].[Remarks], [s1].[SequenceNo], [s1].[SlitCoilId], [s1].[SlittingJobId], [s1].[Status], [s1].[Width]
+FROM [app].[SlittingJobs] AS [s]
+INNER JOIN (
+    SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width]
+    FROM [app].[RawCoils] AS [r]
+    WHERE [r].[IsDeleted] = CAST(0 AS bit)
+) AS [t] ON [s].[MotherCoilId] = [t].[Id]
+INNER JOIN [app].[Suppliers] AS [s0] ON [t].[SupplierId] = [s0].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [t].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [t].[GradeId] = [g].[Id]
+LEFT JOIN [app].[SlittingJobItems] AS [s1] ON [s].[Id] = [s1].[SlittingJobId]
+ORDER BY [s].[Id], [t].[Id], [s0].[Id], [m].[Id], [g].[Id]
+[22:23:55 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [app].[RawCoils] AS [r]
+WHERE [r].[IsDeleted] = CAST(0 AS bit)
+[22:23:55 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[BarcodeValue], [s].[Category], [s].[CoilNumber], [s].[CoreLossPerKg], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[DeletedAtUtc], [s].[DeletedBy], [s].[GenerationLevel], [s].[GradeId], [s].[HeatNumber], [s].[IsDeleted], [s].[LabelLastPrintedBy], [s].[LabelLastPrintedOn], [s].[LabelPrintCount], [s].[LabelPrinted], [s].[LabelVersion], [s].[ManufacturerId], [s].[MotherCoilId], [s].[ParentCoilId], [s].[QrCodeValue], [s].[RootMotherCoilId], [s].[RowVersion], [s].[SlitSequence], [s].[SlittingJobId], [s].[Status], [s].[SupplierId], [s].[Thickness], [s].[UpdatedAtUtc], [s].[UpdatedBy], [s].[WarehouseLocation], [s].[Weight], [s].[Width], [t].[Id], [t].[BISLicNumber], [t].[Category], [t].[CoilNumber], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[GradeId], [t].[HeatNumber], [t].[InvoiceNo], [t].[IsDeleted], [t].[Length], [t].[ManufacturerId], [t].[MillTCNo], [t].[PONumber], [t].[RawCoilNumber], [t].[ReceivedDate], [t].[RowVersion], [t].[Status], [t].[SupplierId], [t].[Thickness], [t].[ThicknessMm], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WarehouseLocation], [t].[WattLossPerKg], [t].[Weight], [t].[Width], [s0].[Id], [s0].[Address], [s0].[Code], [s0].[ContactNo], [s0].[CreatedAtUtc], [s0].[CreatedBy], [s0].[Description], [s0].[Email], [s0].[GST], [s0].[IsActive], [s0].[Name], [s0].[RowVersion], [s0].[UpdatedAtUtc], [s0].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [s1].[Id], [s1].[CancelledBy], [s1].[CancelledOn], [s1].[CompletedBy], [s1].[CompletedOn], [s1].[CreatedAtUtc], [s1].[CreatedBy], [s1].[KnifeThickness], [s1].[LeftEdgeTrim], [s1].[MachineId], [s1].[MotherCoilId], [s1].[PlannerId], [s1].[PlanningDate], [s1].[ProductionType], [s1].[ReleasedBy], [s1].[ReleasedOn], [s1].[Remarks], [s1].[RightEdgeTrim], [s1].[RowVersion], [s1].[Shift], [s1].[SlittingJobNo], [s1].[StartedBy], [s1].[StartedOn], [s1].[Status], [s1].[UpdatedAtUtc], [s1].[UpdatedBy], [s1].[WorkOrderId], [s1].[WorkOrderNumber], [s1].[WorkOrderOperationId], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [s2].[Id], [s2].[Address], [s2].[Code], [s2].[ContactNo], [s2].[CreatedAtUtc], [s2].[CreatedBy], [s2].[Description], [s2].[Email], [s2].[GST], [s2].[IsActive], [s2].[Name], [s2].[RowVersion], [s2].[UpdatedAtUtc], [s2].[UpdatedBy], [m0].[Id], [m0].[Code], [m0].[Country], [m0].[CreatedAtUtc], [m0].[CreatedBy], [m0].[Description], [m0].[IsActive], [m0].[Name], [m0].[RowVersion], [m0].[UpdatedAtUtc], [m0].[UpdatedBy]
+FROM [app].[SlitCoils] AS [s]
+INNER JOIN (
+    SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width]
+    FROM [app].[RawCoils] AS [r]
+    WHERE [r].[IsDeleted] = CAST(0 AS bit)
+) AS [t] ON [s].[MotherCoilId] = [t].[Id]
+INNER JOIN [app].[Suppliers] AS [s0] ON [t].[SupplierId] = [s0].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [t].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[SlittingJobs] AS [s1] ON [s].[SlittingJobId] = [s1].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [s].[GradeId] = [g].[Id]
+INNER JOIN [app].[Suppliers] AS [s2] ON [s].[SupplierId] = [s2].[Id]
+INNER JOIN [app].[Manufacturers] AS [m0] ON [s].[ManufacturerId] = [m0].[Id]
+WHERE [s].[IsDeleted] = CAST(0 AS bit)
+[22:23:55 INF] Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[RawCoilNumber], [t].[CoilNumber], [t].[HeatNumber], [t].[PONumber], [t].[InvoiceNo], [t].[MillTCNo], [t].[BISLicNumber], [t].[SupplierId], [s].[Name], [t].[ManufacturerId], [m].[Name], [t].[GradeId], [g].[Code], [t].[Thickness], [t].[Category], [t].[Width], [t].[Weight], [t].[Length], [t].[CoreLossPerKg], [t].[WarehouseLocation], [t].[Status], [t].[ReceivedDate], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[IsDeleted], [t].[DeletedAtUtc], [t].[RowVersion]
+FROM (
+    SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[Weight], [r].[Width]
+    FROM [app].[RawCoils] AS [r]
+    WHERE [r].[IsDeleted] = CAST(0 AS bit)
+    ORDER BY [r].[CreatedAtUtc]
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [t]
+INNER JOIN [app].[Suppliers] AS [s] ON [t].[SupplierId] = [s].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [t].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [t].[GradeId] = [g].[Id]
+ORDER BY [t].[CreatedAtUtc]
+[22:23:55 INF] HTTP GET /api/rawcoils responded 200 in 15.4926 ms
+[22:23:55 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[CoilNumber], [s].[Copies], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[LabelVersion], [s].[PrintType], [s].[PrintedBy], [s].[PrintedOn], [s].[PrinterName], [s].[Remarks], [s].[SlitCoilId], [s].[UpdatedAtUtc], [s].[UpdatedBy]
+FROM [app].[SlitCoilLabelPrintHistories] AS [s]
+[22:23:55 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [w].[Id], [w].[CancellationReason], [w].[CancelledBy], [w].[CancelledOn], [w].[Category], [w].[ClosedBy], [w].[ClosedOn], [w].[CompletedBy], [w].[CompletedOn], [w].[CoreLossPerKg], [w].[CreatedAtUtc], [w].[CreatedBy], [w].[CustomerCode], [w].[CustomerId], [w].[CustomerName], [w].[CustomerPONumber], [w].[Description], [w].[DispatchedQuantity], [w].[DrawingNumber], [w].[DrawingRevision], [w].[FulfilmentStrategy], [w].[GradeCode], [w].[GradeId], [w].[Length], [w].[OEMJobNumber], [w].[PlannedInventoryQuantity], [w].[PlannedProductionQuantity], [w].[PlannedStartDate], [w].[Planner], [w].[PlanningRequiredQuantity], [w].[Priority], [w].[ProducedQuantity], [w].[ProductType], [w].[ProductionRoute], [w].[QuantityUnit], [w].[ReadyQuantity], [w].[ReleasedBy], [w].[ReleasedOn], [w].[Remarks], [w].[RequiredDate], [w].[RequiredQuantity], [w].[RequiredWeight], [w].[RequiredWidth], [w].[ReservedInventoryQuantity], [w].[RowVersion], [w].[SalesOrderId], [w].[SalesOrderLineId], [w].[SalesOrderLineNumber], [w].[SalesOrderNumber], [w].[SalesOrderReference], [w].[SourceType], [w].[StartedBy], [w].[StartedOn], [w].[Status], [w].[Thickness], [w].[TransformerRating], [w].[UpdatedAtUtc], [w].[UpdatedBy], [w].[WorkOrderDate], [w].[WorkOrderNumber], [w].[WorkOrderType], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [w0].[Id], [w0].[CompletedOn], [w0].[IsRequired], [w0].[OperationType], [w0].[RelatedDocumentId], [w0].[RelatedDocumentNumber], [w0].[Remarks], [w0].[Sequence], [w0].[StartedOn], [w0].[Status], [w0].[WorkOrderId], [w1].[Id], [w1].[AllocatedWeight], [w1].[CoilNumber], [w1].[CoilType], [w1].[ConsumedWeight], [w1].[CreatedBy], [w1].[CreatedOn], [w1].[IssuedWeight], [w1].[MotherCoilId], [w1].[ReleasedBy], [w1].[ReleasedOn], [w1].[RemainingWeightAfterAllocation], [w1].[Remarks], [w1].[ReservedBy], [w1].[ReservedOn], [w1].[SlitCoilId], [w1].[Status], [w1].[WorkOrderId]
+FROM [app].[WorkOrders] AS [w]
+LEFT JOIN [app].[Grades] AS [g] ON [w].[GradeId] = [g].[Id]
+LEFT JOIN [app].[WorkOrderOperations] AS [w0] ON [w].[Id] = [w0].[WorkOrderId]
+LEFT JOIN [app].[WorkOrderMaterialAllocations] AS [w1] ON [w].[Id] = [w1].[WorkOrderId]
+ORDER BY [w].[Id], [g].[Id], [w0].[Id]
+[22:23:55 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [l].[Id], [l].[AllocatedBy], [l].[AllocatedOn], [l].[BottomPlateWeight], [l].[CancelledBy], [l].[CancelledOn], [l].[Category], [l].[CenterPlateWeight], [l].[CompletedBy], [l].[CompletedOn], [l].[CompletionRemarks], [l].[CoreLossPerKg], [l].[CreatedAtUtc], [l].[CreatedBy], [l].[Customer], [l].[CustomerCoreLossPerKg], [l].[DeletedAtUtc], [l].[DeletedBy], [l].[DesignType], [l].[DrawingAttachmentName], [l].[DrawingAttachmentPath], [l].[GradeId], [l].[IsDeleted], [l].[JobOrDrawingNumber], [l].[LaminationJobNumber], [l].[LeftSidePlateWeight], [l].[NoLoadLossWatts], [l].[NumberOfSteps], [l].[PlannedDate], [l].[PlannerName], [l].[Rating], [l].[ReleasedBy], [l].[ReleasedOn], [l].[Remarks], [l].[RequiredDate], [l].[RightSidePlateWeight], [l].[RowVersion], [l].[Shift], [l].[Status], [l].[StepLapOrientation], [l].[Thickness], [l].[TopPlateWeight], [l].[TotalAllocatedWeight], [l].[TotalConsumedWeight], [l].[TotalGoodPieces], [l].[TotalJobWeight], [l].[TotalPlannedPieces], [l].[TotalPlannedWeight], [l].[TotalRejectedPieces], [l].[TotalScrapWeight], [l].[TotalWeight], [l].[UpdatedAtUtc], [l].[UpdatedBy], [l].[WorkOrderId], [l].[WorkOrderNumber], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [t0].[Id], [t0].[LaminationJobId], [t0].[PlannedWeight], [t0].[Remarks], [t0].[Sequence], [t0].[StackQuantity], [t0].[StepNumber], [t0].[Width], [t0].[Id0], [t0].[LaminationJobStepId], [t0].[Length], [t0].[PlannedWeight0], [t0].[PlateType], [t0].[Quantity], [t0].[Remarks0], [t0].[Width0], [t0].[Id00], [t0].[DimensionCode], [t0].[DimensionValue], [t0].[DisplayName], [t0].[LaminationJobPlateId], [t0].[Remarks00], [t0].[Sequence0], [t0].[Unit], [l3].[Id], [l3].[AllocatedWeight], [l3].[ConsumedWeight], [l3].[CreatedBy], [l3].[CreatedOn], [l3].[IssuedWeight], [l3].[LaminationJobId], [l3].[ReleasedBy], [l3].[ReleasedOn], [l3].[RemainingWeightAfterAllocation], [l3].[Remarks], [l3].[RequiredWidth], [l3].[ReservedBy], [l3].[ReservedOn], [l3].[SlitCoilId], [l3].[SlitCoilNumber], [l3].[Status]
+FROM [app].[LaminationJobs] AS [l]
+INNER JOIN [app].[Grades] AS [g] ON [l].[GradeId] = [g].[Id]
+LEFT JOIN (
+    SELECT [l0].[Id], [l0].[LaminationJobId], [l0].[PlannedWeight], [l0].[Remarks], [l0].[Sequence], [l0].[StackQuantity], [l0].[StepNumber], [l0].[Width], [t].[Id] AS [Id0], [t].[LaminationJobStepId], [t].[Length], [t].[PlannedWeight] AS [PlannedWeight0], [t].[PlateType], [t].[Quantity], [t].[Remarks] AS [Remarks0], [t].[Width] AS [Width0], [t].[Id0] AS [Id00], [t].[DimensionCode], [t].[DimensionValue], [t].[DisplayName], [t].[LaminationJobPlateId], [t].[Remarks0] AS [Remarks00], [t].[Sequence] AS [Sequence0], [t].[Unit]
+    FROM [app].[LaminationJobSteps] AS [l0]
+    LEFT JOIN (
+        SELECT [l1].[Id], [l1].[LaminationJobStepId], [l1].[Length], [l1].[PlannedWeight], [l1].[PlateType], [l1].[Quantity], [l1].[Remarks], [l1].[Width], [l2].[Id] AS [Id0], [l2].[DimensionCode], [l2].[DimensionValue], [l2].[DisplayName], [l2].[LaminationJobPlateId], [l2].[Remarks] AS [Remarks0], [l2].[Sequence], [l2].[Unit]
+        FROM [app].[LaminationJobPlates] AS [l1]
+        LEFT JOIN [app].[LaminationPlateDimensions] AS [l2] ON [l1].[Id] = [l2].[LaminationJobPlateId]
+    ) AS [t] ON [l0].[Id] = [t].[LaminationJobStepId]
+) AS [t0] ON [l].[Id] = [t0].[LaminationJobId]
+LEFT JOIN [app].[LaminationJobMaterialAllocations] AS [l3] ON [l].[Id] = [l3].[LaminationJobId]
+WHERE [l].[IsDeleted] = CAST(0 AS bit)
+ORDER BY [l].[Id], [g].[Id], [t0].[Id], [t0].[Id0], [t0].[Id00]
+[22:23:55 INF] HTTP GET /api/dashboard/operations responded 200 in 48.6196 ms
+[22:24:02 INF] HTTP OPTIONS /api/auth/logout responded 204 in 0.1775 ms
+[22:24:02 INF] Executed DbCommand (2ms) [Parameters=[@__sessionId_0='?' (DbType = Guid), @__userId_1='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(2) [u].[Id], [u].[Browser], [u].[Device], [u].[IpAddress], [u].[LastActivityAtUtc], [u].[LoginAtUtc], [u].[RefreshTokenExpiresAtUtc], [u].[RefreshTokenHash], [u].[ReplacedByTokenHash], [u].[RevokedAtUtc], [u].[UserId]
+FROM [auth].[UserSessions] AS [u]
+WHERE [u].[Id] = @__sessionId_0 AND [u].[UserId] = @__userId_1
+[22:24:02 INF] Executed DbCommand (3ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Size = 4000), @p2='?' (Size = 4000), @p3='?' (Size = 4000), @p4='?' (Size = 4000), @p5='?' (Size = 4000), @p6='?' (Size = 4000), @p7='?' (DbType = DateTimeOffset), @p8='?' (Size = 4000), @p9='?' (DbType = Guid), @p11='?' (DbType = Guid), @p10='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [audit].[AuditLogs] ([Id], [Action], [Category], [CorrelationId], [Details], [IpAddress], [Outcome], [TimestampUtc], [UserEmail], [UserId])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
+UPDATE [auth].[UserSessions] SET [RevokedAtUtc] = @p10
+OUTPUT 1
+WHERE [Id] = @p11;
+[22:24:02 INF] HTTP POST /api/auth/logout responded 204 in 28.9485 ms
+[22:52:49 INF] HTTP OPTIONS /api/auth/login responded 204 in 0.3872 ms
+[22:52:50 INF] Executed DbCommand (9ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(2) [i].[Id], [i].[AccessFailedCount], [i].[ConcurrencyStamp], [i].[CreatedAtUtc], [i].[CreatedBy], [i].[DisplayName], [i].[Email], [i].[EmailConfirmed], [i].[IsActive], [i].[JobTitle], [i].[LastLoginAtUtc], [i].[LockoutEnabled], [i].[LockoutEnd], [i].[ModifiedAtUtc], [i].[ModifiedBy], [i].[MustChangePassword], [i].[NormalizedEmail], [i].[NormalizedUserName], [i].[PasswordHash], [i].[PhoneNumber], [i].[PhoneNumberConfirmed], [i].[SecurityStamp], [i].[TwoFactorEnabled], [i].[UserName]
+FROM [auth].[IdentityUsers] AS [i]
+WHERE [i].[NormalizedEmail] = @__normalizedEmail_0
+[22:52:50 INF] Executed DbCommand (5ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [i0].[Name]
+FROM [auth].[IdentityUserRoles] AS [i]
+INNER JOIN [auth].[IdentityRoles] AS [i0] ON [i].[RoleId] = [i0].[Id]
+WHERE [i].[UserId] = @__userId_0
+[22:52:50 INF] Executed DbCommand (27ms) [Parameters=[@__roleNames_0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+SELECT DISTINCT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[IdentityRoles] AS [i] ON [r].[RoleId] = [i].[Id]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [i].[Name] IN (
+    SELECT [r0].[value]
+    FROM OPENJSON(@__roleNames_0) WITH ([value] nvarchar(256) '$') AS [r0]
+)
+[22:52:50 INF] Executed DbCommand (7ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Size = 4000), @p2='?' (Size = 4000), @p3='?' (Size = 4000), @p4='?' (Size = 4000), @p5='?' (Size = 4000), @p6='?' (Size = 4000), @p7='?' (DbType = DateTimeOffset), @p8='?' (Size = 4000), @p9='?' (DbType = Guid), @p11='?' (DbType = Guid), @p12='?' (Size = 4000), @p10='?' (DbType = DateTimeOffset), @p13='?' (DbType = Guid), @p14='?' (Size = 4000), @p15='?' (Size = 4000), @p16='?' (Size = 4000), @p17='?' (DbType = DateTimeOffset), @p18='?' (DbType = DateTimeOffset), @p19='?' (DbType = DateTimeOffset), @p20='?' (Size = 128), @p21='?' (Size = 4000), @p22='?' (DbType = DateTimeOffset), @p23='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [audit].[AuditLogs] ([Id], [Action], [Category], [CorrelationId], [Details], [IpAddress], [Outcome], [TimestampUtc], [UserEmail], [UserId])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
+UPDATE [auth].[IdentityUsers] SET [LastLoginAtUtc] = @p10
+OUTPUT 1
+WHERE [Id] = @p11 AND [ConcurrencyStamp] = @p12;
+INSERT INTO [auth].[UserSessions] ([Id], [Browser], [Device], [IpAddress], [LastActivityAtUtc], [LoginAtUtc], [RefreshTokenExpiresAtUtc], [RefreshTokenHash], [ReplacedByTokenHash], [RevokedAtUtc], [UserId])
+VALUES (@p13, @p14, @p15, @p16, @p17, @p18, @p19, @p20, @p21, @p22, @p23);
+[22:52:50 INF] HTTP POST /api/auth/login responded 200 in 1300.9261 ms
+[22:52:50 INF] HTTP OPTIONS /api/dashboard/operations responded 204 in 0.0251 ms
+[22:52:50 INF] Executed DbCommand (13ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width], [s].[Id], [s].[Address], [s].[Code], [s].[ContactNo], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[Description], [s].[Email], [s].[GST], [s].[IsActive], [s].[Name], [s].[RowVersion], [s].[UpdatedAtUtc], [s].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy]
+FROM [app].[RawCoils] AS [r]
+INNER JOIN [app].[Suppliers] AS [s] ON [r].[SupplierId] = [s].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [r].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [r].[GradeId] = [g].[Id]
+WHERE [r].[IsDeleted] = CAST(0 AS bit)
+[22:52:50 INF] Executed DbCommand (18ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[CancelledBy], [s].[CancelledOn], [s].[CompletedBy], [s].[CompletedOn], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[KnifeThickness], [s].[LeftEdgeTrim], [s].[MachineId], [s].[MotherCoilId], [s].[PlannerId], [s].[PlanningDate], [s].[ProductionType], [s].[ReleasedBy], [s].[ReleasedOn], [s].[Remarks], [s].[RightEdgeTrim], [s].[RowVersion], [s].[Shift], [s].[SlittingJobNo], [s].[StartedBy], [s].[StartedOn], [s].[Status], [s].[UpdatedAtUtc], [s].[UpdatedBy], [s].[WorkOrderId], [s].[WorkOrderNumber], [s].[WorkOrderOperationId], [t].[Id], [t].[BISLicNumber], [t].[Category], [t].[CoilNumber], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[GradeId], [t].[HeatNumber], [t].[InvoiceNo], [t].[IsDeleted], [t].[Length], [t].[ManufacturerId], [t].[MillTCNo], [t].[PONumber], [t].[RawCoilNumber], [t].[ReceivedDate], [t].[RowVersion], [t].[Status], [t].[SupplierId], [t].[Thickness], [t].[ThicknessMm], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WarehouseLocation], [t].[WattLossPerKg], [t].[Weight], [t].[Width], [s0].[Id], [s0].[Address], [s0].[Code], [s0].[ContactNo], [s0].[CreatedAtUtc], [s0].[CreatedBy], [s0].[Description], [s0].[Email], [s0].[GST], [s0].[IsActive], [s0].[Name], [s0].[RowVersion], [s0].[UpdatedAtUtc], [s0].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [s1].[Id], [s1].[ActualWeight], [s1].[ActualWidth], [s1].[EstimatedWeight], [s1].[Remarks], [s1].[SequenceNo], [s1].[SlitCoilId], [s1].[SlittingJobId], [s1].[Status], [s1].[Width]
+FROM [app].[SlittingJobs] AS [s]
+INNER JOIN (
+    SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width]
+    FROM [app].[RawCoils] AS [r]
+    WHERE [r].[IsDeleted] = CAST(0 AS bit)
+) AS [t] ON [s].[MotherCoilId] = [t].[Id]
+INNER JOIN [app].[Suppliers] AS [s0] ON [t].[SupplierId] = [s0].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [t].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [t].[GradeId] = [g].[Id]
+LEFT JOIN [app].[SlittingJobItems] AS [s1] ON [s].[Id] = [s1].[SlittingJobId]
+ORDER BY [s].[Id], [t].[Id], [s0].[Id], [m].[Id], [g].[Id]
+[22:52:50 INF] Executed DbCommand (18ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[BarcodeValue], [s].[Category], [s].[CoilNumber], [s].[CoreLossPerKg], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[DeletedAtUtc], [s].[DeletedBy], [s].[GenerationLevel], [s].[GradeId], [s].[HeatNumber], [s].[IsDeleted], [s].[LabelLastPrintedBy], [s].[LabelLastPrintedOn], [s].[LabelPrintCount], [s].[LabelPrinted], [s].[LabelVersion], [s].[ManufacturerId], [s].[MotherCoilId], [s].[ParentCoilId], [s].[QrCodeValue], [s].[RootMotherCoilId], [s].[RowVersion], [s].[SlitSequence], [s].[SlittingJobId], [s].[Status], [s].[SupplierId], [s].[Thickness], [s].[UpdatedAtUtc], [s].[UpdatedBy], [s].[WarehouseLocation], [s].[Weight], [s].[Width], [t].[Id], [t].[BISLicNumber], [t].[Category], [t].[CoilNumber], [t].[CoreLossPerKg], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[GradeId], [t].[HeatNumber], [t].[InvoiceNo], [t].[IsDeleted], [t].[Length], [t].[ManufacturerId], [t].[MillTCNo], [t].[PONumber], [t].[RawCoilNumber], [t].[ReceivedDate], [t].[RowVersion], [t].[Status], [t].[SupplierId], [t].[Thickness], [t].[ThicknessMm], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WarehouseLocation], [t].[WattLossPerKg], [t].[Weight], [t].[Width], [s0].[Id], [s0].[Address], [s0].[Code], [s0].[ContactNo], [s0].[CreatedAtUtc], [s0].[CreatedBy], [s0].[Description], [s0].[Email], [s0].[GST], [s0].[IsActive], [s0].[Name], [s0].[RowVersion], [s0].[UpdatedAtUtc], [s0].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [s1].[Id], [s1].[CancelledBy], [s1].[CancelledOn], [s1].[CompletedBy], [s1].[CompletedOn], [s1].[CreatedAtUtc], [s1].[CreatedBy], [s1].[KnifeThickness], [s1].[LeftEdgeTrim], [s1].[MachineId], [s1].[MotherCoilId], [s1].[PlannerId], [s1].[PlanningDate], [s1].[ProductionType], [s1].[ReleasedBy], [s1].[ReleasedOn], [s1].[Remarks], [s1].[RightEdgeTrim], [s1].[RowVersion], [s1].[Shift], [s1].[SlittingJobNo], [s1].[StartedBy], [s1].[StartedOn], [s1].[Status], [s1].[UpdatedAtUtc], [s1].[UpdatedBy], [s1].[WorkOrderId], [s1].[WorkOrderNumber], [s1].[WorkOrderOperationId], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [s2].[Id], [s2].[Address], [s2].[Code], [s2].[ContactNo], [s2].[CreatedAtUtc], [s2].[CreatedBy], [s2].[Description], [s2].[Email], [s2].[GST], [s2].[IsActive], [s2].[Name], [s2].[RowVersion], [s2].[UpdatedAtUtc], [s2].[UpdatedBy], [m0].[Id], [m0].[Code], [m0].[Country], [m0].[CreatedAtUtc], [m0].[CreatedBy], [m0].[Description], [m0].[IsActive], [m0].[Name], [m0].[RowVersion], [m0].[UpdatedAtUtc], [m0].[UpdatedBy]
+FROM [app].[SlitCoils] AS [s]
+INNER JOIN (
+    SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width]
+    FROM [app].[RawCoils] AS [r]
+    WHERE [r].[IsDeleted] = CAST(0 AS bit)
+) AS [t] ON [s].[MotherCoilId] = [t].[Id]
+INNER JOIN [app].[Suppliers] AS [s0] ON [t].[SupplierId] = [s0].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [t].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[SlittingJobs] AS [s1] ON [s].[SlittingJobId] = [s1].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [s].[GradeId] = [g].[Id]
+INNER JOIN [app].[Suppliers] AS [s2] ON [s].[SupplierId] = [s2].[Id]
+INNER JOIN [app].[Manufacturers] AS [m0] ON [s].[ManufacturerId] = [m0].[Id]
+WHERE [s].[IsDeleted] = CAST(0 AS bit)
+[22:52:50 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [s].[Id], [s].[CoilNumber], [s].[Copies], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[LabelVersion], [s].[PrintType], [s].[PrintedBy], [s].[PrintedOn], [s].[PrinterName], [s].[Remarks], [s].[SlitCoilId], [s].[UpdatedAtUtc], [s].[UpdatedBy]
+FROM [app].[SlitCoilLabelPrintHistories] AS [s]
+[22:52:50 INF] Executed DbCommand (13ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [w].[Id], [w].[CancellationReason], [w].[CancelledBy], [w].[CancelledOn], [w].[Category], [w].[ClosedBy], [w].[ClosedOn], [w].[CompletedBy], [w].[CompletedOn], [w].[CoreLossPerKg], [w].[CreatedAtUtc], [w].[CreatedBy], [w].[CustomerCode], [w].[CustomerId], [w].[CustomerName], [w].[CustomerPONumber], [w].[Description], [w].[DispatchedQuantity], [w].[DrawingNumber], [w].[DrawingRevision], [w].[FulfilmentStrategy], [w].[GradeCode], [w].[GradeId], [w].[Length], [w].[OEMJobNumber], [w].[PlannedInventoryQuantity], [w].[PlannedProductionQuantity], [w].[PlannedStartDate], [w].[Planner], [w].[PlanningRequiredQuantity], [w].[Priority], [w].[ProducedQuantity], [w].[ProductType], [w].[ProductionRoute], [w].[QuantityUnit], [w].[ReadyQuantity], [w].[ReleasedBy], [w].[ReleasedOn], [w].[Remarks], [w].[RequiredDate], [w].[RequiredQuantity], [w].[RequiredWeight], [w].[RequiredWidth], [w].[ReservedInventoryQuantity], [w].[RowVersion], [w].[SalesOrderId], [w].[SalesOrderLineId], [w].[SalesOrderLineNumber], [w].[SalesOrderNumber], [w].[SalesOrderReference], [w].[SourceType], [w].[StartedBy], [w].[StartedOn], [w].[Status], [w].[Thickness], [w].[TransformerRating], [w].[UpdatedAtUtc], [w].[UpdatedBy], [w].[WorkOrderDate], [w].[WorkOrderNumber], [w].[WorkOrderType], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [w0].[Id], [w0].[CompletedOn], [w0].[IsRequired], [w0].[OperationType], [w0].[RelatedDocumentId], [w0].[RelatedDocumentNumber], [w0].[Remarks], [w0].[Sequence], [w0].[StartedOn], [w0].[Status], [w0].[WorkOrderId], [w1].[Id], [w1].[AllocatedWeight], [w1].[CoilNumber], [w1].[CoilType], [w1].[ConsumedWeight], [w1].[CreatedBy], [w1].[CreatedOn], [w1].[IssuedWeight], [w1].[MotherCoilId], [w1].[ReleasedBy], [w1].[ReleasedOn], [w1].[RemainingWeightAfterAllocation], [w1].[Remarks], [w1].[ReservedBy], [w1].[ReservedOn], [w1].[SlitCoilId], [w1].[Status], [w1].[WorkOrderId]
+FROM [app].[WorkOrders] AS [w]
+LEFT JOIN [app].[Grades] AS [g] ON [w].[GradeId] = [g].[Id]
+LEFT JOIN [app].[WorkOrderOperations] AS [w0] ON [w].[Id] = [w0].[WorkOrderId]
+LEFT JOIN [app].[WorkOrderMaterialAllocations] AS [w1] ON [w].[Id] = [w1].[WorkOrderId]
+ORDER BY [w].[Id], [g].[Id], [w0].[Id]
+[22:52:50 INF] Executed DbCommand (32ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [l].[Id], [l].[AllocatedBy], [l].[AllocatedOn], [l].[BottomPlateWeight], [l].[CancelledBy], [l].[CancelledOn], [l].[Category], [l].[CenterPlateWeight], [l].[CompletedBy], [l].[CompletedOn], [l].[CompletionRemarks], [l].[CoreLossPerKg], [l].[CreatedAtUtc], [l].[CreatedBy], [l].[Customer], [l].[CustomerCoreLossPerKg], [l].[DeletedAtUtc], [l].[DeletedBy], [l].[DesignType], [l].[DrawingAttachmentName], [l].[DrawingAttachmentPath], [l].[GradeId], [l].[IsDeleted], [l].[JobOrDrawingNumber], [l].[LaminationJobNumber], [l].[LeftSidePlateWeight], [l].[NoLoadLossWatts], [l].[NumberOfSteps], [l].[PlannedDate], [l].[PlannerName], [l].[Rating], [l].[ReleasedBy], [l].[ReleasedOn], [l].[Remarks], [l].[RequiredDate], [l].[RightSidePlateWeight], [l].[RowVersion], [l].[Shift], [l].[Status], [l].[StepLapOrientation], [l].[Thickness], [l].[TopPlateWeight], [l].[TotalAllocatedWeight], [l].[TotalConsumedWeight], [l].[TotalGoodPieces], [l].[TotalJobWeight], [l].[TotalPlannedPieces], [l].[TotalPlannedWeight], [l].[TotalRejectedPieces], [l].[TotalScrapWeight], [l].[TotalWeight], [l].[UpdatedAtUtc], [l].[UpdatedBy], [l].[WorkOrderId], [l].[WorkOrderNumber], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [t0].[Id], [t0].[LaminationJobId], [t0].[PlannedWeight], [t0].[Remarks], [t0].[Sequence], [t0].[StackQuantity], [t0].[StepNumber], [t0].[Width], [t0].[Id0], [t0].[LaminationJobStepId], [t0].[Length], [t0].[PlannedWeight0], [t0].[PlateType], [t0].[Quantity], [t0].[Remarks0], [t0].[Width0], [t0].[Id00], [t0].[DimensionCode], [t0].[DimensionValue], [t0].[DisplayName], [t0].[LaminationJobPlateId], [t0].[Remarks00], [t0].[Sequence0], [t0].[Unit], [l3].[Id], [l3].[AllocatedWeight], [l3].[ConsumedWeight], [l3].[CreatedBy], [l3].[CreatedOn], [l3].[IssuedWeight], [l3].[LaminationJobId], [l3].[ReleasedBy], [l3].[ReleasedOn], [l3].[RemainingWeightAfterAllocation], [l3].[Remarks], [l3].[RequiredWidth], [l3].[ReservedBy], [l3].[ReservedOn], [l3].[SlitCoilId], [l3].[SlitCoilNumber], [l3].[Status]
+FROM [app].[LaminationJobs] AS [l]
+INNER JOIN [app].[Grades] AS [g] ON [l].[GradeId] = [g].[Id]
+LEFT JOIN (
+    SELECT [l0].[Id], [l0].[LaminationJobId], [l0].[PlannedWeight], [l0].[Remarks], [l0].[Sequence], [l0].[StackQuantity], [l0].[StepNumber], [l0].[Width], [t].[Id] AS [Id0], [t].[LaminationJobStepId], [t].[Length], [t].[PlannedWeight] AS [PlannedWeight0], [t].[PlateType], [t].[Quantity], [t].[Remarks] AS [Remarks0], [t].[Width] AS [Width0], [t].[Id0] AS [Id00], [t].[DimensionCode], [t].[DimensionValue], [t].[DisplayName], [t].[LaminationJobPlateId], [t].[Remarks0] AS [Remarks00], [t].[Sequence] AS [Sequence0], [t].[Unit]
+    FROM [app].[LaminationJobSteps] AS [l0]
+    LEFT JOIN (
+        SELECT [l1].[Id], [l1].[LaminationJobStepId], [l1].[Length], [l1].[PlannedWeight], [l1].[PlateType], [l1].[Quantity], [l1].[Remarks], [l1].[Width], [l2].[Id] AS [Id0], [l2].[DimensionCode], [l2].[DimensionValue], [l2].[DisplayName], [l2].[LaminationJobPlateId], [l2].[Remarks] AS [Remarks0], [l2].[Sequence], [l2].[Unit]
+        FROM [app].[LaminationJobPlates] AS [l1]
+        LEFT JOIN [app].[LaminationPlateDimensions] AS [l2] ON [l1].[Id] = [l2].[LaminationJobPlateId]
+    ) AS [t] ON [l0].[Id] = [t].[LaminationJobStepId]
+) AS [t0] ON [l].[Id] = [t0].[LaminationJobId]
+LEFT JOIN [app].[LaminationJobMaterialAllocations] AS [l3] ON [l].[Id] = [l3].[LaminationJobId]
+WHERE [l].[IsDeleted] = CAST(0 AS bit)
+ORDER BY [l].[Id], [g].[Id], [t0].[Id], [t0].[Id0], [t0].[Id00]
+[22:52:50 INF] HTTP GET /api/dashboard/operations responded 200 in 122.4869 ms
+[22:53:00 INF] HTTP OPTIONS /api/slitting-jobs/c332588e-c24c-474c-9de0-70668898a372 responded 204 in 0.0372 ms
+[22:53:00 INF] HTTP OPTIONS /api/slitting-jobs/mother-coils responded 204 in 0.0461 ms
+[22:53:00 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width], [s].[Id], [s].[Address], [s].[Code], [s].[ContactNo], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[Description], [s].[Email], [s].[GST], [s].[IsActive], [s].[Name], [s].[RowVersion], [s].[UpdatedAtUtc], [s].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy]
+FROM [app].[RawCoils] AS [r]
+INNER JOIN [app].[Suppliers] AS [s] ON [r].[SupplierId] = [s].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [r].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [r].[GradeId] = [g].[Id]
+WHERE [r].[IsDeleted] = CAST(0 AS bit)
+[22:53:00 INF] Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT DISTINCT [s].[MotherCoilId]
+FROM [app].[SlittingJobs] AS [s]
+WHERE [s].[Status] = N'Draft'
+[22:53:00 INF] HTTP GET /api/slitting-jobs/mother-coils responded 200 in 13.2681 ms
+[22:53:00 INF] Executed DbCommand (16ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [t0].[Id], [t0].[CancelledBy], [t0].[CancelledOn], [t0].[CompletedBy], [t0].[CompletedOn], [t0].[CreatedAtUtc], [t0].[CreatedBy], [t0].[KnifeThickness], [t0].[LeftEdgeTrim], [t0].[MachineId], [t0].[MotherCoilId], [t0].[PlannerId], [t0].[PlanningDate], [t0].[ProductionType], [t0].[ReleasedBy], [t0].[ReleasedOn], [t0].[Remarks], [t0].[RightEdgeTrim], [t0].[RowVersion], [t0].[Shift], [t0].[SlittingJobNo], [t0].[StartedBy], [t0].[StartedOn], [t0].[Status], [t0].[UpdatedAtUtc], [t0].[UpdatedBy], [t0].[WorkOrderId], [t0].[WorkOrderNumber], [t0].[WorkOrderOperationId], [t0].[Id0], [t0].[BISLicNumber], [t0].[Category], [t0].[CoilNumber], [t0].[CoreLossPerKg], [t0].[CreatedAtUtc0], [t0].[CreatedBy0], [t0].[DeletedAtUtc], [t0].[DeletedBy], [t0].[GradeId], [t0].[HeatNumber], [t0].[InvoiceNo], [t0].[IsDeleted], [t0].[Length], [t0].[ManufacturerId], [t0].[MillTCNo], [t0].[PONumber], [t0].[RawCoilNumber], [t0].[ReceivedDate], [t0].[RowVersion0], [t0].[Status0], [t0].[SupplierId], [t0].[Thickness], [t0].[ThicknessMm], [t0].[UpdatedAtUtc0], [t0].[UpdatedBy0], [t0].[WarehouseLocation], [t0].[WattLossPerKg], [t0].[Weight], [t0].[Width], [t0].[Id1], [t0].[Address], [t0].[Code], [t0].[ContactNo], [t0].[CreatedAtUtc1], [t0].[CreatedBy1], [t0].[Description], [t0].[Email], [t0].[GST], [t0].[IsActive], [t0].[Name], [t0].[RowVersion1], [t0].[UpdatedAtUtc1], [t0].[UpdatedBy1], [t0].[Id2], [t0].[Code0], [t0].[Country], [t0].[CreatedAtUtc2], [t0].[CreatedBy2], [t0].[Description0], [t0].[IsActive0], [t0].[Name0], [t0].[RowVersion2], [t0].[UpdatedAtUtc2], [t0].[UpdatedBy2], [t0].[Id3], [t0].[Category0], [t0].[Code1], [t0].[CoreLossPerKg0], [t0].[CreatedAtUtc3], [t0].[CreatedBy3], [t0].[Description1], [t0].[IsActive1], [t0].[Name1], [t0].[RowVersion3], [t0].[ThicknessMm0], [t0].[UpdatedAtUtc3], [t0].[UpdatedBy3], [s1].[Id], [s1].[ActualWeight], [s1].[ActualWidth], [s1].[EstimatedWeight], [s1].[Remarks], [s1].[SequenceNo], [s1].[SlitCoilId], [s1].[SlittingJobId], [s1].[Status], [s1].[Width]
+FROM (
+    SELECT TOP(1) [s].[Id], [s].[CancelledBy], [s].[CancelledOn], [s].[CompletedBy], [s].[CompletedOn], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[KnifeThickness], [s].[LeftEdgeTrim], [s].[MachineId], [s].[MotherCoilId], [s].[PlannerId], [s].[PlanningDate], [s].[ProductionType], [s].[ReleasedBy], [s].[ReleasedOn], [s].[Remarks], [s].[RightEdgeTrim], [s].[RowVersion], [s].[Shift], [s].[SlittingJobNo], [s].[StartedBy], [s].[StartedOn], [s].[Status], [s].[UpdatedAtUtc], [s].[UpdatedBy], [s].[WorkOrderId], [s].[WorkOrderNumber], [s].[WorkOrderOperationId], [t].[Id] AS [Id0], [t].[BISLicNumber], [t].[Category], [t].[CoilNumber], [t].[CoreLossPerKg], [t].[CreatedAtUtc] AS [CreatedAtUtc0], [t].[CreatedBy] AS [CreatedBy0], [t].[DeletedAtUtc], [t].[DeletedBy], [t].[GradeId], [t].[HeatNumber], [t].[InvoiceNo], [t].[IsDeleted], [t].[Length], [t].[ManufacturerId], [t].[MillTCNo], [t].[PONumber], [t].[RawCoilNumber], [t].[ReceivedDate], [t].[RowVersion] AS [RowVersion0], [t].[Status] AS [Status0], [t].[SupplierId], [t].[Thickness], [t].[ThicknessMm], [t].[UpdatedAtUtc] AS [UpdatedAtUtc0], [t].[UpdatedBy] AS [UpdatedBy0], [t].[WarehouseLocation], [t].[WattLossPerKg], [t].[Weight], [t].[Width], [s0].[Id] AS [Id1], [s0].[Address], [s0].[Code], [s0].[ContactNo], [s0].[CreatedAtUtc] AS [CreatedAtUtc1], [s0].[CreatedBy] AS [CreatedBy1], [s0].[Description], [s0].[Email], [s0].[GST], [s0].[IsActive], [s0].[Name], [s0].[RowVersion] AS [RowVersion1], [s0].[UpdatedAtUtc] AS [UpdatedAtUtc1], [s0].[UpdatedBy] AS [UpdatedBy1], [m].[Id] AS [Id2], [m].[Code] AS [Code0], [m].[Country], [m].[CreatedAtUtc] AS [CreatedAtUtc2], [m].[CreatedBy] AS [CreatedBy2], [m].[Description] AS [Description0], [m].[IsActive] AS [IsActive0], [m].[Name] AS [Name0], [m].[RowVersion] AS [RowVersion2], [m].[UpdatedAtUtc] AS [UpdatedAtUtc2], [m].[UpdatedBy] AS [UpdatedBy2], [g].[Id] AS [Id3], [g].[Category] AS [Category0], [g].[Code] AS [Code1], [g].[CoreLossPerKg] AS [CoreLossPerKg0], [g].[CreatedAtUtc] AS [CreatedAtUtc3], [g].[CreatedBy] AS [CreatedBy3], [g].[Description] AS [Description1], [g].[IsActive] AS [IsActive1], [g].[Name] AS [Name1], [g].[RowVersion] AS [RowVersion3], [g].[ThicknessMm] AS [ThicknessMm0], [g].[UpdatedAtUtc] AS [UpdatedAtUtc3], [g].[UpdatedBy] AS [UpdatedBy3]
+    FROM [app].[SlittingJobs] AS [s]
+    INNER JOIN (
+        SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width]
+        FROM [app].[RawCoils] AS [r]
+        WHERE [r].[IsDeleted] = CAST(0 AS bit)
+    ) AS [t] ON [s].[MotherCoilId] = [t].[Id]
+    INNER JOIN [app].[Suppliers] AS [s0] ON [t].[SupplierId] = [s0].[Id]
+    INNER JOIN [app].[Manufacturers] AS [m] ON [t].[ManufacturerId] = [m].[Id]
+    INNER JOIN [app].[Grades] AS [g] ON [t].[GradeId] = [g].[Id]
+    WHERE [s].[Id] = @__id_0
+) AS [t0]
+LEFT JOIN [app].[SlittingJobItems] AS [s1] ON [t0].[Id] = [s1].[SlittingJobId]
+ORDER BY [t0].[Id], [t0].[Id0], [t0].[Id1], [t0].[Id2], [t0].[Id3]
+[22:53:00 INF] HTTP GET /api/slitting-jobs/c332588e-c24c-474c-9de0-70668898a372 responded 200 in 31.3333 ms
+[22:53:05 INF] HTTP OPTIONS /api/slitting-jobs responded 204 in 0.0328 ms
+[22:53:05 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [app].[SlittingJobs] AS [s]
+[22:53:05 INF] Executed DbCommand (26ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [t].[Id], [t].[CancelledBy], [t].[CancelledOn], [t].[CompletedBy], [t].[CompletedOn], [t].[CreatedAtUtc], [t].[CreatedBy], [t].[KnifeThickness], [t].[LeftEdgeTrim], [t].[MachineId], [t].[MotherCoilId], [t].[PlannerId], [t].[PlanningDate], [t].[ProductionType], [t].[ReleasedBy], [t].[ReleasedOn], [t].[Remarks], [t].[RightEdgeTrim], [t].[RowVersion], [t].[Shift], [t].[SlittingJobNo], [t].[StartedBy], [t].[StartedOn], [t].[Status], [t].[UpdatedAtUtc], [t].[UpdatedBy], [t].[WorkOrderId], [t].[WorkOrderNumber], [t].[WorkOrderOperationId], [t0].[Id], [t0].[BISLicNumber], [t0].[Category], [t0].[CoilNumber], [t0].[CoreLossPerKg], [t0].[CreatedAtUtc], [t0].[CreatedBy], [t0].[DeletedAtUtc], [t0].[DeletedBy], [t0].[GradeId], [t0].[HeatNumber], [t0].[InvoiceNo], [t0].[IsDeleted], [t0].[Length], [t0].[ManufacturerId], [t0].[MillTCNo], [t0].[PONumber], [t0].[RawCoilNumber], [t0].[ReceivedDate], [t0].[RowVersion], [t0].[Status], [t0].[SupplierId], [t0].[Thickness], [t0].[ThicknessMm], [t0].[UpdatedAtUtc], [t0].[UpdatedBy], [t0].[WarehouseLocation], [t0].[WattLossPerKg], [t0].[Weight], [t0].[Width], [s0].[Id], [s0].[Address], [s0].[Code], [s0].[ContactNo], [s0].[CreatedAtUtc], [s0].[CreatedBy], [s0].[Description], [s0].[Email], [s0].[GST], [s0].[IsActive], [s0].[Name], [s0].[RowVersion], [s0].[UpdatedAtUtc], [s0].[UpdatedBy], [m].[Id], [m].[Code], [m].[Country], [m].[CreatedAtUtc], [m].[CreatedBy], [m].[Description], [m].[IsActive], [m].[Name], [m].[RowVersion], [m].[UpdatedAtUtc], [m].[UpdatedBy], [g].[Id], [g].[Category], [g].[Code], [g].[CoreLossPerKg], [g].[CreatedAtUtc], [g].[CreatedBy], [g].[Description], [g].[IsActive], [g].[Name], [g].[RowVersion], [g].[ThicknessMm], [g].[UpdatedAtUtc], [g].[UpdatedBy], [s1].[Id], [s1].[ActualWeight], [s1].[ActualWidth], [s1].[EstimatedWeight], [s1].[Remarks], [s1].[SequenceNo], [s1].[SlitCoilId], [s1].[SlittingJobId], [s1].[Status], [s1].[Width]
+FROM (
+    SELECT [s].[Id], [s].[CancelledBy], [s].[CancelledOn], [s].[CompletedBy], [s].[CompletedOn], [s].[CreatedAtUtc], [s].[CreatedBy], [s].[KnifeThickness], [s].[LeftEdgeTrim], [s].[MachineId], [s].[MotherCoilId], [s].[PlannerId], [s].[PlanningDate], [s].[ProductionType], [s].[ReleasedBy], [s].[ReleasedOn], [s].[Remarks], [s].[RightEdgeTrim], [s].[RowVersion], [s].[Shift], [s].[SlittingJobNo], [s].[StartedBy], [s].[StartedOn], [s].[Status], [s].[UpdatedAtUtc], [s].[UpdatedBy], [s].[WorkOrderId], [s].[WorkOrderNumber], [s].[WorkOrderOperationId]
+    FROM [app].[SlittingJobs] AS [s]
+    ORDER BY [s].[CreatedAtUtc]
+    OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+) AS [t]
+INNER JOIN (
+    SELECT [r].[Id], [r].[BISLicNumber], [r].[Category], [r].[CoilNumber], [r].[CoreLossPerKg], [r].[CreatedAtUtc], [r].[CreatedBy], [r].[DeletedAtUtc], [r].[DeletedBy], [r].[GradeId], [r].[HeatNumber], [r].[InvoiceNo], [r].[IsDeleted], [r].[Length], [r].[ManufacturerId], [r].[MillTCNo], [r].[PONumber], [r].[RawCoilNumber], [r].[ReceivedDate], [r].[RowVersion], [r].[Status], [r].[SupplierId], [r].[Thickness], [r].[ThicknessMm], [r].[UpdatedAtUtc], [r].[UpdatedBy], [r].[WarehouseLocation], [r].[WattLossPerKg], [r].[Weight], [r].[Width]
+    FROM [app].[RawCoils] AS [r]
+    WHERE [r].[IsDeleted] = CAST(0 AS bit)
+) AS [t0] ON [t].[MotherCoilId] = [t0].[Id]
+INNER JOIN [app].[Suppliers] AS [s0] ON [t0].[SupplierId] = [s0].[Id]
+INNER JOIN [app].[Manufacturers] AS [m] ON [t0].[ManufacturerId] = [m].[Id]
+INNER JOIN [app].[Grades] AS [g] ON [t0].[GradeId] = [g].[Id]
+LEFT JOIN [app].[SlittingJobItems] AS [s1] ON [t].[Id] = [s1].[SlittingJobId]
+ORDER BY [t].[CreatedAtUtc], [t].[Id], [t0].[Id], [s0].[Id], [m].[Id], [g].[Id]
+[22:53:05 INF] HTTP GET /api/slitting-jobs responded 200 in 39.2042 ms
+[22:53:15 INF] HTTP OPTIONS /api/admin/users responded 204 in 0.0369 ms
+[22:53:15 INF] HTTP OPTIONS /api/admin/roles responded 204 in 0.3299 ms
+[22:53:15 INF] HTTP OPTIONS /api/admin/permissions responded 204 in 0.2882 ms
+[22:53:15 INF] HTTP OPTIONS /api/admin/sessions responded 204 in 0.0390 ms
+[22:53:15 INF] HTTP OPTIONS /api/admin/audit responded 204 in 0.0337 ms
+[22:53:15 INF] HTTP OPTIONS /api/admin/company responded 204 in 0.0329 ms
+[22:53:15 INF] Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [i].[Id], [i].[ConcurrencyStamp], [i].[CreatedAtUtc], [i].[Description], [i].[IsSystem], [i].[Name], [i].[NormalizedName]
+FROM [auth].[IdentityRoles] AS [i]
+ORDER BY [i].[Name]
+[22:53:15 INF] Executed DbCommand (7ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUsers] AS [i]
+[22:53:15 INF] Executed DbCommand (6ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[Permissions] AS [p]
+ORDER BY [p].[Name]
+[22:53:15 INF] HTTP GET /api/admin/permissions responded 200 in 11.8822 ms
+[22:53:15 INF] Executed DbCommand (6ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT TOP(2) [c].[Id], [c].[Address], [c].[BarcodePrefix], [c].[CompanyName], [c].[DefaultCurrency], [c].[DefaultTimezone], [c].[Email], [c].[GstNumber], [c].[LogoUrl], [c].[ModifiedAtUtc], [c].[ModifiedBy], [c].[PackingSlipFooter], [c].[Pan], [c].[Phone], [c].[ReportFooter], [c].[ReportHeader], [c].[SmtpHost], [c].[SmtpPasswordEncrypted], [c].[SmtpPort], [c].[SmtpUseTls], [c].[SmtpUserName], [c].[Website]
+FROM [config].[CompanyProfile] AS [c]
+[22:53:15 INF] HTTP GET /api/admin/company responded 200 in 10.8321 ms
+[22:53:15 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [audit].[AuditLogs] AS [a]
+[22:53:15 INF] Executed DbCommand (4ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [a].[Id], [a].[TimestampUtc], [a].[UserId], [a].[UserEmail], [a].[Category], [a].[Action], [a].[Outcome], [a].[IpAddress], [a].[Details]
+FROM [audit].[AuditLogs] AS [a]
+ORDER BY [a].[TimestampUtc] DESC
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+[22:53:15 INF] HTTP GET /api/admin/audit responded 200 in 23.9928 ms
+[22:53:15 INF] Executed DbCommand (9ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:53:15 INF] Executed DbCommand (5ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [i].[Id], [i].[AccessFailedCount], [i].[ConcurrencyStamp], [i].[CreatedAtUtc], [i].[CreatedBy], [i].[DisplayName], [i].[Email], [i].[EmailConfirmed], [i].[IsActive], [i].[JobTitle], [i].[LastLoginAtUtc], [i].[LockoutEnabled], [i].[LockoutEnd], [i].[ModifiedAtUtc], [i].[ModifiedBy], [i].[MustChangePassword], [i].[NormalizedEmail], [i].[NormalizedUserName], [i].[PasswordHash], [i].[PhoneNumber], [i].[PhoneNumberConfirmed], [i].[SecurityStamp], [i].[TwoFactorEnabled], [i].[UserName]
+FROM [auth].[IdentityUsers] AS [i]
+ORDER BY [i].[DisplayName]
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+[22:53:15 INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [i0].[Name]
+FROM [auth].[IdentityUserRoles] AS [i]
+INNER JOIN [auth].[IdentityRoles] AS [i0] ON [i].[RoleId] = [i0].[Id]
+WHERE [i].[UserId] = @__userId_0
+[22:53:15 INF] Executed DbCommand (15ms) [Parameters=[@__current_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [u].[Id], [u].[UserId], [i].[Email], [u].[Device], [u].[Browser], [u].[IpAddress], [u].[LoginAtUtc], [u].[LastActivityAtUtc], CASE
+    WHEN [u].[Id] = @__current_0 THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END, CASE
+    WHEN [u].[RevokedAtUtc] IS NOT NULL THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+FROM [auth].[UserSessions] AS [u]
+INNER JOIN [auth].[IdentityUsers] AS [i] ON [u].[UserId] = [i].[Id]
+ORDER BY [u].[LastActivityAtUtc] DESC
+[22:53:15 INF] Executed DbCommand (4ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:53:15 INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [i0].[Name]
+FROM [auth].[IdentityUserRoles] AS [i]
+INNER JOIN [auth].[IdentityRoles] AS [i0] ON [i].[RoleId] = [i0].[Id]
+WHERE [i].[UserId] = @__userId_0
+[22:53:15 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:53:15 INF] HTTP GET /api/admin/sessions responded 200 in 32.2447 ms
+[22:53:15 INF] HTTP GET /api/admin/users responded 200 in 34.9427 ms
+[22:53:15 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:53:15 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:53:15 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:53:15 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:53:15 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:53:15 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:53:15 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:53:15 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:53:15 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:53:15 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:53:15 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:53:15 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:53:15 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:53:15 INF] HTTP GET /api/admin/roles responded 200 in 52.6737 ms
+[22:56:14 INF] HTTP OPTIONS /api/admin/users responded 204 in 0.0396 ms
+[22:56:14 INF] HTTP OPTIONS /api/admin/roles responded 204 in 0.0188 ms
+[22:56:14 INF] HTTP OPTIONS /api/admin/permissions responded 204 in 0.0332 ms
+[22:56:14 INF] HTTP OPTIONS /api/admin/sessions responded 204 in 0.0244 ms
+[22:56:14 INF] HTTP OPTIONS /api/admin/audit responded 204 in 0.0363 ms
+[22:56:14 INF] HTTP OPTIONS /api/admin/company responded 204 in 0.0392 ms
+[22:56:14 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUsers] AS [i]
+[22:56:14 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [i].[Id], [i].[ConcurrencyStamp], [i].[CreatedAtUtc], [i].[Description], [i].[IsSystem], [i].[Name], [i].[NormalizedName]
+FROM [auth].[IdentityRoles] AS [i]
+ORDER BY [i].[Name]
+[22:56:14 INF] Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [i].[Id], [i].[AccessFailedCount], [i].[ConcurrencyStamp], [i].[CreatedAtUtc], [i].[CreatedBy], [i].[DisplayName], [i].[Email], [i].[EmailConfirmed], [i].[IsActive], [i].[JobTitle], [i].[LastLoginAtUtc], [i].[LockoutEnabled], [i].[LockoutEnd], [i].[ModifiedAtUtc], [i].[ModifiedBy], [i].[MustChangePassword], [i].[NormalizedEmail], [i].[NormalizedUserName], [i].[PasswordHash], [i].[PhoneNumber], [i].[PhoneNumberConfirmed], [i].[SecurityStamp], [i].[TwoFactorEnabled], [i].[UserName]
+FROM [auth].[IdentityUsers] AS [i]
+ORDER BY [i].[DisplayName]
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+[22:56:14 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:56:14 INF] Executed DbCommand (2ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:56:14 INF] Executed DbCommand (3ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [i0].[Name]
+FROM [auth].[IdentityUserRoles] AS [i]
+INNER JOIN [auth].[IdentityRoles] AS [i0] ON [i].[RoleId] = [i0].[Id]
+WHERE [i].[UserId] = @__userId_0
+[22:56:14 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[Permissions] AS [p]
+ORDER BY [p].[Name]
+[22:56:14 INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [i0].[Name]
+FROM [auth].[IdentityUserRoles] AS [i]
+INNER JOIN [auth].[IdentityRoles] AS [i0] ON [i].[RoleId] = [i0].[Id]
+WHERE [i].[UserId] = @__userId_0
+[22:56:14 INF] HTTP GET /api/admin/permissions responded 200 in 5.7553 ms
+[22:56:14 INF] HTTP GET /api/admin/users responded 200 in 15.0620 ms
+[22:56:14 INF] Executed DbCommand (3ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:56:14 INF] Executed DbCommand (2ms) [Parameters=[@__current_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [u].[Id], [u].[UserId], [i].[Email], [u].[Device], [u].[Browser], [u].[IpAddress], [u].[LoginAtUtc], [u].[LastActivityAtUtc], CASE
+    WHEN [u].[Id] = @__current_0 THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END, CASE
+    WHEN [u].[RevokedAtUtc] IS NOT NULL THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+FROM [auth].[UserSessions] AS [u]
+INNER JOIN [auth].[IdentityUsers] AS [i] ON [u].[UserId] = [i].[Id]
+ORDER BY [u].[LastActivityAtUtc] DESC
+[22:56:14 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:56:14 INF] HTTP GET /api/admin/sessions responded 200 in 9.5512 ms
+[22:56:14 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:56:14 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:56:14 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT TOP(2) [c].[Id], [c].[Address], [c].[BarcodePrefix], [c].[CompanyName], [c].[DefaultCurrency], [c].[DefaultTimezone], [c].[Email], [c].[GstNumber], [c].[LogoUrl], [c].[ModifiedAtUtc], [c].[ModifiedBy], [c].[PackingSlipFooter], [c].[Pan], [c].[Phone], [c].[ReportFooter], [c].[ReportHeader], [c].[SmtpHost], [c].[SmtpPasswordEncrypted], [c].[SmtpPort], [c].[SmtpUseTls], [c].[SmtpUserName], [c].[Website]
+FROM [config].[CompanyProfile] AS [c]
+[22:56:14 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [audit].[AuditLogs] AS [a]
+[22:56:14 INF] Executed DbCommand (3ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:56:14 INF] HTTP GET /api/admin/company responded 200 in 14.9879 ms
+[22:56:14 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:56:14 INF] Executed DbCommand (2ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [a].[Id], [a].[TimestampUtc], [a].[UserId], [a].[UserEmail], [a].[Category], [a].[Action], [a].[Outcome], [a].[IpAddress], [a].[Details]
+FROM [audit].[AuditLogs] AS [a]
+ORDER BY [a].[TimestampUtc] DESC
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+[22:56:14 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:56:14 INF] HTTP GET /api/admin/audit responded 200 in 19.2702 ms
+[22:56:14 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:56:14 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:56:14 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:56:14 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:56:14 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:56:14 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:56:14 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:56:14 INF] HTTP GET /api/admin/roles responded 200 in 39.2673 ms
+[22:57:16 INF] HTTP OPTIONS /api/admin/users responded 204 in 0.0724 ms
+[22:57:16 INF] HTTP OPTIONS /api/admin/roles responded 204 in 0.1089 ms
+[22:57:16 INF] HTTP OPTIONS /api/admin/permissions responded 204 in 0.0459 ms
+[22:57:16 INF] HTTP OPTIONS /api/admin/sessions responded 204 in 0.0285 ms
+[22:57:16 INF] HTTP OPTIONS /api/admin/audit responded 204 in 0.0289 ms
+[22:57:16 INF] HTTP OPTIONS /api/admin/company responded 204 in 0.0326 ms
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUsers] AS [i]
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [i].[Id], [i].[ConcurrencyStamp], [i].[CreatedAtUtc], [i].[Description], [i].[IsSystem], [i].[Name], [i].[NormalizedName]
+FROM [auth].[IdentityRoles] AS [i]
+ORDER BY [i].[Name]
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [i].[Id], [i].[AccessFailedCount], [i].[ConcurrencyStamp], [i].[CreatedAtUtc], [i].[CreatedBy], [i].[DisplayName], [i].[Email], [i].[EmailConfirmed], [i].[IsActive], [i].[JobTitle], [i].[LastLoginAtUtc], [i].[LockoutEnabled], [i].[LockoutEnd], [i].[ModifiedAtUtc], [i].[ModifiedBy], [i].[MustChangePassword], [i].[NormalizedEmail], [i].[NormalizedUserName], [i].[PasswordHash], [i].[PhoneNumber], [i].[PhoneNumberConfirmed], [i].[SecurityStamp], [i].[TwoFactorEnabled], [i].[UserName]
+FROM [auth].[IdentityUsers] AS [i]
+ORDER BY [i].[DisplayName]
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[Permissions] AS [p]
+ORDER BY [p].[Name]
+[22:57:16 INF] HTTP GET /api/admin/permissions responded 200 in 4.3783 ms
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [i0].[Name]
+FROM [auth].[IdentityUserRoles] AS [i]
+INNER JOIN [auth].[IdentityRoles] AS [i0] ON [i].[RoleId] = [i0].[Id]
+WHERE [i].[UserId] = @__userId_0
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT TOP(2) [c].[Id], [c].[Address], [c].[BarcodePrefix], [c].[CompanyName], [c].[DefaultCurrency], [c].[DefaultTimezone], [c].[Email], [c].[GstNumber], [c].[LogoUrl], [c].[ModifiedAtUtc], [c].[ModifiedBy], [c].[PackingSlipFooter], [c].[Pan], [c].[Phone], [c].[ReportFooter], [c].[ReportHeader], [c].[SmtpHost], [c].[SmtpPasswordEncrypted], [c].[SmtpPort], [c].[SmtpUseTls], [c].[SmtpUserName], [c].[Website]
+FROM [config].[CompanyProfile] AS [c]
+[22:57:16 INF] Executed DbCommand (2ms) [Parameters=[@__current_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [u].[Id], [u].[UserId], [i].[Email], [u].[Device], [u].[Browser], [u].[IpAddress], [u].[LoginAtUtc], [u].[LastActivityAtUtc], CASE
+    WHEN [u].[Id] = @__current_0 THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END, CASE
+    WHEN [u].[RevokedAtUtc] IS NOT NULL THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+FROM [auth].[UserSessions] AS [u]
+INNER JOIN [auth].[IdentityUsers] AS [i] ON [u].[UserId] = [i].[Id]
+ORDER BY [u].[LastActivityAtUtc] DESC
+[22:57:16 INF] Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [audit].[AuditLogs] AS [a]
+[22:57:16 INF] Executed DbCommand (0ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [i0].[Name]
+FROM [auth].[IdentityUserRoles] AS [i]
+INNER JOIN [auth].[IdentityRoles] AS [i0] ON [i].[RoleId] = [i0].[Id]
+WHERE [i].[UserId] = @__userId_0
+[22:57:16 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:57:16 INF] HTTP GET /api/admin/users responded 200 in 11.3080 ms
+[22:57:16 INF] HTTP GET /api/admin/sessions responded 200 in 7.5548 ms
+[22:57:16 INF] HTTP GET /api/admin/company responded 200 in 3.3991 ms
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [a].[Id], [a].[TimestampUtc], [a].[UserId], [a].[UserEmail], [a].[Category], [a].[Action], [a].[Outcome], [a].[IpAddress], [a].[Details]
+FROM [audit].[AuditLogs] AS [a]
+ORDER BY [a].[TimestampUtc] DESC
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:57:16 INF] HTTP GET /api/admin/audit responded 200 in 7.4978 ms
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:57:16 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:57:16 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:57:16 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:57:16 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:57:16 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:57:16 INF] HTTP GET /api/admin/roles responded 200 in 27.7363 ms
+[22:59:51 INF] HTTP OPTIONS /api/admin/users responded 204 in 0.0794 ms
+[22:59:51 INF] HTTP OPTIONS /api/admin/roles responded 204 in 0.0234 ms
+[22:59:51 INF] HTTP OPTIONS /api/admin/permissions responded 204 in 0.0361 ms
+[22:59:51 INF] HTTP OPTIONS /api/admin/sessions responded 204 in 0.0397 ms
+[22:59:51 INF] HTTP OPTIONS /api/admin/audit responded 204 in 0.0289 ms
+[22:59:51 INF] HTTP OPTIONS /api/admin/company responded 204 in 0.0435 ms
+[22:59:51 INF] Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUsers] AS [i]
+[22:59:51 INF] Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[Permissions] AS [p]
+ORDER BY [p].[Name]
+[22:59:51 INF] Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [i].[Id], [i].[ConcurrencyStamp], [i].[CreatedAtUtc], [i].[Description], [i].[IsSystem], [i].[Name], [i].[NormalizedName]
+FROM [auth].[IdentityRoles] AS [i]
+ORDER BY [i].[Name]
+[22:59:51 INF] HTTP GET /api/admin/permissions responded 200 in 5.6564 ms
+[22:59:51 INF] Executed DbCommand (2ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [i].[Id], [i].[AccessFailedCount], [i].[ConcurrencyStamp], [i].[CreatedAtUtc], [i].[CreatedBy], [i].[DisplayName], [i].[Email], [i].[EmailConfirmed], [i].[IsActive], [i].[JobTitle], [i].[LastLoginAtUtc], [i].[LockoutEnabled], [i].[LockoutEnd], [i].[ModifiedAtUtc], [i].[ModifiedBy], [i].[MustChangePassword], [i].[NormalizedEmail], [i].[NormalizedUserName], [i].[PasswordHash], [i].[PhoneNumber], [i].[PhoneNumberConfirmed], [i].[SecurityStamp], [i].[TwoFactorEnabled], [i].[UserName]
+FROM [auth].[IdentityUsers] AS [i]
+ORDER BY [i].[DisplayName]
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+[22:59:51 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:59:51 INF] Executed DbCommand (0ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [i0].[Name]
+FROM [auth].[IdentityUserRoles] AS [i]
+INNER JOIN [auth].[IdentityRoles] AS [i0] ON [i].[RoleId] = [i0].[Id]
+WHERE [i].[UserId] = @__userId_0
+[22:59:51 INF] Executed DbCommand (1ms) [Parameters=[@__current_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [u].[Id], [u].[UserId], [i].[Email], [u].[Device], [u].[Browser], [u].[IpAddress], [u].[LoginAtUtc], [u].[LastActivityAtUtc], CASE
+    WHEN [u].[Id] = @__current_0 THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END, CASE
+    WHEN [u].[RevokedAtUtc] IS NOT NULL THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+FROM [auth].[UserSessions] AS [u]
+INNER JOIN [auth].[IdentityUsers] AS [i] ON [u].[UserId] = [i].[Id]
+ORDER BY [u].[LastActivityAtUtc] DESC
+[22:59:51 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:59:51 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [audit].[AuditLogs] AS [a]
+[22:59:51 INF] Executed DbCommand (1ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [i0].[Name]
+FROM [auth].[IdentityUserRoles] AS [i]
+INNER JOIN [auth].[IdentityRoles] AS [i0] ON [i].[RoleId] = [i0].[Id]
+WHERE [i].[UserId] = @__userId_0
+[22:59:51 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:59:51 INF] HTTP GET /api/admin/sessions responded 200 in 8.0062 ms
+[22:59:51 INF] Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT TOP(2) [c].[Id], [c].[Address], [c].[BarcodePrefix], [c].[CompanyName], [c].[DefaultCurrency], [c].[DefaultTimezone], [c].[Email], [c].[GstNumber], [c].[LogoUrl], [c].[ModifiedAtUtc], [c].[ModifiedBy], [c].[PackingSlipFooter], [c].[Pan], [c].[Phone], [c].[ReportFooter], [c].[ReportHeader], [c].[SmtpHost], [c].[SmtpPasswordEncrypted], [c].[SmtpPort], [c].[SmtpUseTls], [c].[SmtpUserName], [c].[Website]
+FROM [config].[CompanyProfile] AS [c]
+[22:59:51 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:59:51 INF] HTTP GET /api/admin/users responded 200 in 15.2770 ms
+[22:59:51 INF] Executed DbCommand (1ms) [Parameters=[@__p_0='?' (DbType = Int32), @__p_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT [a].[Id], [a].[TimestampUtc], [a].[UserId], [a].[UserEmail], [a].[Category], [a].[Action], [a].[Outcome], [a].[IpAddress], [a].[Details]
+FROM [audit].[AuditLogs] AS [a]
+ORDER BY [a].[TimestampUtc] DESC
+OFFSET @__p_0 ROWS FETCH NEXT @__p_1 ROWS ONLY
+[22:59:51 INF] HTTP GET /api/admin/company responded 200 in 4.0481 ms
+[22:59:51 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:59:51 INF] HTTP GET /api/admin/audit responded 200 in 7.9381 ms
+[22:59:51 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:59:51 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:59:51 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:59:51 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:59:51 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:59:51 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:59:51 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:59:51 INF] Executed DbCommand (1ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:59:51 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:59:51 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT [p].[Name]
+FROM [auth].[RolePermissions] AS [r]
+INNER JOIN [auth].[Permissions] AS [p] ON [r].[PermissionId] = [p].[Id]
+WHERE [r].[RoleId] = @__role_Id_0
+[22:59:51 INF] Executed DbCommand (0ms) [Parameters=[@__role_Id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT COUNT(*)
+FROM [auth].[IdentityUserRoles] AS [i]
+WHERE [i].[RoleId] = @__role_Id_0
+[22:59:51 INF] HTTP GET /api/admin/roles responded 200 in 30.6767 ms
+[23:00:29 INF] HTTP OPTIONS /api/auth/logout responded 204 in 0.0364 ms
+[23:00:29 INF] Executed DbCommand (3ms) [Parameters=[@__sessionId_0='?' (DbType = Guid), @__userId_1='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(2) [u].[Id], [u].[Browser], [u].[Device], [u].[IpAddress], [u].[LastActivityAtUtc], [u].[LoginAtUtc], [u].[RefreshTokenExpiresAtUtc], [u].[RefreshTokenHash], [u].[ReplacedByTokenHash], [u].[RevokedAtUtc], [u].[UserId]
+FROM [auth].[UserSessions] AS [u]
+WHERE [u].[Id] = @__sessionId_0 AND [u].[UserId] = @__userId_1
+[23:00:29 INF] Executed DbCommand (5ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (Size = 4000), @p2='?' (Size = 4000), @p3='?' (Size = 4000), @p4='?' (Size = 4000), @p5='?' (Size = 4000), @p6='?' (Size = 4000), @p7='?' (DbType = DateTimeOffset), @p8='?' (Size = 4000), @p9='?' (DbType = Guid), @p11='?' (DbType = Guid), @p10='?' (DbType = DateTimeOffset)], CommandType='Text', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [audit].[AuditLogs] ([Id], [Action], [Category], [CorrelationId], [Details], [IpAddress], [Outcome], [TimestampUtc], [UserEmail], [UserId])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9);
+UPDATE [auth].[UserSessions] SET [RevokedAtUtc] = @p10
+OUTPUT 1
+WHERE [Id] = @p11;
+[23:00:29 INF] HTTP POST /api/auth/logout responded 204 in 17.6256 ms

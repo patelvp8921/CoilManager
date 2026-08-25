@@ -50,6 +50,9 @@ export class OperationsDashboardComponent implements OnInit {
   }
 
   protected loadDashboard(): void {
+    if (this.isLoading()) return;
+
+    const isRefresh = this.dashboard() !== null;
     this.isLoading.set(true);
     this.error.set('');
 
@@ -60,6 +63,9 @@ export class OperationsDashboardComponent implements OnInit {
         next: (dashboard) => {
           this.dashboard.set(dashboard);
           this.dashboardRole.set(dashboard.dashboardRole || this.resolveDashboardRole());
+          if (isRefresh) {
+            this.snackBar.open('Dashboard refreshed.', 'Close', { duration: 2500 });
+          }
         },
         error: (error: HttpErrorResponse) => {
           const message = this.extractError(error);

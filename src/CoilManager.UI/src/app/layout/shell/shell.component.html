@@ -23,7 +23,7 @@
         </a>
       }
 
-      @for (group of groups; track group.label) {
+      @for (group of visibleGroups(); track group.label) {
         <button class="group-toggle" [class.active-parent]="groupActive(group)" type="button" (click)="toggleGroup(group.label)"
           [matTooltip]="group.label" [matTooltipDisabled]="!layout.effectiveCollapsed()" matTooltipPosition="right"
           [attr.aria-label]="group.label" [attr.aria-expanded]="groupExpanded(group.label)">
@@ -46,12 +46,11 @@
         }
       }
 
-      <button class="group-toggle placeholder" type="button" matTooltip="Reports" matTooltipPosition="right" aria-label="Reports coming soon">
-        <mat-icon>assessment</mat-icon>@if (!layout.effectiveCollapsed()) { <span>Reports</span><small>Coming soon</small> }
-      </button>
-      <button class="group-toggle placeholder" type="button" matTooltip="Settings" matTooltipPosition="right" aria-label="Settings coming soon">
-        <mat-icon>settings</mat-icon>@if (!layout.effectiveCollapsed()) { <span>Settings</span><small>Coming soon</small> }
-      </button>
+      @if (reportsVisible()) {
+        <button class="group-toggle placeholder" type="button" matTooltip="Reports" matTooltipPosition="right" aria-label="Reports coming soon">
+          <mat-icon>assessment</mat-icon>@if (!layout.effectiveCollapsed()) { <span>Reports</span><small>Coming soon</small> }
+        </button>
+      }
     </mat-nav-list>
 
     @if (!layout.effectiveCollapsed()) {

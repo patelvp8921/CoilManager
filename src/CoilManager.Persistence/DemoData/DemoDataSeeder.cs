@@ -26,6 +26,13 @@ public sealed class DemoDataSeeder(ApplicationDbContext db, ILogger<DemoDataSeed
         log.LogInformation("Generating Mother Coils..."); var mothers=CreateMotherCoils(random,suppliers,manufacturers,grades);
         await db.RawCoils.AddRangeAsync(mothers,token); await db.SaveChangesAsync(token);
 
+        if(string.Equals(command.Stage,"MotherCoils",StringComparison.OrdinalIgnoreCase))
+        {
+            await transaction.CommitAsync(token);watch.Stop();
+            log.LogInformation("Mother Coil demo data completed successfully in {Elapsed} ms",watch.ElapsedMilliseconds);
+            return new(mothers.Count,0,0,0,0,0,watch.ElapsedMilliseconds,"Mother Coil demo data generated successfully.");
+        }
+
         log.LogInformation("Generating Slitting Jobs and Slit Coils..."); var jobs=new List<SlittingJob>();var slits=new List<SlitCoil>();var inventory=new List<InventoryTransaction>();
         for(int i=0;i<30;i++)
         {
@@ -77,6 +84,7 @@ public sealed class DemoDataSeeder(ApplicationDbContext db, ILogger<DemoDataSeed
 
     private async Task ClearAsync(CancellationToken token)
     {
+        await db.WorkOrderMaterialAllocations.ExecuteDeleteAsync(token);
         await db.LaminationJobMaterialAllocations.ExecuteDeleteAsync(token);await db.LaminationPlateDimensions.ExecuteDeleteAsync(token);await db.LaminationJobPlates.ExecuteDeleteAsync(token);await db.LaminationJobSteps.ExecuteDeleteAsync(token);await db.LaminationJobs.IgnoreQueryFilters().ExecuteDeleteAsync(token);
         await db.SlitCoilLabelPrintHistories.ExecuteDeleteAsync(token);await db.InventoryTransactions.ExecuteDeleteAsync(token);await db.SlitCoils.IgnoreQueryFilters().ExecuteDeleteAsync(token);await db.SlittingJobItems.ExecuteDeleteAsync(token);await db.SlittingJobs.ExecuteDeleteAsync(token);await db.RawCoils.IgnoreQueryFilters().ExecuteDeleteAsync(token);db.ChangeTracker.Clear();
     }

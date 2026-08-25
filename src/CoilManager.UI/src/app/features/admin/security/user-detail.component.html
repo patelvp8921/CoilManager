@@ -14,7 +14,7 @@
         <mat-tab label="Permissions"><div class="tab-content"><h3>Inherited Permissions</h3><div class="permission-list">@for(p of u.permissions;track p){<span><mat-icon>check_circle</mat-icon>{{p}}</span>}</div></div></mat-tab>
         <mat-tab label="Sessions"><div class="tab-content empty-panel"><mat-icon>devices</mat-icon><h3>Active Sessions</h3><p>Review and revoke this user's devices from the Sessions tab in Security & Access.</p><a mat-stroked-button routerLink="/admin/sessions">Open Sessions</a></div></mat-tab>
         <mat-tab label="Audit"><div class="tab-content empty-panel"><mat-icon>history</mat-icon><h3>User Audit Trail</h3><p>View immutable authentication and administration events in the central audit log.</p><a mat-stroked-button routerLink="/admin/audit">Open Audit Log</a></div></mat-tab>
-        <mat-tab label="Security"><div class="tab-content actions"><button mat-stroked-button><mat-icon>password</mat-icon>Reset Password</button><button mat-stroked-button><mat-icon>lock_open</mat-icon>Unlock Account</button><button mat-stroked-button><mat-icon>published_with_changes</mat-icon>Force Password Change</button><button mat-stroked-button><mat-icon>logout</mat-icon>Revoke All Sessions</button></div></mat-tab>
+        <mat-tab label="Security"><div class="tab-content actions"><button mat-stroked-button type="button" (click)="resetPassword(u)"><mat-icon>password</mat-icon>Reset Password</button><button mat-stroked-button><mat-icon>lock_open</mat-icon>Unlock Account</button><button mat-stroked-button><mat-icon>published_with_changes</mat-icon>Force Password Change</button><button mat-stroked-button><mat-icon>logout</mat-icon>Revoke All Sessions</button></div></mat-tab>
       </mat-tab-group>
     </mat-card>
   </section>

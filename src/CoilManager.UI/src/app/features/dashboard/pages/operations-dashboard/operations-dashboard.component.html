@@ -10,12 +10,12 @@
           <span><strong>{{ headerData.inventory.totalMotherCoils }}</strong> Mother Coils</span>
           <span>Mother Coils - <strong>{{ headerData.inventory.totalWeight | number:'1.0-0' }} kg</strong></span>
           <span>Slit Coils - <strong>{{ headerData.slitting.slitWeight | number:'1.0-0' }} kg</strong></span>
-          <span>Updated {{ headerData.generatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          <span>Updated {{ headerData.generatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</span>
         </div>
       }
       <button mat-flat-button type="button" (click)="loadDashboard()" [disabled]="isLoading()">
         <mat-icon>refresh</mat-icon>
-        Refresh
+        <span>{{ isLoading() ? 'Refreshing...' : 'Refresh' }}</span>
       </button>
     </div>
   </header>
@@ -56,8 +56,8 @@
                   <span class="queue-status" [class.running]="item.status === 'Running'">{{ item.status }}</span>
                   <strong>{{ item.slittingJobNo }}</strong>
                   <span>{{ item.motherCoilNumber }}</span>
-                  <span>Released {{ item.releasedOn ? (item.releasedOn | date:'dd/MM/yyyy HH:mm') : '-' }}</span>
-                  <span>Started {{ item.startedOn ? (item.startedOn | date:'dd/MM/yyyy HH:mm') : '-' }}</span>
+                  <span>Released {{ item.releasedOn ? (item.releasedOn | date:'dd/MM/yyyy HH:mm:ss') : '-' }}</span>
+                  <span>Started {{ item.startedOn ? (item.startedOn | date:'dd/MM/yyyy HH:mm:ss') : '-' }}</span>
                   <span>{{ item.waitingMinutes | number:'1.0-1' }} min</span>
                   <span>{{ item.shift || '-' }}</span>
                 </a>

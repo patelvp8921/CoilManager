@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, signal } from '@angular/core';
+import { Component, HostListener, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -12,7 +12,7 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from '../../core/auth/auth.service';
 
 interface NavigationItem { label: string; icon: string; route: string; exact?: boolean; }
-interface NavigationGroup { label: string; icon: string; items: readonly NavigationItem[]; }
+interface NavigationGroup { label: string; icon: string; permissionPrefixes: readonly string[]; items: readonly NavigationItem[]; }
 
 @Component({
   selector: 'app-shell',
@@ -25,28 +25,20 @@ export class ShellComponent {
   protected readonly layout = inject(LayoutStateService);
   private readonly router = inject(Router);
   protected readonly auth = inject(AuthService);
-  protected readonly expandedGroups = signal(new Set(['Inventory', 'Planning', 'Production', 'Administration']));
+  protected readonly expandedGroups = signal(new Set<string>());
   protected readonly primaryItems: readonly NavigationItem[] = [
     { label: 'Dashboard', icon: 'dashboard', route: '/dashboard', exact: true },
-    { label: 'Coil Search', icon: 'qr_code_scanner', route: '/coil-search' },
   ];
   protected readonly groups: readonly NavigationGroup[] = [
-    { label: 'Sales', icon: 'request_quote', items: [
-      { label: 'Customers', icon: 'groups', route: '/customers' },
-      { label: 'Sales Orders', icon: 'request_quote', route: '/sales-orders' },
-    ]},
-    { label: 'Inventory', icon: 'inventory_2', items: [
+    { label: 'Inventory', icon: 'inventory_2', permissionPrefixes: ['Inventory.'], items: [
       { label: 'Mother Coils', icon: 'inventory_2', route: '/mother-coils' },
       { label: 'Slit Coils', icon: 'view_list', route: '/slit-coils' },
     ]},
-    { label: 'Production', icon: 'precision_manufacturing', items: [
+    { label: 'Production', icon: 'precision_manufacturing', permissionPrefixes: ['Production.'], items: [
       { label: 'Slitting Jobs', icon: 'precision_manufacturing', route: '/slitting-jobs' },
       { label: 'Lamination Jobs', icon: 'layers', route: '/lamination-jobs' },
     ]},
-    { label: 'Planning', icon: 'event_note', items: [
-      { label: 'Work Orders', icon: 'assignment', route: '/work-orders' },
-    ]},
-    { label: 'Administration', icon: 'admin_panel_settings', items: [
+    { label: 'Administration', icon: 'admin_panel_settings', permissionPrefixes: ['Administration.'], items: [
       { label: 'Security & Access', icon: 'shield', route: '/admin/users' },
       { label: 'Manufacturers', icon: 'factory', route: '/admin/manufacturers' },
       { label: 'Suppliers', icon: 'storefront', route: '/admin/suppliers' },
@@ -54,7 +46,17 @@ export class ShellComponent {
       { label: 'Analytics', icon: 'analytics', route: '/admin/analytics' },
       ...(environment.production ? [] : [{ label: 'Development Tools', icon: 'science', route: '/admin/development-tools' }]),
     ]},
+    { label: 'Sales', icon: 'request_quote', permissionPrefixes: ['Sales.', 'Customers.', 'SalesOrders.'], items: [
+      { label: 'Customers', icon: 'groups', route: '/customers' },
+      { label: 'Sales Orders', icon: 'request_quote', route: '/sales-orders' },
+    ]},
+    { label: 'Planning', icon: 'event_note', permissionPrefixes: ['WorkOrders.'], items: [
+      { label: 'Work Orders', icon: 'assignment', route: '/work-orders' },
+    ]},
   ];
+  protected readonly visibleGroups = computed(() => this.groups.filter(group =>
+    group.permissionPrefixes.some(prefix => this.hasPermissionPrefix(prefix))));
+  protected readonly reportsVisible = computed(() => this.hasPermissionPrefix('Reports.'));
 
   protected toggleGroup(label: string): void {
     if (this.layout.effectiveCollapsed()) { this.layout.expandSidebar(); return; }
@@ -69,6 +71,11 @@ export class ShellComponent {
   }
   protected routeSelected(): void { this.layout.closeMobile(); }
   protected logout(): void { this.auth.logout(); }
+
+  private hasPermissionPrefix(prefix: string): boolean {
+    const user = this.auth.user();
+    return !!user && (user.roles.includes('Administrator') || user.permissions.some(permission => permission.startsWith(prefix)));
+  }
 
   protected userInitials(): string {
     const parts = (this.auth.user()?.displayName ?? 'User').trim().split(/\s+/).filter(Boolean);
